@@ -11,7 +11,7 @@ COPY src/ ./
 RUN dotnet restore ykotika.sln
 
 # Сборка проекта
-RUN dotnet publish src/ykotika.WebAPI/ykotika.WebAPI.csproj -c Release -o /app
+RUN dotnet publish ykotika.WebAPI/ykotika.WebAPI.csproj -c Release -o /app
 
 # Используем официальный образ .NET Runtime для запуска приложения (с .NET 8)
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
