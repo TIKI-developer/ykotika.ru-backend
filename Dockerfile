@@ -10,11 +10,11 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 # Копируем только файл .csproj и восстанавливаем зависимости
-COPY ["ykotika/ykotika.WebAPI/ykotika.WebAPI.csproj", "ykotika.WebAPI/"]
+COPY ["src/ykotika.WebAPI/ykotika.WebAPI.csproj", "ykotika.WebAPI/"]
 RUN dotnet restore "ykotika.WebAPI/ykotika.WebAPI.csproj"
 
 # Копируем оставшиеся файлы проекта и собираем приложение
-COPY ./ykotika ./ykotika
+COPY ./src ./src
 WORKDIR "/src/ykotika.WebAPI"
 RUN dotnet build "ykotika.WebAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
