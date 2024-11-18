@@ -16,7 +16,7 @@ RUN dotnet restore "ykotika.WebAPI/ykotika.WebAPI.csproj"
 # Копируем оставшиеся файлы проекта и собираем приложение
 COPY ./src ./src
 WORKDIR "/src/ykotika.WebAPI"
-RUN dotnet build "ykotika.WebAPI/ykotika.WebAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./src/ykotika.WebAPI/ykotika.WebAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Публикуем приложение в папку /app/publish
 FROM build AS publish
