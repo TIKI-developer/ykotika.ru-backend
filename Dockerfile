@@ -2,7 +2,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 # Устанавливаем рабочую директорию для сборки
-WORKDIR /src
+#WORKDIR /src
 
 # Копируем решение и все проекты в контейнер
 COPY src/ykotika.sln ./
