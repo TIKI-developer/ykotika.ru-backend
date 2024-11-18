@@ -1,0 +1,73 @@
+# .NET Core
+bin/
+obj/
+project.lock.json
+project.fragment.lock.json
+*.sln.docstates
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userprefs
+*.sln.ide
+
+# Rider
+.idea/
+*.sln.iml
+
+# ASP.NET Core
+appsettings*.json
+*.db
+*.log
+*.pdb
+*.mdb
+*.dll
+*.exe
+
+# Docker
+*.dockerignore
+Dockerfile
+docker-compose*.yml
+
+# NuGet
+*.nupkg
+*.snupkg
+*.nuspec
+packages/
+*.nupkg
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+
+# Coverage results
+coverage/
+*.coverage
+*.coveragexml
+
+# Publish output
+publish/
+out/
+
+# Other
+*.cache
+*.zip
+*.tar.gz
+*.tar
+*.tgz
+*.7z
+*.rar
+
+# User-specific files
+*.DS_Store
+Thumbs.db
+ehthumbs.db
+LocalDatabase.db
+LocalDatabase.db-shm
+LocalDatabase.db-wal
+/uploads/
+UpgradeLog.htm
+/Restaurant.WebApi/wwwroot/uploads
