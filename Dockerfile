@@ -5,7 +5,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Копируем решение и все проекты в контейнер
-COPY ykotika.sln ./
+COPY src/ykotika.sln ./
 COPY src/ykotika.Domain ./src/ykotika.Domain
 COPY src/ykotika.Application ./src/ykotika.Application
 COPY src/ykotika.Security ./src/ykotika.Security
