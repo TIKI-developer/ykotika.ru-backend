@@ -2,15 +2,14 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 # Устанавливаем рабочую директорию для сборки
-WORKDIR /src
 
 # Копируем решение и все проекты в контейнер
-COPY ./ykotika.sln ./
-COPY ./ykotika.Domain ./src/ykotika.Domain
-COPY ./ykotika.Application ./src/ykotika.Application
-COPY ./ykotika.Security ./src/ykotika.Security
-COPY ./ykotika.Persistence ./src/ykotika.Persistence
-COPY ./ykotika.WebAPI ./src/ykotika.WebAPI
+COPY /src/ykotika.sln ./
+COPY /src/ykotika.Domain ./src/ykotika.Domain
+COPY /src/ykotika.Application ./src/ykotika.Application
+COPY /src/ykotika.Security ./src/ykotika.Security
+COPY /src/ykotika.Persistence ./src/ykotika.Persistence
+COPY /src/ykotika.WebAPI ./src/ykotika.WebAPI
 
 # Восстанавливаем зависимости всех проектов
 RUN dotnet restore ykotika.sln
