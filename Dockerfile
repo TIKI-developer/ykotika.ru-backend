@@ -9,7 +9,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 
 # Копируем только файл .csproj и восстанавливаем зависимости
-WORKDIR /src
+WORKDIR /src/
 COPY ykotika.Application/ykotika.Application.csproj app/ykotika.Application/
 COPY ykotika.Domain/ykotika.Domain.csproj app/ykotika.Domain/
 COPY ykotika.Security/ykotika.Security.csproj app/ykotika.Security/
