@@ -9,12 +9,12 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 
 # Копируем только файл .csproj и восстанавливаем зависимости
-WORKDIR /src/
-COPY ykotika.Application/ykotika.Application.csproj app/ykotika.Application/
-COPY ykotika.Domain/ykotika.Domain.csproj app/ykotika.Domain/
-COPY ykotika.Security/ykotika.Security.csproj app/ykotika.Security/
-COPY ykotika.Persistence/ykotika.Persistence.csproj app/ykotika.Persistence/
-COPY ykotika.WebAPI/ykotika.WebAPI.csproj app/ykotika.WebAPI/
+WORKDIR /src
+COPY /src/ykotika.Application/ykotika.Application.csproj app/ykotika.Application/
+COPY /src/ykotika.Domain/ykotika.Domain.csproj app/ykotika.Domain/
+COPY /src/ykotika.Security/ykotika.Security.csproj app/ykotika.Security/
+COPY /src/ykotika.Persistence/ykotika.Persistence.csproj app/ykotika.Persistence/
+COPY /src/ykotika.WebAPI/ykotika.WebAPI.csproj app/ykotika.WebAPI/
 RUN dotnet restore "ykotika.WebAPI/ykotika.WebAPI.csproj"
 
 # Копируем оставшиеся файлы проекта и собираем приложение
