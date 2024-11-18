@@ -15,7 +15,7 @@ COPY /src/ykotika.Domain/ykotika.Domain.csproj app/ykotika.Domain/
 COPY /src/ykotika.Security/ykotika.Security.csproj app/ykotika.Security/
 COPY /src/ykotika.Persistence/ykotika.Persistence.csproj app/ykotika.Persistence/
 COPY /src/ykotika.WebAPI/ykotika.WebAPI.csproj app/ykotika.WebAPI/
-RUN dotnet restore "ykotika.WebAPI/ykotika.WebAPI.csproj"
+RUN dotnet restore "app/ykotika.WebAPI/ykotika.WebAPI.csproj"
 
 # Копируем оставшиеся файлы проекта и собираем приложение
 COPY /src .
