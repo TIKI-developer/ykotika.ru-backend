@@ -1,34 +1,34 @@
-# Используем базовый образ для ASP.NET Core на Linux
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
-
-# Используем образ SDK для сборки приложения
+# Используем официальный образ .NET SDK для сборки приложения (с .NET 8)
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
 
-# Копируем только файл .csproj и восстанавливаем зависимости
+# Устанавливаем рабочую директорию для сборки
 WORKDIR /src
-COPY /src/ykotika.Application/ykotika.Application.csproj app/ykotika.Application/
-COPY /src/ykotika.Domain/ykotika.Domain.csproj app/ykotika.Domain/
-COPY /src/ykotika.Security/ykotika.Security.csproj app/ykotika.Security/
-COPY /src/ykotika.Persistence/ykotika.Persistence.csproj app/ykotika.Persistence/
-COPY /src/ykotika.WebAPI/ykotika.WebAPI.csproj app/ykotika.WebAPI/
-RUN dotnet restore "app/ykotika.WebAPI/ykotika.WebAPI.csproj"
 
-# Копируем оставшиеся файлы проекта и собираем приложение
-COPY /src ./
-WORKDIR /src/ykotika.WebAPI
-RUN dotnet build "ykotika.WebAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
+# Копируем решение и все проекты в контейнер
+COPY ykotika.sln ./
+COPY src/ykotika.Domain ./src/ykotika.Domain
+COPY src/ykotika.Application ./src/ykotika.Application
+COPY src/ykotika.Security ./src/ykotika.Security
+COPY src/ykotika.Persistence ./src/ykotika.Persistence
+COPY src/ykotika.WebAPI ./src/ykotika.WebAPI
 
-# Публикуем приложение в папку /app/publish
-FROM build AS publish
-WORKDIR /src/ykotika.WebAPI
-RUN dotnet publish "ykotika.WebAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+# Восстанавливаем зависимости всех проектов
+RUN dotnet restore ykotika.sln
 
-# Финальный этап: использование базового образа и копирование опубликованных файлов
-FROM base AS final
+# Сборка проекта
+RUN dotnet publish src/ykotika.WebAPI/ykotika.WebAPI.csproj -c Release -o /app
+
+# Используем официальный образ .NET Runtime для запуска приложения (с .NET 8)
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+
+# Устанавливаем рабочую директорию для исполнимого файла
 WORKDIR /app
-COPY --from=publish /app/publish .
+
+# Копируем собранное приложение из стадии сборки
+COPY --from=build /app .
+
+# Открываем порт для приложения
+EXPOSE 80
+
+# Указываем команду для запуска веб-приложения
 ENTRYPOINT ["dotnet", "ykotika.WebAPI.dll"]
