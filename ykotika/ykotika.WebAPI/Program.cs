@@ -1,4 +1,4 @@
-namespace ykotika.WebAPI
+namespace Ykotika.WebAPI
 {
     public class Program
     {
