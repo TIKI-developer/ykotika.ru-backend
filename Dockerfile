@@ -7,18 +7,18 @@ EXPOSE 8081
 # Используем образ SDK для сборки приложения
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
 
 # Копируем только файл .csproj и восстанавливаем зависимости
-COPY src/ykotika.WebAPI/ykotika.WebAPI.csproj ykotika.WebAPI/
-COPY src/ykotika.Application/ykotika.Application.csproj ykotika.Application/
-COPY src/ykotika.Domain/ykotika.Domain.csproj ykotika.Domain/
-COPY src/ykotika.Security/ykotika.Security.csproj ykotika.Security/
-COPY src/ykotika.Persistence/ykotika.Persistence.csproj ykotika.Persistence/
+WORKDIR /src
+COPY ykotika.Application/ykotika.Application.csproj app/ykotika.Application/
+COPY ykotika.Domain/ykotika.Domain.csproj app/ykotika.Domain/
+COPY ykotika.Security/ykotika.Security.csproj app/ykotika.Security/
+COPY ykotika.Persistence/ykotika.Persistence.csproj app/ykotika.Persistence/
+COPY ykotika.WebAPI/ykotika.WebAPI.csproj app/ykotika.WebAPI/
 RUN dotnet restore "ykotika.WebAPI/ykotika.WebAPI.csproj"
 
 # Копируем оставшиеся файлы проекта и собираем приложение
-COPY src ./src
+COPY /src .
 WORKDIR "/src/ykotika.WebAPI"
 RUN dotnet build "ykotika.WebAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
