@@ -13,6 +13,7 @@ WORKDIR /src
 COPY src/ykotika.WebAPI/ykotika.WebAPI.csproj ykotika.WebAPI/
 COPY src/ykotika.Application/ykotika.Application.csproj ykotika.Application/
 COPY src/ykotika.Domain/ykotika.Domain.csproj ykotika.Domain/
+COPY src/ykotika.Security/ykotika.Security.csproj ykotika.Security/
 COPY src/ykotika.Persistence/ykotika.Persistence.csproj ykotika.Persistence/
 RUN dotnet restore "ykotika.WebAPI/ykotika.WebAPI.csproj"
 
