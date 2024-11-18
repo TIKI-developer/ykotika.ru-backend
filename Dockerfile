@@ -23,7 +23,8 @@ WORKDIR /app
 COPY --from=build /app .
 
 # Открываем порт для приложения
-EXPOSE 80
+EXPOSE 8080
+EXPOSE 8081
 
 # Указываем команду для запуска веб-приложения
 ENTRYPOINT ["dotnet", "ykotika.WebAPI.dll"]
