@@ -12,6 +12,7 @@ WORKDIR /src
 # Копируем только файл .csproj и восстанавливаем зависимости
 COPY src/ykotika.WebAPI/ykotika.WebAPI.csproj ykotika.WebAPI/
 COPY src/ykotika.Application/ykotika.Application.csproj ykotika.Application/
+COPY src/ykotika.Domain/ykotika.Domain.csproj ykotika.Domain/
 COPY src/ykotika.Persistence/ykotika.Persistence.csproj ykotika.Persistence/
 RUN dotnet restore "ykotika.WebAPI/ykotika.WebAPI.csproj"
 
