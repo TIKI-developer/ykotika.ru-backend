@@ -30,12 +30,15 @@ namespace Ykotika.WebAPI
 
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAll", policy =>
-                {
-                    policy.AllowAnyHeader();
-                    policy.AllowAnyMethod();
-                    policy.AllowAnyOrigin();
-                });
+                options.AddPolicy("AllowSpecificOrigin",
+                    builder =>
+                    {
+                        builder
+                            .AllowAnyOrigin()
+                            .AllowAnyMethod()
+                            .AllowAnyHeader()
+                            .AllowCredentials();
+                    });
             });
             services.AddSwaggerGen();
         }
