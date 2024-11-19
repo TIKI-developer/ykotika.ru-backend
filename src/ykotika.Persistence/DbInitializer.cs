@@ -1,4 +1,4 @@
-﻿namespace ykotika.Persistence
+﻿namespace Ykotika.Persistence
 {
     public class DbInitializer
     {

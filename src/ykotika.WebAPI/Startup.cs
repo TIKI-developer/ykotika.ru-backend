@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
+using Ykotika.Application;
 using Ykotika.Application.Common.Mappings;
-using ykotika.Persistence;
+using Ykotika.Persistence;
+using Ykotika.Security;
 using Ykotika.WebAPI.Middleware;
 
 namespace Ykotika.WebAPI
@@ -20,8 +22,11 @@ namespace Ykotika.WebAPI
             });
 
             services.AddPersistence(Configuration);
+            services.AddSecurity(Configuration);
+            services.AddApplication();
 
             services.AddControllers();
+
 
             services.AddCors(options =>
             {

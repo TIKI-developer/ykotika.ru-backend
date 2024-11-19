@@ -1,4 +1,4 @@
-using ykotika.Persistence;
+using Ykotika.Persistence;
 
 namespace Ykotika.WebAPI
 {
