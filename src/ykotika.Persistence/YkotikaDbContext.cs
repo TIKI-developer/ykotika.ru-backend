@@ -1,10 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ykotika.Application.Interfaces;
+using Ykotika.Application.Interfaces;
+using Ykotika.Domain;
+using Ykotika.Persistence.EntityTypeConfigurations;
 
-namespace ykotika.Persistence
+namespace Ykotika.Persistence
 {
     public class YkotikaDbContext(DbContextOptions<YkotikaDbContext> options) : DbContext(options), IYkotikaDbContext
     {
-
+        public DbSet<UserModel> Users { get; set; }
+        
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

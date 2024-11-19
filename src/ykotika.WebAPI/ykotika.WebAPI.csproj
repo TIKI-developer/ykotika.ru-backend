@@ -15,14 +15,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
     <Folder Include="Extensions\" />
-    <Folder Include="Models\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ykotika.Application\ykotika.Application.csproj" />
     <ProjectReference Include="..\ykotika.Persistence\ykotika.Persistence.csproj" />
+    <ProjectReference Include="..\ykotika.Security\ykotika.Security.csproj" />
   </ItemGroup>
 
 </Project>

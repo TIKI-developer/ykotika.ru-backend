@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="EntityTypeConfigurations\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ykotika.Application\ykotika.Application.csproj" />
   </ItemGroup>
 
