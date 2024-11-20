@@ -47,6 +47,7 @@ namespace Ykotika.WebAPI
                     policy.AllowAnyHeader();
                     policy.AllowAnyMethod();
                     policy.AllowAnyOrigin();
+                    policy.AllowCredentials();
                 });
             });
             services.AddSwaggerGen();
