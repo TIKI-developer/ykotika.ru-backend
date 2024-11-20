@@ -47,7 +47,7 @@ namespace Ykotika.WebAPI
                     policy.AllowAnyHeader();
                     policy.AllowAnyMethod();
                     policy.AllowAnyOrigin();
-                    policy.WithOrigins("https://infinite-ellipse-ykotika-ru-frontend-9e75.twc1.net/")
+                    policy.WithOrigins("https://infinite-ellipse-ykotika-ru-frontend-9e75.twc1.net")
                     .AllowCredentials();
                 });
             });
