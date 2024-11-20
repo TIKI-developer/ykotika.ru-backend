@@ -27,19 +27,31 @@ namespace Ykotika.WebAPI
 
             services.AddControllers();
 
-
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAll",
+                options.AddPolicy("AllowSpecificOrigin",
                     builder =>
                     {
                         builder
-                            .AllowAnyOrigin()
+                            .WithOrigins("https://infinite-ellipse-ykotika-ru-frontend-9e75.twc1.net/")
                             .AllowAnyMethod()
                             .AllowAnyHeader()
                             .AllowCredentials();
                     });
             });
+
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy("AllowAll",
+            //        builder =>
+            //        {
+            //            builder
+            //                .AllowAnyOrigin()
+            //                .AllowAnyMethod()
+            //                .AllowAnyHeader()
+            //                .AllowCredentials();
+            //        });
+            //});
             services.AddSwaggerGen();
         }
 
@@ -52,7 +64,7 @@ namespace Ykotika.WebAPI
             app.UseStaticFiles();
             app.UseCustomExceptionHandler();
             app.UseHttpsRedirection();
-            app.UseCors("AllowAll");
+            app.UseCors("AllowSpecificOrigin");
             app.UseSwagger();
             app.UseSwaggerUI(config =>
             {
