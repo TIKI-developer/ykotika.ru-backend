@@ -30,7 +30,7 @@ namespace Ykotika.WebAPI
 
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowSpecificOrigin",
+                options.AddPolicy("AllowAll",
                     builder =>
                     {
                         builder
