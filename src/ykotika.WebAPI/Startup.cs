@@ -42,15 +42,14 @@ namespace Ykotika.WebAPI
 
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAll",
-                    builder =>
-                    {
-                        builder
-                            .AllowAnyOrigin()
-                            .AllowAnyMethod()
-                            .AllowAnyHeader()
-                            .AllowCredentials();
-                    });
+                options.AddPolicy("AllowAll", policy =>
+                {
+                    policy.AllowAnyHeader();
+                    policy.AllowAnyMethod();
+                    policy.AllowAnyOrigin();
+                    policy.WithOrigins("https://infinite-ellipse-ykotika-ru-frontend-9e75.twc1.net")
+                    .AllowCredentials();
+                });
             });
             services.AddSwaggerGen();
         }
