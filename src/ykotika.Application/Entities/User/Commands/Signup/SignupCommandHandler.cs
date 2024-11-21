@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Ykotika.Application.Common.Exceptions;
 using Ykotika.Application.Interfaces;
 using Ykotika.Domain;
 
@@ -7,7 +9,7 @@ namespace Ykotika.Application.Entities.User.Commands.Signup
     public class SignupCommandHandler(
         IYkotikaDbContext dbContext,
         IPasswordHasher passwordHasher,
-        IJwtProvider jwtProvider) 
+        IJwtProvider jwtProvider)
         : IRequestHandler<SignupCommand, string>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
@@ -16,19 +18,46 @@ namespace Ykotika.Application.Entities.User.Commands.Signup
 
         public async Task<string> Handle(SignupCommand request, CancellationToken cancellationToken)
         {
-            var client = new UserModel
+            var existUser = await
+                _dbContext
+                .Users
+                .FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
+
+            bool userExist = existUser != null;
+            string token;
+
+            if (!userExist)
             {
-                Id = Guid.NewGuid(),
-                Name = request.Name,
-                Email = request.Email,
-                PasswordHash = _passwordHasher.Generate(request.Password),
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow,
-            };
+                var user = new UserModel
+                {
+                    Id = Guid.NewGuid(),
+                    Name = request.Name,
+                    Email = request.Email,
+                    PasswordHash = _passwordHasher.Generate(request.Password)
+                };
 
-            await _dbContext.Users.AddAsync(client, cancellationToken);
+                await _dbContext.Users.AddAsync(user, cancellationToken);
 
-            var token = _jwtProvider.Generate(client);
+                token = _jwtProvider.GenerateAccessToken(user);
+            }
+            else
+            {
+                bool userIsGuest = existUser!.Role == UserRole.Guest;
+
+                if (userIsGuest)
+                {
+                    existUser.Name = request.Name;
+                    existUser.Email = request.Email;
+                    existUser.PasswordHash = _passwordHasher.Generate(request.Password);
+                    existUser.MarkUpdated();
+                    token = _jwtProvider.GenerateAccessToken(existUser);
+                }
+                else
+                {
+                    throw new UserAlreadyRegistered(request.Email);
+                }
+            }
+
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return token;

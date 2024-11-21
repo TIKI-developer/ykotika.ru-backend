@@ -4,6 +4,7 @@ namespace Ykotika.Application.Interfaces
 {
     public interface IJwtProvider
     {
-        string Generate(UserModel user);
+        string GenerateAccessToken(UserModel user);
+        string GenerateEmailVerificationToken(Guid userId, string userEmail);
     }
 }

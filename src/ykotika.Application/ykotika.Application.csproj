@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Common\" />
     <Folder Include="Entities\User\Queries\" />
     <Folder Include="Validation\" />
   </ItemGroup>
@@ -21,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ykotika.Domain\ykotika.Domain.csproj" />
+    <ProjectReference Include="..\ykotika.Domain\Ykotika.Domain.csproj" />
   </ItemGroup>
 
 </Project>

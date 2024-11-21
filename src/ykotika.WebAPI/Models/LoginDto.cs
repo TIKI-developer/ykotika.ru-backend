@@ -2,7 +2,7 @@
 using Ykotika.Application.Common.Mappings;
 using Ykotika.Application.Entities.User.Commands.Login;
 
-namespace ykotika.WebAPI.Models
+namespace Ykotika.WebAPI.Models
 {
     public class LoginDto : IMapWith<LoginCommand>
     {

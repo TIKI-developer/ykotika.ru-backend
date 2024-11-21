@@ -12,11 +12,13 @@ namespace Ykotika.Security
     {
         private readonly JwtOptions _options = options.Value;
 
-        public string Generate(UserModel user)
+        public string GenerateAccessToken(UserModel user)
         {
             var claims = new List<Claim>
             {
-                new(ClaimTypes.NameIdentifier, user.Id.ToString())
+                new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new(ClaimTypes.Email, user.Email.ToString()),
+                new(ClaimTypes.Role, user.Role.ToString())
             };
 
             var signingCredentials = new SigningCredentials(
@@ -35,6 +37,33 @@ namespace Ykotika.Security
                     expires: DateTime.UtcNow.AddHours(_options.ExpiresHours)
                 );
 
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return tokenString;
+        }
+
+        public string GenerateEmailVerificationToken(Guid userId, string userEmail)
+        {
+            var claims = new List<Claim>
+            {
+                new(ClaimTypes.NameIdentifier, userId.ToString()),
+                new(ClaimTypes.Email, userEmail)
+
+            };
+            var signingCredentials = new SigningCredentials(
+
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey)),
+
+                SecurityAlgorithms.HmacSha256
+            );
+            var token = new JwtSecurityToken(
+
+                 claims: claims,
+
+                 signingCredentials: signingCredentials,
+
+                 expires: DateTime.UtcNow.AddMinutes(30)
+             );
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
             return tokenString;
