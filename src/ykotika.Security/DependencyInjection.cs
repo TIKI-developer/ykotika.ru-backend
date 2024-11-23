@@ -11,6 +11,7 @@ namespace Ykotika.Security
         {
             services.AddScoped<IPasswordHasher, PasswordHasher>();
             services.AddScoped<IJwtProvider, JwtProvider>();
+            services.AddScoped<IEmailVerifier, EmailVerifier>();
 
             var jwtOptionsSection = configuration.GetSection(nameof(JwtOptions));
             var secretKey = jwtOptionsSection.GetValue<string>("SecretKey")

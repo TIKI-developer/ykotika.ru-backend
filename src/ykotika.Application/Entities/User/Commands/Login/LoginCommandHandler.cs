@@ -1,8 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Ykotika.Application.Common.Exceptions;
 using Ykotika.Application.Interfaces;
-using Ykotika.Domain;
 
 namespace Ykotika.Application.Entities.User.Commands.Login
 {
@@ -23,16 +21,17 @@ namespace Ykotika.Application.Entities.User.Commands.Login
                 .Users
                 .FirstOrDefaultAsync(u => u.Email ==  request.Email, cancellationToken);
 
-            if (user == null)
+            if (user == null || !_passwordHasher.Verify(request.Password, user.PasswordHash))
             {
-                throw new NotFoundException(nameof(UserModel), request.Email);
+                throw new Exception("User doesn't exist, or invalid password");
             }
 
-            if (!_passwordHasher.Verify(request.Password, user.PasswordHash))
+            if (!user.IsEmailVerified)
             {
-                throw new Exception("Incorrect password");
+                throw new Exception("Email not verified");
             }
-            var token = _jwtProvider.Generate(user);
+
+            var token = _jwtProvider.GenerateAccessToken(user);
 
             return token;
         }

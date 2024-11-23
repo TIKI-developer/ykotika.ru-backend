@@ -3,6 +3,7 @@ using Ykotika.Application;
 using Ykotika.Application.Common.Mappings;
 using Ykotika.Persistence;
 using Ykotika.Security;
+using Ykotika.WebApi.Extensions;
 using Ykotika.WebAPI.Middleware;
 
 namespace Ykotika.WebAPI
@@ -21,10 +22,10 @@ namespace Ykotika.WebAPI
                 config.AddProfile(new AssemblyMappingProfile(typeof(YkotikaDbContext).Assembly));
             });
 
+            services.AddApiAuthentication(Configuration);
             services.AddPersistence(Configuration);
             services.AddSecurity(Configuration);
             services.AddApplication();
-
             services.AddControllers();
 
             //services.AddCors(options =>
@@ -71,7 +72,9 @@ namespace Ykotika.WebAPI
                 config.RoutePrefix = string.Empty;
                 config.SwaggerEndpoint("swagger/v1/swagger.json", "Restaurant API");
             });
+            app.UseAuthentication();
             app.UseRouting();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

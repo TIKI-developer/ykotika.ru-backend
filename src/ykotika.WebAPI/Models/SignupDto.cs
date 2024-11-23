@@ -2,7 +2,7 @@
 using Ykotika.Application.Common.Mappings;
 using Ykotika.Application.Entities.User.Commands.Signup;
 
-namespace ykotika.WebAPI.Models
+namespace Ykotika.WebAPI.Models
 {
     public class SignupDto : IMapWith<SignupCommand>
     {
