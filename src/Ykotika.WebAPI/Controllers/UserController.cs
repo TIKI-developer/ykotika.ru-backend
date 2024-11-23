@@ -21,28 +21,28 @@ namespace Ykotika.WebAPI.Controllers
 
         [Route("signup")]
         [HttpPost]
-        public async Task<ActionResult<string>> Signup([FromBody] SignupDto signupDto)
+        public async Task<ActionResult<SignupViewModel>> Signup([FromBody] SignupDto signupDto)
         {
             var command = _mapper.Map<SignupCommand>(signupDto);
 
-            var token = await Mediator.Send(command);
+            var vm = await Mediator.Send(command);
 
-            HttpContext.Response.Cookies.Append("creeper", token);
+            HttpContext.Response.Cookies.Append("creeper", vm.AccessToken);
 
-            return Ok(token);
+            return Ok(vm);
         }
 
         [Route("login")]
         [HttpPost]
-        public async Task<ActionResult<string>> Login([FromBody] LoginDto signupDto)
+        public async Task<ActionResult<LoginViewModel>> Login([FromBody] LoginDto signupDto)
         {
             var command = _mapper.Map<LoginCommand>(signupDto);
 
-            var token = await Mediator.Send(command);
+            var vm = await Mediator.Send(command);
 
-            HttpContext.Response.Cookies.Append("creeper", token);
+            HttpContext.Response.Cookies.Append("creeper", vm.AccessToken);
 
-            return Ok(token);
+            return Ok(vm);
         }
         [Authorize(Roles = "Guest")]
         [Route("send-verify")]

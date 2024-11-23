@@ -8,13 +8,13 @@ namespace Ykotika.Application.Entities.User.Commands.Login
         IYkotikaDbContext dbContext,
         IJwtProvider jwtProvider,
         IPasswordHasher passwordHasher)
-        : IRequestHandler<LoginCommand, string>
+        : IRequestHandler<LoginCommand, LoginViewModel>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
         private readonly IJwtProvider _jwtProvider = jwtProvider;
         private readonly IPasswordHasher _passwordHasher = passwordHasher;
 
-        public async Task<string> Handle(LoginCommand request, CancellationToken cancellationToken)
+        public async Task<LoginViewModel> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
             var user = await
                 _dbContext
@@ -33,7 +33,7 @@ namespace Ykotika.Application.Entities.User.Commands.Login
 
             var token = _jwtProvider.GenerateAccessToken(user);
 
-            return token;
+            return new LoginViewModel { AccessToken = token };
         }
     }
 }

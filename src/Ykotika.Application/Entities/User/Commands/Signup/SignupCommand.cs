@@ -2,7 +2,7 @@
 
 namespace Ykotika.Application.Entities.User.Commands.Signup
 {
-    public class SignupCommand : IRequest<string>
+    public class SignupCommand : IRequest<SignupViewModel>
     {
         public required string Name { get; set; }
         public required string Email { get; set; }
