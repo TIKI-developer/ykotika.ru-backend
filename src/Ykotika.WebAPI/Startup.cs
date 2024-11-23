@@ -22,9 +22,9 @@ namespace Ykotika.WebAPI
                 config.AddProfile(new AssemblyMappingProfile(typeof(YkotikaDbContext).Assembly));
             });
 
-            services.AddApiAuthentication(Configuration);
             services.AddPersistence(Configuration);
             services.AddSecurity(Configuration);
+            services.AddApiAuthentication();
             services.AddApplication();
             services.AddControllers();
 
