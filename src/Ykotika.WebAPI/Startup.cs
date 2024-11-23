@@ -49,7 +49,7 @@ namespace Ykotika.WebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
+            if (env.IsProduction() || env.IsProduction()) 
             {
                 app.UseCustomExceptionHandler();
             }

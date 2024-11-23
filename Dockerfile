@@ -6,9 +6,6 @@ WORKDIR /src
 
 # Копируем всю директорию с исходным кодом в контейнер
 COPY src/ ./
-# Устанавливаем переменную окружения для Development
-ENV ASPNETCORE_ENVIRONMENT Development
-
 # Очищаем проект перед сборкой
 RUN dotnet clean Ykotika.sln
 
@@ -26,9 +23,6 @@ WORKDIR /app
 
 # Копируем собранное приложение из стадии сборки
 COPY --from=build /app ./
-
-# Устанавливаем переменную окружения для Development в контейнере
-ENV ASPNETCORE_ENVIRONMENT Development
 
 # Открываем порт для приложения
 EXPOSE 8080
