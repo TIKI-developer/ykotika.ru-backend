@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Ykotika.Application.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace Ykotika.Persistence
 {

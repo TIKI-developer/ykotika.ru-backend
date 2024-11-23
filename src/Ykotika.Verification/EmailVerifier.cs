@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Net.Mail;
-using Ykotika.Application.Interfaces;
 
 namespace Ykotika.Verification
 {

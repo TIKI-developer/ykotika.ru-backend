@@ -12,8 +12,8 @@ namespace Ykotika.WebAPI.Controllers
         protected IMediator Mediator =>
             _mediator ??= HttpContext.RequestServices.GetService<IMediator>();
 
-        internal Guid UserId => !User.Identity.IsAuthenticated 
-            ? Guid.Empty 
+        internal Guid UserId => !User.Identity.IsAuthenticated
+            ? Guid.Empty
             : Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
         internal string UserEmail => !User.Identity.IsAuthenticated

@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using Ykotika.Application.Common.Behaviors;
 using System.Reflection;
+using Ykotika.Application.Common.Behaviors;
 using Ykotika.Application.Validation;
 
 namespace Ykotika.Application

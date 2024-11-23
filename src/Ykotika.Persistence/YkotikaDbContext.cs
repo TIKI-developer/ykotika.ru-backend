@@ -8,7 +8,7 @@ namespace Ykotika.Persistence
     public class YkotikaDbContext(DbContextOptions<YkotikaDbContext> options) : DbContext(options), IYkotikaDbContext
     {
         public DbSet<UserModel> Users { get; set; }
-        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new UserConfiguration());
