@@ -8,10 +8,10 @@ WORKDIR /src
 COPY src/ ./
 
 # Восстанавливаем зависимости всех проектов
-RUN dotnet restore ykotika.sln
+RUN dotnet restore Ykotika.sln
 
 # Сборка проекта
-RUN dotnet publish ykotika.WebAPI/ykotika.WebAPI.csproj -c Release -o /app
+RUN dotnet publish Ykotika.WebAPI/Ykotika.WebAPI.csproj -c Release -o /app
 
 # Используем официальный образ .NET Runtime для запуска приложения (с .NET 8)
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
@@ -27,4 +27,4 @@ EXPOSE 8080
 EXPOSE 8081
 
 # Указываем команду для запуска веб-приложения
-ENTRYPOINT ["dotnet", "ykotika.WebAPI.dll"]
+ENTRYPOINT ["dotnet", "Ykotika.WebAPI.dll"]
