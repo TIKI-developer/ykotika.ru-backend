@@ -35,9 +35,9 @@ namespace Ykotika.WebAPI
                     policy.AllowAnyHeader();
                     policy.AllowAnyMethod();
                     policy.AllowAnyOrigin();
-                    //policy.WithOrigins("https://infinite-ellipse-ykotika-ru-frontend-9e75.twc1.net",
-                    //                   "https://infinite-ellipse-ykotika-ru-backend-869f.twc1.net")
-                    //.AllowCredentials();
+                    policy.WithOrigins("https://infinite-ellipse-ykotika-ru-frontend-9e75.twc1.net",
+                                       "https://infinite-ellipse-ykotika-ru-backend-869f.twc1.net")
+                    .AllowCredentials();
                 });
             });
             services.AddSwaggerGen();
