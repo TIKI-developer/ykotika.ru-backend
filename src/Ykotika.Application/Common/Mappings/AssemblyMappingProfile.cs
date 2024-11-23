@@ -12,7 +12,7 @@ namespace Ykotika.Application.Common.Mappings
         {
             var types = assembly.GetExportedTypes()
                 .Where(type => type.GetInterfaces()
-                    .Any(i => i.IsGenericType && 
+                    .Any(i => i.IsGenericType &&
                     i.GetGenericTypeDefinition() == typeof(IMapWith<>)))
                 .ToList();
             foreach (var type in types)

@@ -79,7 +79,7 @@ namespace Ykotika.Security
             }
             catch
             {
-                return false; 
+                return false;
             }
 
             if (!_jwtSecurityTokenHandler.CanReadToken(decryptedToken))
@@ -120,7 +120,7 @@ namespace Ykotika.Security
         {
             using var aes = Aes.Create();
             aes.Key = Encoding.UTF8.GetBytes(_options.SecretKey.PadRight(32).Substring(0, 32));
-            aes.IV = Encoding.UTF8.GetBytes(AES_IV.PadRight(16).Substring(0, 16)); 
+            aes.IV = Encoding.UTF8.GetBytes(AES_IV.PadRight(16).Substring(0, 16));
 
             using var encryptor = aes.CreateEncryptor();
             var tokenBytes = Encoding.UTF8.GetBytes(token);
@@ -133,7 +133,7 @@ namespace Ykotika.Security
         {
             using var aes = Aes.Create();
             aes.Key = Encoding.UTF8.GetBytes(_options.SecretKey.PadRight(32).Substring(0, 32));
-            aes.IV = Encoding.UTF8.GetBytes(AES_IV.PadRight(16).Substring(0, 16)); 
+            aes.IV = Encoding.UTF8.GetBytes(AES_IV.PadRight(16).Substring(0, 16));
 
             using var decryptor = aes.CreateDecryptor();
             var encryptedBytes = Convert.FromBase64String(encryptedToken);

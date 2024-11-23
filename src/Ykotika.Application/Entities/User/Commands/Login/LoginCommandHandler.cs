@@ -5,9 +5,9 @@ using Ykotika.Application.Interfaces;
 namespace Ykotika.Application.Entities.User.Commands.Login
 {
     public class LoginCommandHandler(
-        IYkotikaDbContext dbContext, 
+        IYkotikaDbContext dbContext,
         IJwtProvider jwtProvider,
-        IPasswordHasher passwordHasher) 
+        IPasswordHasher passwordHasher)
         : IRequestHandler<LoginCommand, string>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
@@ -19,7 +19,7 @@ namespace Ykotika.Application.Entities.User.Commands.Login
             var user = await
                 _dbContext
                 .Users
-                .FirstOrDefaultAsync(u => u.Email ==  request.Email, cancellationToken);
+                .FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
 
             if (user == null || !_passwordHasher.Verify(request.Password, user.PasswordHash))
             {

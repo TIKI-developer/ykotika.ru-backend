@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Ykotika.Application.Interfaces;
-using Ykotika.WebAPI.Models;
 using Ykotika.Application.Entities.User.Commands.Login;
 using Ykotika.Application.Entities.User.Commands.Signup;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Ykotika.Application.Entities.User.Commands.VerifyEmail;
+using Ykotika.Application.Interfaces;
+using Ykotika.WebAPI.Models;
 
 namespace Ykotika.WebAPI.Controllers
 {

@@ -1,6 +1,6 @@
-﻿using System.Net;
+﻿using FluentValidation;
+using System.Net;
 using System.Text.Json;
-using FluentValidation;
 using Ykotika.Application.Common.Exceptions;
 
 namespace Ykotika.WebAPI.Middleware
@@ -18,7 +18,7 @@ namespace Ykotika.WebAPI.Middleware
             {
                 await _next(context);
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 await HandleExceptionAsync(context, exception);
             }
@@ -28,7 +28,7 @@ namespace Ykotika.WebAPI.Middleware
         {
             var code = HttpStatusCode.InternalServerError;
             var result = string.Empty;
-            switch(exception)
+            switch (exception)
             {
                 case ValidationException validationException:
                     code = HttpStatusCode.BadRequest;

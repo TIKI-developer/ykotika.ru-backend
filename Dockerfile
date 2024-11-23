@@ -6,7 +6,6 @@ WORKDIR /src
 
 # Копируем всю директорию с исходным кодом в контейнер
 COPY src/ ./
-
 # Устанавливаем переменную окружения для Development
 ENV ASPNETCORE_ENVIRONMENT Development
 
