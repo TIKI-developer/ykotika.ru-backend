@@ -14,7 +14,7 @@ ENV ASPNETCORE_ENVIRONMENT Development
 RUN dotnet clean Ykotika.sln
 
 # Сборка проекта
-RUN dotnet build Ykotika.sln -c Release
+RUN dotnet build Ykotika.sln -c Debug
 
 # Публикуем проект
 RUN dotnet publish Ykotika.WebAPI/Ykotika.WebAPI.csproj -c Release -o /app
