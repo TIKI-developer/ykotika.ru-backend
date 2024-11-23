@@ -6,5 +6,6 @@ namespace Ykotika.Application.Interfaces
     {
         string GenerateAccessToken(UserModel user);
         string GenerateEmailVerificationToken(Guid userId, string userEmail);
+        bool VerifyEmailToken(string token, Guid userId, string userEmail);
     }
 }

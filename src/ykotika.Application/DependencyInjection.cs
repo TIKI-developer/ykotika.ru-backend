@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Ykotika.Application.Common.Behaviors;
 using System.Reflection;
+using Ykotika.Application.Validation;
 
 namespace Ykotika.Application
 {
@@ -17,17 +18,16 @@ namespace Ykotika.Application
             services.AddTransient(typeof(IPipelineBehavior<,>),
                 typeof(ValidationBehavior<,>));
 
-            // Код для валидации (потребуется в дальнейшем)
-            //var baseType = typeof(ValidationRules); 
-            //var implementationTypes = AppDomain.CurrentDomain.GetAssemblies()
-            //    .SelectMany(assembly => assembly.GetTypes())
-            //    .Where(type => baseType.IsAssignableFrom(type) && !type.IsAbstract);
+            var baseType = typeof(ValidationRules);
+            var implementationTypes = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(assembly => assembly.GetTypes())
+                .Where(type => baseType.IsAssignableFrom(type) && !type.IsAbstract);
 
-            //foreach (var implementationType in implementationTypes)
-            //{
-            //    services.AddTransient(baseType, implementationType);
-            //    services.AddTransient(implementationType);
-            //}
+            foreach (var implementationType in implementationTypes)
+            {
+                services.AddTransient(baseType, implementationType);
+                services.AddTransient(implementationType);
+            }
 
             return services;
         }

@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Folder Include="Entities\User\Queries\" />
-    <Folder Include="Validation\" />
   </ItemGroup>
 
   <ItemGroup>

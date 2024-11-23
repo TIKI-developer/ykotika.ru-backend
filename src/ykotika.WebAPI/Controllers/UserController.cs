@@ -70,15 +70,16 @@ namespace Ykotika.WebAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> VerifyEmail([FromQuery] string token)
         {
-            // TODO: Добавить проверку токена, плюс нужно чтобы пользователь вошел в аккаунт заново, либо возвращать ему новый токен
-            await Task.Run(() =>
+            if (!_jwtProvider.VerifyEmailToken(token, UserId, UserEmail))
             {
-                Console.WriteLine(token);
-            });
+                return BadRequest("Invalid token!");
+            }
+
             var command = new VerifyEmailCommand
             { UserId = UserId };
 
             await Mediator.Send(command);
+
 
             return Ok();
         }
