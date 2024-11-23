@@ -49,8 +49,11 @@ namespace Ykotika.WebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseCustomExceptionHandler();
+            }
             app.UseStaticFiles();
-            app.UseCustomExceptionHandler();
             app.UseHttpsRedirection();
             app.UseCors("AllowSpecificOrigin");
             app.UseSwagger();
