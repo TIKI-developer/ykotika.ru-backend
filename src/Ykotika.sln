@@ -9,15 +9,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{D250A60F-8360-4EF6-B16C-453256A5155D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ykotika.Domain", "ykotika.Domain\Ykotika.Domain.csproj", "{FB3449F0-6756-42C3-9AB7-C5BA963B586D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ykotika.Domain", "Ykotika.Domain\Ykotika.Domain.csproj", "{FB3449F0-6756-42C3-9AB7-C5BA963B586D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ykotika.Application", "ykotika.Application\Ykotika.Application.csproj", "{E4F3F9E3-C425-4580-B0A3-F8B1D25B3C0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ykotika.Application", "Ykotika.Application\Ykotika.Application.csproj", "{E4F3F9E3-C425-4580-B0A3-F8B1D25B3C0F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ykotika.Persistence", "ykotika.Persistence\Ykotika.Persistence.csproj", "{A6693B42-1830-4014-927E-C4F7251448B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ykotika.Persistence", "Ykotika.Persistence\Ykotika.Persistence.csproj", "{A6693B42-1830-4014-927E-C4F7251448B7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ykotika.WebAPI", "ykotika.WebAPI\Ykotika.WebAPI.csproj", "{A2890909-5B90-43BA-BEEB-B400AFD83E13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ykotika.WebAPI", "Ykotika.WebAPI\Ykotika.WebAPI.csproj", "{A2890909-5B90-43BA-BEEB-B400AFD83E13}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ykotika.Security", "ykotika.Security\Ykotika.Security.csproj", "{8BE72AA7-19A1-4B88-9DF5-9648C2EF8787}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ykotika.Security", "Ykotika.Security\Ykotika.Security.csproj", "{8BE72AA7-19A1-4B88-9DF5-9648C2EF8787}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ykotika.Validation", "Ykotika.Validation\Ykotika.Validation.csproj", "{9CABBB26-C6A8-4298-A7D5-52EAEA421607}"
 EndProject
