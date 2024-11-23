@@ -17,7 +17,7 @@ RUN dotnet clean Ykotika.sln
 RUN dotnet build Ykotika.sln -c Debug
 
 # Публикуем проект
-RUN dotnet publish Ykotika.WebAPI/Ykotika.WebAPI.csproj -c Release -o /app
+RUN dotnet publish Ykotika.WebAPI/Ykotika.WebAPI.csproj -c Debug -o /app
 
 # Используем официальный образ .NET Runtime для запуска приложения (с .NET 8)
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
