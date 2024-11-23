@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ykotika.Domain\Ykotika.Domain.csproj" />
+    <ProjectReference Include="..\Ykotika.Domain\Ykotika.Domain.csproj" />
   </ItemGroup>
 
 </Project>
