@@ -7,10 +7,16 @@ WORKDIR /src
 # Копируем всю директорию с исходным кодом в контейнер
 COPY src/ ./
 
-# Восстанавливаем зависимости всех проектов
-RUN dotnet restore Ykotika.sln
+# Устанавливаем переменную окружения для Development
+ENV ASPNETCORE_ENVIRONMENT Development
+
+# Очищаем проект перед сборкой
+RUN dotnet clean Ykotika.sln
 
 # Сборка проекта
+RUN dotnet build Ykotika.sln -c Release
+
+# Публикуем проект
 RUN dotnet publish Ykotika.WebAPI/Ykotika.WebAPI.csproj -c Release -o /app
 
 # Используем официальный образ .NET Runtime для запуска приложения (с .NET 8)
@@ -20,7 +26,10 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 
 # Копируем собранное приложение из стадии сборки
-COPY --from=build /app .
+COPY --from=build /app ./
+
+# Устанавливаем переменную окружения для Development в контейнере
+ENV ASPNETCORE_ENVIRONMENT Development
 
 # Открываем порт для приложения
 EXPOSE 8080
