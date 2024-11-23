@@ -19,9 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ykotika.Application\Ykotika.Application.csproj" />
-    <ProjectReference Include="..\ykotika.Persistence\Ykotika.Persistence.csproj" />
-    <ProjectReference Include="..\ykotika.Security\Ykotika.Security.csproj" />
+    <ProjectReference Include="..\Ykotika.Application\Ykotika.Application.csproj" />
+    <ProjectReference Include="..\Ykotika.Persistence\Ykotika.Persistence.csproj" />
+    <ProjectReference Include="..\Ykotika.Security\Ykotika.Security.csproj" />
   </ItemGroup>
 
 </Project>
