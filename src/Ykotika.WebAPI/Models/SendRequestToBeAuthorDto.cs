@@ -12,12 +12,15 @@ namespace Ykotika.WebAPI.Models
         public required string PhoneNumber { get; set; }
         public required string Socials { get; set; }
         public required string TellAboutYourself { get; set; }
-        public required Social WhichSocial { get; set; }
+        public required string WhichSocial { get; set; }
         public required bool ConfirmedOffer { get; set; }
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<SendRequestToBeAuthorDto, SendRequestToBeCommand>();
+            profile.CreateMap<SendRequestToBeAuthorDto, SendRequestToBeCommand>()
+
+                .ForMember(to => to.WhichSocial,
+                opt => opt.MapFrom(from => (Social)Enum.Parse(typeof(Social), from.WhichSocial)));
         }
     }
 }
