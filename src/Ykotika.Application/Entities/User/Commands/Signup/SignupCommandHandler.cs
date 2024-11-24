@@ -33,7 +33,8 @@ namespace Ykotika.Application.Entities.User.Commands.Signup
                     Id = Guid.NewGuid(),
                     Name = request.Name,
                     Email = request.Email,
-                    PasswordHash = _passwordHasher.Generate(request.Password)
+                    PasswordHash = _passwordHasher.Generate(request.Password),
+                    ConfirmedPolicy = true
                 };
 
                 await _dbContext.Users.AddAsync(user, cancellationToken);
@@ -42,7 +43,7 @@ namespace Ykotika.Application.Entities.User.Commands.Signup
             }
             else
             {
-                bool userIsGuest = existUser!.Role == UserRole.Guest;
+                bool userIsGuest = existUser!.Roles.Contains(UserRole.Guest);
 
                 if (userIsGuest)
                 {

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Ykotika.Security;
+using Ykotika.WebAPI.Constants;
 
 namespace Ykotika.WebApi.Extensions
 {
@@ -42,8 +43,9 @@ namespace Ykotika.WebApi.Extensions
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("RequireGuestRole", policy => policy.RequireRole("Guest"));
-                options.AddPolicy("RequireDefaultRole", policy => policy.RequireRole("Default"));
+                options.AddPolicy("RequireGuestRole", policy => policy.RequireRole(Roles.GUEST_ROLE));
+                options.AddPolicy("RequireCustomerRole", policy => policy.RequireRole(Roles.CUSTOMER_ROLE));
+                options.AddPolicy("RequireAuthorRole", policy => policy.RequireRole(Roles.AUTHOR_ROLE));
             });
         }
     }

@@ -1,17 +1,19 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Ykotika.Application.Entities.Author.Commands;
 using Ykotika.Application.Entities.User.Commands.Login;
 using Ykotika.Application.Entities.User.Commands.Signup;
 using Ykotika.Application.Entities.User.Commands.VerifyEmail;
 using Ykotika.Application.Interfaces;
+using Ykotika.WebAPI.Constants;
 using Ykotika.WebAPI.Models;
 
 namespace Ykotika.WebAPI.Controllers
 {
     [Route("users")]
-    public class UserController(
-        IMapper mapper,
+    public class UserController
+        (IMapper mapper,
         IEmailVerifier emailVerifier,
         IJwtProvider jwtProvider) : BaseController
     {
@@ -44,7 +46,8 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok(vm);
         }
-        [Authorize(Roles = "Guest")]
+
+        [Authorize(Roles = $"{Roles.GUEST_ROLE}")]
         [Route("send-verify")]
         [HttpPost]
         public async Task<IActionResult> SendVerifyEmailMessage()
@@ -64,7 +67,8 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok();
         }
-        [Authorize(Roles = "Guest")]
+
+        [Authorize(Roles = $"{Roles.GUEST_ROLE}")]
         [Route("verify")]
         [HttpGet]
         public async Task<IActionResult> VerifyEmail([FromQuery] string token)
@@ -79,6 +83,18 @@ namespace Ykotika.WebAPI.Controllers
 
             await Mediator.Send(command);
 
+
+            return Ok();
+        }
+
+        [Authorize(Roles = $"{Roles.CUSTOMER_ROLE}")]
+        [Route("send-request-to-be-author")]
+        [HttpPut]
+        public async Task<IActionResult> SendRequestToBeAuthor([FromBody] SendRequestToBeAuthorDto dto)
+        {
+            var command = _mapper.Map<SendRequestToBeCommand>(dto);
+            command.UserId = UserId;
+            await Mediator.Send(command);
 
             return Ok();
         }

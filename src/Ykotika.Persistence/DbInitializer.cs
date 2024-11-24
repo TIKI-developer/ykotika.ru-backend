@@ -4,7 +4,7 @@
     {
         public static void Initialize(YkotikaDbContext restaurantDbContext)
         {
-            //restaurantDbContext.Database.EnsureDeleted();
+            restaurantDbContext.Database.EnsureDeleted();
             var created = restaurantDbContext.Database.EnsureCreated();
         }
     }

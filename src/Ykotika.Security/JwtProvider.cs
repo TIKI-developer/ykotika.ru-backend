@@ -21,8 +21,12 @@ namespace Ykotika.Security
             {
                 new(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new(ClaimTypes.Email, user.Email.ToString()),
-                new(ClaimTypes.Role, user.Role.ToString())
             };
+
+            foreach (var role in user.Roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role.ToString()));
+            }
 
             var signingCredentials = new SigningCredentials(
 
