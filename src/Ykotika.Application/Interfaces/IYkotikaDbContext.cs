@@ -8,6 +8,8 @@ namespace Ykotika.Application.Interfaces
         DbSet<UserModel> Users { get; set; }
         DbSet<AuthorModel> Authors { get; set; }
         DbSet<CustomerModel> Customers { get; set; }
+        DbSet<FileModel> Files { get; set; }
+
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }
