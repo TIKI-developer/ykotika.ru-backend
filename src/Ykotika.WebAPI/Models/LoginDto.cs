@@ -11,13 +11,7 @@ namespace Ykotika.WebAPI.Models
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<LoginDto, LoginCommand>()
-
-                .ForMember(to => to.Email,
-                opt => opt.MapFrom(from => from.Email))
-
-                .ForMember(to => to.Password,
-                opt => opt.MapFrom(from => from.Password));
+            profile.CreateMap<LoginDto, LoginCommand>();
         }
     }
 }

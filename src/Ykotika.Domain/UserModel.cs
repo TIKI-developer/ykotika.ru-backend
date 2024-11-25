@@ -2,20 +2,16 @@
 {
     public class UserModel
     {
-        public required Guid Id { get; set; }
+        public required Guid Id { get; init; }
         public required string Name { get; set; }
         public required string Email { get; set; }
         public required string PasswordHash { get; set; }
-        public DateTime CreatedAt { get; private set; }
-        public DateTime UpdatedAt { get; private set; }
-        public bool IsEmailVerified => Role != UserRole.Guest;
-        public virtual UserRole Role => UserRole.Guest;
+        public required bool ConfirmedPolicy { get; set; }
+        public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; private set; } = DateTime.UtcNow;
+        public List<UserRole> Roles { get; set; } = [UserRole.Guest];
+        public bool IsEmailVerified => !Roles.Contains(UserRole.Guest);
 
-        public UserModel()
-        {
-            CreatedAt = DateTime.UtcNow;
-            UpdatedAt = DateTime.UtcNow;
-        }
         public void MarkUpdated()
         {
             UpdatedAt = DateTime.UtcNow;
@@ -25,6 +21,7 @@
     public enum UserRole
     {
         Guest,
-        Default
+        Customer,
+        Author
     }
 }

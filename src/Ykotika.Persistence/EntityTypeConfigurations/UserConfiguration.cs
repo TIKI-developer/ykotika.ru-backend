@@ -16,9 +16,6 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
             builder
                 .Property(e => e.Email)
                 .HasMaxLength(256);
-            builder
-                .HasDiscriminator<string>("UserType")
-                .HasValue<DefaultUserModel>("Default");
         }
     }
 }

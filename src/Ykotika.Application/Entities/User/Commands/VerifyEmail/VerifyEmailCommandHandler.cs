@@ -6,34 +6,40 @@ using Ykotika.Domain;
 
 namespace Ykotika.Application.Entities.User.Commands.VerifyEmail
 {
-    public class VerifyEmailCommandHandler(IYkotikaDbContext dbContext) : IRequestHandler<VerifyEmailCommand>
+    public class VerifyEmailCommandHandler
+        (IYkotikaDbContext dbContext)
+        :
+        IRequestHandler<VerifyEmailCommand>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
 
         public async Task Handle(VerifyEmailCommand request, CancellationToken cancellationToken)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == request.UserId, cancellationToken);
+            var user = await
+                _dbContext
+                .Users
+                .FirstOrDefaultAsync(u => u.Id == request.UserId, cancellationToken);
 
             if (user == null)
             {
                 throw new NotFoundException(nameof(UserModel), request.UserId);
             }
 
-            if (user is DefaultUserModel)
+            if (!user.Roles.Contains(UserRole.Guest))
             {
                 return;
             }
 
-            var defaultUser = new DefaultUserModel
+            var customer = new CustomerModel
             {
-                Id = user.Id,
-                Name = user.Name,
-                Email = user.Email,
-                PasswordHash = user.PasswordHash,
+                UserId = user.Id,
             };
 
-            _dbContext.Users.Remove(user);
-            _dbContext.Users.Add(defaultUser);
+            user.Roles.Remove(UserRole.Guest);
+            user.Roles.Add(UserRole.Customer);
+            user.MarkUpdated();
+
+            _dbContext.Customers.Add(customer);
 
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
