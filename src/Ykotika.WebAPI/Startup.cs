@@ -1,6 +1,9 @@
-﻿using System.Reflection;
+﻿using Microsoft.Extensions.FileProviders;
+using System.Reflection;
 using Ykotika.Application;
 using Ykotika.Application.Common.Mappings;
+using Ykotika.Application.Interfaces;
+using Ykotika.FileStorage;
 using Ykotika.Persistence;
 using Ykotika.Security;
 using Ykotika.WebApi.Extensions;
@@ -19,10 +22,11 @@ namespace Ykotika.WebAPI
             services.AddAutoMapper(config =>
             {
                 config.AddProfile(new AssemblyMappingProfile(Assembly.GetExecutingAssembly()));
-                config.AddProfile(new AssemblyMappingProfile(typeof(YkotikaDbContext).Assembly));
+                config.AddProfile(new AssemblyMappingProfile(typeof(IYkotikaDbContext).Assembly));
             });
 
             services.AddPersistence(Configuration);
+            services.AddFileStorage();
             services.AddSecurity(Configuration);
             services.AddApiAuthentication();
             services.AddApplication();
@@ -49,18 +53,24 @@ namespace Ykotika.WebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
-            if (env.IsProduction() || env.IsStaging()) 
+            if (env.IsProduction() || env.IsStaging())
             {
                 app.UseCustomExceptionHandler();
             }
-            app.UseStaticFiles();
+            string staticFilesPath = serviceProvider.GetService<IFileService>().BaseStaticFolder;
+            Console.WriteLine(staticFilesPath);
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(staticFilesPath),
+                RequestPath = "/static"
+            });
             app.UseHttpsRedirection();
             app.UseCors("AllowSpecificOrigin");
             app.UseSwagger();
             app.UseSwaggerUI(config =>
             {
                 config.RoutePrefix = string.Empty;
-                config.SwaggerEndpoint("swagger/v1/swagger.json", "Restaurant API");
+                config.SwaggerEndpoint("swagger/v1/swagger.json", "Ykotika API");
             });
             app.UseAuthentication();
             app.UseRouting();

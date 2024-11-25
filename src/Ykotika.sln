@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ykotika.Verification", "Yko
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ykotika.WebAPI", "Ykotika.WebAPI\Ykotika.WebAPI.csproj", "{C9571BF0-EDA8-498F-8FAB-7B280F62C525}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ykotika.FileStorage", "Ykotika.FileStorage\Ykotika.FileStorage.csproj", "{9298DEE2-9B7E-4E62-890B-4DB1C875DA5F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{C9571BF0-EDA8-498F-8FAB-7B280F62C525}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9571BF0-EDA8-498F-8FAB-7B280F62C525}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9571BF0-EDA8-498F-8FAB-7B280F62C525}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9298DEE2-9B7E-4E62-890B-4DB1C875DA5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9298DEE2-9B7E-4E62-890B-4DB1C875DA5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9298DEE2-9B7E-4E62-890B-4DB1C875DA5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9298DEE2-9B7E-4E62-890B-4DB1C875DA5F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,6 +75,7 @@ Global
 		{5EC486E5-06DA-48E6-B0B1-5B1EB3DF8E90} = {EB28710A-D892-40A6-BD35-B1CBCEAB62C7}
 		{2313D5B5-C74D-4496-888E-9A805D3261AD} = {EB28710A-D892-40A6-BD35-B1CBCEAB62C7}
 		{C9571BF0-EDA8-498F-8FAB-7B280F62C525} = {A44FA93E-0892-4C16-BC2F-454FA84FE375}
+		{9298DEE2-9B7E-4E62-890B-4DB1C875DA5F} = {EB28710A-D892-40A6-BD35-B1CBCEAB62C7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AEB7AB46-486C-466B-BBD3-A6321F825590}
