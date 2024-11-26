@@ -21,6 +21,11 @@ namespace Ykotika.WebAPI.Controllers
         private readonly IMapper _mapper = mapper;
         private readonly IEmailVerifier _emailVerifier = emailVerifier;
         private readonly IJwtProvider _jwtProvider = jwtProvider;
+        private readonly CookieOptions _cookieOptions = new CookieOptions
+        {
+            SameSite = SameSiteMode.Strict,
+            Secure = false
+        };
 
         [Route("signup")]
         [HttpPost]
@@ -30,7 +35,9 @@ namespace Ykotika.WebAPI.Controllers
 
             var vm = await Mediator.Send(command);
 
-            HttpContext.Response.Cookies.Append("creeper", vm.AccessToken);
+
+
+            //HttpContext.Response.Cookies.Append("accessToken", vm.AccessToken);
 
             return Ok(vm);
         }
@@ -43,7 +50,7 @@ namespace Ykotika.WebAPI.Controllers
 
             var vm = await Mediator.Send(command);
 
-            HttpContext.Response.Cookies.Append("creeper", vm.AccessToken);
+            //HttpContext.Response.Cookies.Append("accessToken", vm.AccessToken);
 
             return Ok(vm);
         }
@@ -117,7 +124,7 @@ namespace Ykotika.WebAPI.Controllers
         public async Task<IActionResult> Logout()
         {
             await Task.Run(() => { 
-                HttpContext.Response.Cookies.Delete("creeper"); 
+                HttpContext.Response.Cookies.Delete("accessToken"); 
             }); 
 
             return Ok();
