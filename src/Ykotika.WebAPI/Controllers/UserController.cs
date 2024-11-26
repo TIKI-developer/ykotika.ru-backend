@@ -56,13 +56,17 @@ namespace Ykotika.WebAPI.Controllers
             await Task.Run(() =>
             {
                 var token = _jwtProvider.GenerateEmailVerificationToken(UserId, UserEmail);
-                Console.WriteLine(token);
-                var confirmationLink = Url.Action(
-                    "VerifyEmail",
-                    "User",
-                    new { token = token! },
-                    protocol: Request.Scheme
-                );
+
+                // Without FrontEnd
+                //Console.WriteLine(token);
+                //var confirmationLink = Url.Action(
+                //    "VerifyEmail",
+                //    "User",
+                //    new { token = token! },
+                //    protocol: Request.Scheme
+                //);
+
+                var confirmationLink = $"https://infinite-ellipse-ykotika-ru-frontend-9e75.twc1.net/auth/new-verification?token={token}";
                 _emailVerifier.SendVerificationLink(UserEmail, confirmationLink!);
             });
 
@@ -99,7 +103,6 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok();
         }
-        [Authorize(Roles = $"{Roles.CUSTOMER_ROLE}")]
         [HttpGet("profile")]
         public async Task<ActionResult<ProfileViewModel>> GetProfile()
         {
@@ -108,7 +111,6 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok(vm);
         }
-        [Authorize(Roles = $"{Roles.CUSTOMER_ROLE}")]
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
