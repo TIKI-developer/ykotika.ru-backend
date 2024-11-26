@@ -5,6 +5,7 @@ using Ykotika.Application.Entities.Author.Commands;
 using Ykotika.Application.Entities.User.Commands.Login;
 using Ykotika.Application.Entities.User.Commands.Signup;
 using Ykotika.Application.Entities.User.Commands.VerifyEmail;
+using Ykotika.Application.Entities.User.Queries.GetProfile;
 using Ykotika.Application.Interfaces;
 using Ykotika.WebAPI.Constants;
 using Ykotika.WebAPI.Models;
@@ -95,6 +96,25 @@ namespace Ykotika.WebAPI.Controllers
             var command = _mapper.Map<SendRequestToBeCommand>(dto);
             command.UserId = UserId;
             await Mediator.Send(command);
+
+            return Ok();
+        }
+        [Authorize(Roles = $"{Roles.CUSTOMER_ROLE}")]
+        [HttpGet("profile")]
+        public async Task<ActionResult<ProfileViewModel>> GetProfile()
+        {
+            var query = new GetProfileQuery { Id = UserId };
+            var vm = await Mediator.Send(query);
+
+            return Ok(vm);
+        }
+        [Authorize(Roles = $"{Roles.CUSTOMER_ROLE}")]
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await Task.Run(() => { 
+                HttpContext.Response.Cookies.Delete("creeper"); 
+            }); 
 
             return Ok();
         }
