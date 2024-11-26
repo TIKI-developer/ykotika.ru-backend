@@ -65,8 +65,8 @@ namespace Ykotika.WebAPI.Controllers
                 //    new { token = token! },
                 //    protocol: Request.Scheme
                 //);
-
-                var confirmationLink = $"https://infinite-ellipse-ykotika-ru-frontend-9e75.twc1.net/auth/new-verification?token={token}";
+                var encodeToken = Uri.EscapeDataString(token);
+                var confirmationLink = $"https://infinite-ellipse-ykotika-ru-frontend-9e75.twc1.net/auth/new-verification?token={encodeToken}";
                 _emailVerifier.SendVerificationLink(UserEmail, confirmationLink!);
             });
 
@@ -78,7 +78,8 @@ namespace Ykotika.WebAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> VerifyEmail([FromQuery] string token)
         {
-            if (!_jwtProvider.VerifyEmailToken(token, UserId, UserEmail))
+            var decodedToken = Uri.UnescapeDataString(token);
+            if (!_jwtProvider.VerifyEmailToken(decodedToken, UserId, UserEmail))
             {
                 return BadRequest("Invalid token!");
             }
@@ -102,6 +103,7 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok();
         }
+
         [HttpGet("profile")]
         public async Task<ActionResult<ProfileViewModel>> GetProfile()
         {
@@ -110,6 +112,7 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok(vm);
         }
+
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
