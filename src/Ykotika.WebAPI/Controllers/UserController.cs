@@ -86,10 +86,9 @@ namespace Ykotika.WebAPI.Controllers
             var command = new VerifyEmailCommand
             { UserId = UserId };
 
-            await Mediator.Send(command);
+            var vm = await Mediator.Send(command);
 
-
-            return Ok();
+            return Ok(vm);
         }
 
         [Authorize(Roles = $"{Roles.CUSTOMER_ROLE}")]
