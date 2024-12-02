@@ -15,7 +15,7 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
                 .Property(e => e.Name)
                 .HasMaxLength(100);
             builder
-                .HasMany(e => e.Fields)
+                .HasMany(e => e.Inputs)
                 .WithOne(e => e.Form);
             builder
                 .Property(e => e.CreatedAt)

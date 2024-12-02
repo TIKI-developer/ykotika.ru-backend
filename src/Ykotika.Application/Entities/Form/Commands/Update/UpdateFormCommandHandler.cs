@@ -21,12 +21,12 @@ namespace Ykotika.Application.Entities.Form.Commands.Update
             var form = await
                 _dbContext
                 .Forms
-                .Include(f => f.Fields)
+                .Include(f => f.Inputs)
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(FormModel), request.Id);
 
             form.Name = request.Name ?? form.Name;
-            form.Fields = _mapper.Map<List<FormInputModel>>(request.Fields) ?? form.Fields;
+            form.Inputs = _mapper.Map<List<FormInputModel>>(request.Fields) ?? form.Inputs;
 
             await _dbContext.SaveChangesAsync(cancellationToken);
         }

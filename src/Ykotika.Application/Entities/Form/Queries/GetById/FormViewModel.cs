@@ -14,7 +14,7 @@ namespace Ykotika.Application.Entities.Form.Queries.GetById
         {
             profile.CreateMap<FormModel, FormViewModel>()
                 .ForMember(to => to.Fields,
-                opt => opt.MapFrom(from => from.Fields));
+                opt => opt.MapFrom(from => from.Inputs));
         }
     }
 }

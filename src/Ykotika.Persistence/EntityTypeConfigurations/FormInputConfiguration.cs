@@ -13,7 +13,7 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
                 .HasKey(e => e.Id);
             builder
                 .HasOne(e => e.Form)
-                .WithMany(e => e.Fields);
+                .WithMany(e => e.Inputs);
             builder
                 .Property(e => e.Label)
                 .HasMaxLength(255);

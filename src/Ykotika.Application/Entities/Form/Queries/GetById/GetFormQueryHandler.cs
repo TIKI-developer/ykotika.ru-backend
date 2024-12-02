@@ -21,7 +21,7 @@ namespace Ykotika.Application.Entities.Form.Queries.GetById
             var form = await
                 _dbContext
                 .Forms
-                .Include(f => f.Fields)
+                .Include(f => f.Inputs)
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(FormModel), request.Id);
 

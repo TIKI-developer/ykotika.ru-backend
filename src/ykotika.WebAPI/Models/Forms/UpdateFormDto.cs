@@ -2,7 +2,7 @@
 using Ykotika.Application.Common.Mappings;
 using Ykotika.Application.Entities.Form.Commands.Update;
 
-namespace Ykotika.WebAPI.Models
+namespace Ykotika.WebAPI.Models.Forms
 {
     public class UpdateFormDto : IMapWith<UpdateFormCommand>
     {

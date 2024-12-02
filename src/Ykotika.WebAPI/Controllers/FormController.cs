@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Ykotika.Application.Entities.Form.Commands.AddInput;
 using Ykotika.Application.Entities.Form.Commands.Create;
 using Ykotika.Application.Entities.Form.Commands.Delete;
+using Ykotika.Application.Entities.Form.Commands.DeleteInput;
 using Ykotika.Application.Entities.Form.Commands.Update;
+using Ykotika.Application.Entities.Form.Commands.UpdateInput;
 using Ykotika.Application.Entities.Form.Queries.GetById;
 using Ykotika.Application.Entities.Form.Queries.GetList;
-using Ykotika.WebAPI.Models;
+using Ykotika.WebAPI.Models.Forms;
 
 namespace Ykotika.WebAPI.Controllers
 {
@@ -58,18 +61,29 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpPost("add-input/{formId}")]
-        public async Task<ActionResult<Guid>> AddInput(Guid formId)
+        public async Task<ActionResult<Guid>> AddInput(Guid formId, [FromBody] AddInputDto dto)
         {
-            return Ok(Guid.Empty);
+            var command = _mapper.Map<AddInputCommand>(dto);
+            command.FormId = formId;
+            var id = await Mediator.Send(command);
+
+            return Ok(id);
         }
         [HttpPut("update-input/{id}")]
-        public async Task<IActionResult> UpdateInput(Guid id)
+        public async Task<IActionResult> UpdateInput(Guid id, [FromBody] UpdateInputDto dto)
         {
+            var command = _mapper.Map<UpdateInputCommand>(dto);
+            command.Id = id;
+            await Mediator.Send(command);
+
             return Ok();
         }
         [HttpDelete("delete-input/{id}")]
         public async Task<IActionResult> RemoveInput(Guid id)
         {
+            var command = new DeleteInputCommand { Id = id };
+            await Mediator.Send(command);
+
             return Ok();
         }
         
