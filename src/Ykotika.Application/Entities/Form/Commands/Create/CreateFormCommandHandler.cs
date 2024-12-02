@@ -16,25 +16,14 @@ namespace Ykotika.Application.Entities.Form.Commands.Create
 
         public async Task<Guid> Handle(CreateFormCommand request, CancellationToken cancellationToken)
         {
-            request.Fields.ForEach(f => Console.WriteLine(f));
-
-            var fields = _mapper.Map<List<FormInputModel>>(request.Fields);
-
             var form = new FormModel
             {
                 Id = Guid.NewGuid(),
-                Name = request.Name,
-                Fields = fields,
+                Name = "Форма",
+                Fields = null,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
             };
-
-            foreach (var field in form.Fields) 
-            { 
-                field.Id = Guid.NewGuid();
-                field.Form = form;
-                await _dbContext.FormInputs.AddAsync(field, cancellationToken);
-            }
 
             await _dbContext.Forms.AddAsync(form, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
