@@ -4,23 +4,24 @@ using Ykotika.Application.Common.Exceptions;
 using Ykotika.Application.Interfaces;
 using Ykotika.Domain;
 
-namespace Ykotika.Application.Entities.Form.Commands.DeleteInput
+namespace Ykotika.Application.Entities.FormRecord.Commands.Delete
 {
-    public class DeleteInputCommandHandler
+    public class DeleteFormRecordCommandHandler
         (IYkotikaDbContext dbContext)
         :
-        IRequestHandler<DeleteInputCommand>
+        IRequestHandler<DeleteFormRecordCommand>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
 
-        public async Task Handle(DeleteInputCommand request, CancellationToken cancellationToken)
+        public async Task Handle(DeleteFormRecordCommand request, CancellationToken cancellationToken)
         {
-            var input = await
+            var formRecord = await
                 _dbContext
-                .FormInputs
+                .FormRecords
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
-                ?? throw new NotFoundException(nameof(FormInputModel), request.Id);
-            _dbContext.FormInputs.Remove(input);
+                ?? throw new NotFoundException(nameof(FormRecordModel), request.Id);
+
+            _dbContext.FormRecords.Remove(formRecord);
 
             await _dbContext.SaveChangesAsync(cancellationToken);
         }

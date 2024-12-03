@@ -9,8 +9,8 @@ namespace Ykotika.Application.Entities.Form.Queries.GetById
 {
     public class GetFormQueryHandler
         (IYkotikaDbContext dbContext,
-        IMapper mapper) 
-        : 
+        IMapper mapper)
+        :
         IRequestHandler<GetFormQuery, FormViewModel>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;

@@ -4,7 +4,7 @@ using Ykotika.Domain;
 
 namespace Ykotika.Persistence.EntityTypeConfigurations
 {
-    public class FormConfiguration 
+    public class FormConfiguration
         : IEntityTypeConfiguration<FormModel>
     {
         public void Configure(EntityTypeBuilder<FormModel> builder)

@@ -58,6 +58,7 @@ namespace Ykotika.WebAPI
             string staticFilesPath = serviceProvider.GetService<IFileService>().BaseStaticFolder;
             app.UseRouting();
             app.UseCors("AllowSpecificOrigin");
+            app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(staticFilesPath),
@@ -69,7 +70,9 @@ namespace Ykotika.WebAPI
             {
                 config.RoutePrefix = string.Empty;
                 config.SwaggerEndpoint("swagger/v1/swagger.json", "Ykotika API");
+                config.InjectStylesheet("/swagger-ui/SwaggerDark.css");
             });
+
             app.UseAuthentication();
             app.UseAuthorization();
 

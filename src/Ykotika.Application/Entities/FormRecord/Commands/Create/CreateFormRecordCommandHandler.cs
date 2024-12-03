@@ -4,16 +4,16 @@ using Ykotika.Application.Common.Exceptions;
 using Ykotika.Application.Interfaces;
 using Ykotika.Domain;
 
-namespace Ykotika.Application.Entities.Form.Record
+namespace Ykotika.Application.Entities.FormRecord.Commands.Create
 {
-    public class CreateRecordCommandHandler
+    public class CreateFormRecordCommandHandler
         (IYkotikaDbContext dbContext)
-        : 
-        IRequestHandler<CreateRecordCommand, Guid>
+        :
+        IRequestHandler<CreateFormRecordCommand, Guid>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
 
-        public async Task<Guid> Handle(CreateRecordCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(CreateFormRecordCommand request, CancellationToken cancellationToken)
         {
             var form = await
                 _dbContext
@@ -28,6 +28,14 @@ namespace Ykotika.Application.Entities.Form.Record
                 .FirstOrDefaultAsync(e => e.Id == request.UserId, cancellationToken)
                 ?? throw new NotFoundException(nameof(UserModel), request.UserId);
 
+            var formRecord = new FormRecordModel
+            {
+                Id = Guid.NewGuid(),
+                Form = form,
+                User = user,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
             foreach (var inputRecordRequest in request.InputRecords)
             {
                 var formInput = await
@@ -40,23 +48,18 @@ namespace Ykotika.Application.Entities.Form.Record
                 {
                     Id = Guid.NewGuid(),
                     FormInput = formInput,
+                    SubmittedFormData = formRecord,
                     Value = inputRecordRequest.Value
                 };
 
+                formRecord.InputRecords.Add(inputRecord);
+
+                await _dbContext.FormInputRecords.AddAsync(inputRecord, cancellationToken);
             }
 
-            var formRecord = new FormRecordModel
-            {
-                Id = Guid.NewGuid(),
-                Form = form,
-                User = user,
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            };
-
-
-            return Guid.Empty;
+            return formRecord.Id;
         }
     }
 }

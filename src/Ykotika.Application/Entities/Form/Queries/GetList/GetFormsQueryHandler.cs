@@ -8,8 +8,8 @@ namespace Ykotika.Application.Entities.Form.Queries.GetList
 {
     public class GetFormsQueryHandler
         (IYkotikaDbContext dbContext,
-        IMapper mapper) 
-        : 
+        IMapper mapper)
+        :
         IRequestHandler<GetFormsQuery, FormListViewModel>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;

@@ -7,11 +7,11 @@ namespace Ykotika.Application.Entities.Form.Commands.Create
 {
     public class CreateFormCommandHandler
         (IYkotikaDbContext dbContext,
-        IMapper mapper) 
-        : 
+        IMapper mapper)
+        :
         IRequestHandler<CreateFormCommand, Guid>
     {
-        private readonly IYkotikaDbContext _dbContext = dbContext; 
+        private readonly IYkotikaDbContext _dbContext = dbContext;
         private readonly IMapper _mapper = mapper;
 
         public async Task<Guid> Handle(CreateFormCommand request, CancellationToken cancellationToken)

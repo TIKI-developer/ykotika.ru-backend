@@ -7,10 +7,10 @@ using Ykotika.Domain;
 
 namespace Ykotika.Application.Entities.User.Queries.GetProfile
 {
-    public class GetProfileQueryHandler 
+    public class GetProfileQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
-        : 
+        :
         IRequestHandler<GetProfileQuery, ProfileViewModel>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
@@ -22,7 +22,7 @@ namespace Ykotika.Application.Entities.User.Queries.GetProfile
                 _dbContext
                 .Users
                 .FirstOrDefaultAsync(u => u.Id == request.Id, cancellationToken);
-    
+
             if (user == null)
             {
                 throw new NotFoundException(nameof(UserModel), request.Id);

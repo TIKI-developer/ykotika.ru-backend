@@ -8,7 +8,7 @@ namespace Ykotika.Application.Entities.Form.Commands.UpdateInput
 {
     public class UpdateInputCommandHandler
         (IYkotikaDbContext dbContext)
-        : 
+        :
         IRequestHandler<UpdateInputCommand>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
