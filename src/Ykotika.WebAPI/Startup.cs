@@ -36,9 +36,7 @@ namespace Ykotika.WebAPI
             {
                 options.AddPolicy("AllowSpecificOrigin", policy =>
                 {
-                    policy.WithOrigins("https://infinite-ellipse-ykotika-ru-frontend-9e75.twc1.net",
-                                       "https://infinite-ellipse-ykotika-ru-backend-869f.twc1.net",
-                                       "https://44a9-92-124-207-205.ngrok-free.app")
+                    policy.WithOrigins("https://277b-92-124-207-205.ngrok-free.app")
                     .AllowCredentials()
                     .AllowAnyHeader()
                     .AllowAnyMethod();
@@ -58,6 +56,7 @@ namespace Ykotika.WebAPI
                 app.UseCustomExceptionHandler();
             }
             string staticFilesPath = serviceProvider.GetService<IFileService>().BaseStaticFolder;
+            app.UseRouting();
             app.UseCors("AllowSpecificOrigin");
             app.UseStaticFiles(new StaticFileOptions
             {
@@ -72,7 +71,6 @@ namespace Ykotika.WebAPI
                 config.SwaggerEndpoint("swagger/v1/swagger.json", "Ykotika API");
             });
             app.UseAuthentication();
-            app.UseRouting();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

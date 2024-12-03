@@ -9,8 +9,8 @@ using Ykotika.WebAPI.Models.Forms;
 
 namespace Ykotika.WebAPI.Controllers
 {
-    [Route("submitted-forms")]
-    public class SubmittedFormController(IMapper mapper) : BaseController
+    [Route("forms/records")]
+    public class FormRecordsController(IMapper mapper) : BaseController
     {
         private readonly IMapper _mapper = mapper;
 

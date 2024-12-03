@@ -13,9 +13,9 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
                 .HasKey(e => e.Id);
             builder
                 .HasOne(e => e.SubmittedFormData)
-                .WithMany(e => e.FieldsData);
+                .WithMany(e => e.InputRecords);
             builder
-                .HasOne(e => e.FormField)
+                .HasOne(e => e.FormInput)
                 .WithMany(e => e.SubmittedFormFieldsData);
         }
     }

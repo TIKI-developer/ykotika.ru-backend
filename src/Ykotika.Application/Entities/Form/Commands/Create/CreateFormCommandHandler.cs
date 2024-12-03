@@ -16,7 +16,7 @@ namespace Ykotika.Application.Entities.Form.Commands.Create
 
         public async Task<Guid> Handle(CreateFormCommand request, CancellationToken cancellationToken)
         {
-            var inputs = _mapper.Map<List<FormInputModel>>(request.Fields);
+            var inputs = _mapper.Map<List<FormInputModel>>(request.Inputs);
             var form = new FormModel
             {
                 Id = Guid.NewGuid(),

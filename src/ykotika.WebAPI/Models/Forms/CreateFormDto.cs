@@ -7,7 +7,7 @@ namespace Ykotika.WebAPI.Models.Forms
     public class CreateFormDto : IMapWith<CreateFormCommand>
     {
         public required string Name { get; set; }
-        public List<FormInputDto>? Fields { get; set; }
+        public List<FormInputDto>? Inputs { get; set; }
 
         public void Mapping(Profile profile)
         {
