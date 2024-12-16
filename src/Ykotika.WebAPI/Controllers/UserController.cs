@@ -5,6 +5,7 @@ using Ykotika.Application.Entities.Author.Commands;
 using Ykotika.Application.Entities.User.Commands.Login;
 using Ykotika.Application.Entities.User.Commands.Signup;
 using Ykotika.Application.Entities.User.Commands.VerifyEmail;
+using Ykotika.Application.Entities.User.Queries.GetProfile;
 using Ykotika.Application.Interfaces;
 using Ykotika.WebAPI.Constants;
 using Ykotika.WebAPI.Models;
@@ -20,6 +21,11 @@ namespace Ykotika.WebAPI.Controllers
         private readonly IMapper _mapper = mapper;
         private readonly IEmailVerifier _emailVerifier = emailVerifier;
         private readonly IJwtProvider _jwtProvider = jwtProvider;
+        private readonly CookieOptions _cookieOptions = new CookieOptions
+        {
+            SameSite = SameSiteMode.Strict,
+            Secure = false
+        };
 
         [Route("signup")]
         [HttpPost]
@@ -29,7 +35,7 @@ namespace Ykotika.WebAPI.Controllers
 
             var vm = await Mediator.Send(command);
 
-            HttpContext.Response.Cookies.Append("creeper", vm.AccessToken);
+            HttpContext.Response.Cookies.Append("accessToken", vm.AccessToken);
 
             return Ok(vm);
         }
@@ -42,7 +48,7 @@ namespace Ykotika.WebAPI.Controllers
 
             var vm = await Mediator.Send(command);
 
-            HttpContext.Response.Cookies.Append("creeper", vm.AccessToken);
+            HttpContext.Response.Cookies.Append("accessToken", vm.AccessToken);
 
             return Ok(vm);
         }
@@ -55,13 +61,17 @@ namespace Ykotika.WebAPI.Controllers
             await Task.Run(() =>
             {
                 var token = _jwtProvider.GenerateEmailVerificationToken(UserId, UserEmail);
-                Console.WriteLine(token);
-                var confirmationLink = Url.Action(
-                    "VerifyEmail",
-                    "User",
-                    new { token = token! },
-                    protocol: Request.Scheme
-                );
+
+                // Without FrontEnd
+                //Console.WriteLine(token);
+                //var confirmationLink = Url.Action(
+                //    "VerifyEmail",
+                //    "User",
+                //    new { token = token! },
+                //    protocol: Request.Scheme
+                //);
+                var encodeToken = Uri.EscapeDataString(token);
+                var confirmationLink = $"https://infinite-ellipse-ykotika-ru-frontend-9e75.twc1.net/auth/new-verification?token={encodeToken}";
                 _emailVerifier.SendVerificationLink(UserEmail, confirmationLink!);
             });
 
@@ -73,7 +83,8 @@ namespace Ykotika.WebAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> VerifyEmail([FromQuery] string token)
         {
-            if (!_jwtProvider.VerifyEmailToken(token, UserId, UserEmail))
+            var decodedToken = Uri.UnescapeDataString(token);
+            if (!_jwtProvider.VerifyEmailToken(decodedToken, UserId, UserEmail))
             {
                 return BadRequest("Invalid token!");
             }
@@ -81,10 +92,9 @@ namespace Ykotika.WebAPI.Controllers
             var command = new VerifyEmailCommand
             { UserId = UserId };
 
-            await Mediator.Send(command);
+            var vm = await Mediator.Send(command);
 
-
-            return Ok();
+            return Ok(vm);
         }
 
         [Authorize(Roles = $"{Roles.CUSTOMER_ROLE}")]
@@ -95,6 +105,26 @@ namespace Ykotika.WebAPI.Controllers
             var command = _mapper.Map<SendRequestToBeCommand>(dto);
             command.UserId = UserId;
             await Mediator.Send(command);
+
+            return Ok();
+        }
+
+        [HttpGet("profile")]
+        public async Task<ActionResult<ProfileViewModel>> GetProfile()
+        {
+            var query = new GetProfileQuery { Id = UserId };
+            var vm = await Mediator.Send(query);
+
+            return Ok(vm);
+        }
+
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await Task.Run(() =>
+            {
+                HttpContext.Response.Cookies.Delete("accessToken");
+            });
 
             return Ok();
         }

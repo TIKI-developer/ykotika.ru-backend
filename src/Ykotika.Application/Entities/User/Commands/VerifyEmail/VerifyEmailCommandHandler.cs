@@ -1,19 +1,22 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Ykotika.Application.Common.Exceptions;
+using Ykotika.Application.Entities.User.Commands.Login;
 using Ykotika.Application.Interfaces;
 using Ykotika.Domain;
 
 namespace Ykotika.Application.Entities.User.Commands.VerifyEmail
 {
     public class VerifyEmailCommandHandler
-        (IYkotikaDbContext dbContext)
+        (IYkotikaDbContext dbContext,
+        IJwtProvider jwtProvider)
         :
-        IRequestHandler<VerifyEmailCommand>
+        IRequestHandler<VerifyEmailCommand, LoginViewModel>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
+        private readonly IJwtProvider _jwtProvider = jwtProvider;
 
-        public async Task Handle(VerifyEmailCommand request, CancellationToken cancellationToken)
+        public async Task<LoginViewModel> Handle(VerifyEmailCommand request, CancellationToken cancellationToken)
         {
             var user = await
                 _dbContext
@@ -27,7 +30,7 @@ namespace Ykotika.Application.Entities.User.Commands.VerifyEmail
 
             if (!user.Roles.Contains(UserRole.Guest))
             {
-                return;
+                throw new Exception("User already verified");
             }
 
             var customer = new CustomerModel
@@ -42,6 +45,10 @@ namespace Ykotika.Application.Entities.User.Commands.VerifyEmail
             _dbContext.Customers.Add(customer);
 
             await _dbContext.SaveChangesAsync(cancellationToken);
+
+            var token = _jwtProvider.GenerateAccessToken(user);
+
+            return new LoginViewModel { AccessToken = token };
         }
     }
 

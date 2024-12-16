@@ -11,6 +11,10 @@ namespace Ykotika.Persistence
         public DbSet<CustomerModel> Customers { get; set; }
         public DbSet<AuthorModel> Authors { get; set; }
         public DbSet<FileModel> Files { get; set; }
+        public DbSet<FormModel> Forms { get; set; }
+        public DbSet<FormInputModel> FormInputs { get; set; }
+        public DbSet<FormRecordModel> FormRecords { get; set; }
+        public DbSet<FormInputRecordModel> FormInputRecords { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -18,6 +22,10 @@ namespace Ykotika.Persistence
             modelBuilder.ApplyConfiguration(new CustomerConfiguration());
             modelBuilder.ApplyConfiguration(new AuthorConfiguration());
             modelBuilder.ApplyConfiguration(new FileConfiguration());
+            modelBuilder.ApplyConfiguration(new FormConfiguration());
+            modelBuilder.ApplyConfiguration(new FormInputConfiguration());
+            modelBuilder.ApplyConfiguration(new FormRecordConfiguration());
+            modelBuilder.ApplyConfiguration(new FormInputRecordConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

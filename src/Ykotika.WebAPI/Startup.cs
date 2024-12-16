@@ -36,12 +36,11 @@ namespace Ykotika.WebAPI
             {
                 options.AddPolicy("AllowSpecificOrigin", policy =>
                 {
-                    policy.AllowAnyHeader();
-                    policy.AllowAnyMethod();
-                    policy.AllowAnyOrigin();
-                    policy.WithOrigins("https://infinite-ellipse-ykotika-ru-frontend-9e75.twc1.net",
-                                       "https://infinite-ellipse-ykotika-ru-backend-869f.twc1.net")
-                    .AllowCredentials();
+                    policy
+                        .WithOrigins("http://localhost:3000")
+                        .AllowCredentials()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
                 });
             });
             services.AddSwaggerGen();
@@ -58,22 +57,24 @@ namespace Ykotika.WebAPI
                 app.UseCustomExceptionHandler();
             }
             string staticFilesPath = serviceProvider.GetService<IFileService>().BaseStaticFolder;
-            Console.WriteLine(staticFilesPath);
+            app.UseRouting();
+            app.UseCors("AllowSpecificOrigin");
+            app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(staticFilesPath),
                 RequestPath = "/static"
             });
             app.UseHttpsRedirection();
-            app.UseCors("AllowSpecificOrigin");
             app.UseSwagger();
             app.UseSwaggerUI(config =>
             {
                 config.RoutePrefix = string.Empty;
                 config.SwaggerEndpoint("swagger/v1/swagger.json", "Ykotika API");
+                config.InjectStylesheet("/swagger-ui/SwaggerDark.css");
             });
+
             app.UseAuthentication();
-            app.UseRouting();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

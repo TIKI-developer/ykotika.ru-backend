@@ -11,6 +11,7 @@
         public DateTime UpdatedAt { get; private set; } = DateTime.UtcNow;
         public List<UserRole> Roles { get; set; } = [UserRole.Guest];
         public bool IsEmailVerified => !Roles.Contains(UserRole.Guest);
+        public List<FormRecordModel>? SubmittedForms { get; set; }
 
         public void MarkUpdated()
         {

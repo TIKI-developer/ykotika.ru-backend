@@ -35,7 +35,7 @@ namespace Ykotika.WebApi.Extensions
                     {
                         OnMessageReceived = context =>
                         {
-                            context.Token = context.Request.Cookies["creeper"];
+                            context.Token = context.Request.Cookies["accessToken"];
                             return Task.CompletedTask;
                         }
                     };
