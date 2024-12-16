@@ -36,10 +36,11 @@ namespace Ykotika.WebAPI
             {
                 options.AddPolicy("AllowSpecificOrigin", policy =>
                 {
-                    policy.WithOrigins("https://277b-92-124-207-205.ngrok-free.app")
-                    .AllowCredentials()
-                    .AllowAnyHeader()
-                    .AllowAnyMethod();
+                    policy
+                        .WithOrigins("http://localhost:3000")
+                        .AllowCredentials()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
                 });
             });
             services.AddSwaggerGen();
