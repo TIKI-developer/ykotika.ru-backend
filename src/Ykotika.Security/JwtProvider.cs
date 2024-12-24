@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Ykotika.Application.Interfaces;
-using Ykotika.Domain;
+using Ykotika.Domain.Entities;
 
 namespace Ykotika.Security
 {
@@ -15,7 +15,7 @@ namespace Ykotika.Security
         private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler = new();
         private const string AES_IV = "sdofisldjfklsd3ldedddsddhiew";
 
-        public string GenerateAccessToken(UserModel user)
+        public string GenerateAccessToken(User user)
         {
             var claims = new List<Claim>
             {
@@ -23,7 +23,7 @@ namespace Ykotika.Security
                 new(ClaimTypes.Email, user.Email.ToString()),
             };
 
-            foreach (var role in user.Roles)
+            foreach (var role in user.Permissions)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role.ToString()));
             }

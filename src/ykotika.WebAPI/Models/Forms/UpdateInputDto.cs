@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using Ykotika.Application.Commands.Input;
 using Ykotika.Application.Common.Mappings;
-using Ykotika.Application.Entities.Form.Commands.UpdateInput;
 
 namespace Ykotika.WebAPI.Models.Forms
 {

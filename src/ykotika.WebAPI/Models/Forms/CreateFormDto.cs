@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
+using Ykotika.Application.Commands.Form;
 using Ykotika.Application.Common.Mappings;
-using Ykotika.Application.Entities.Form.Commands.Create;
+using Ykotika.Application.ViewModels;
 
 namespace Ykotika.WebAPI.Models.Forms
 {

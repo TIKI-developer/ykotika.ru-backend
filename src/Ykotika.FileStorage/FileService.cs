@@ -1,6 +1,5 @@
-﻿using Ykotika.Application;
-using Ykotika.Application.Interfaces;
-using Ykotika.Domain;
+﻿using Ykotika.Application.Interfaces;
+using Ykotika.Domain.ValueObjects;
 
 namespace Ykotika.FileStorage
 {
@@ -20,7 +19,7 @@ namespace Ykotika.FileStorage
         }
         private readonly string _baseFolder = Path.Combine(AppContext.BaseDirectory, "uploads");
 
-        public async Task<FileModel> Upload(FileData data, string relativePath = "static")
+        public async Task<Domain.Entities.File> Upload(FileData data, string relativePath = "static")
         {
             Guid id = Guid.NewGuid();
             string uniqueName = id + Path.GetExtension(data.Name);
@@ -37,18 +36,24 @@ namespace Ykotika.FileStorage
                 await stream.WriteAsync(data.Content);
             }
 
-            return new FileModel { Id = id, Name = uniqueName, RelativePath = relativePath };
+            return new Domain.Entities.File
+            {
+                Id = id,
+                Name = uniqueName,
+                Timestamps = new Timestamps(),
+                RelativePath = relativePath
+            };
         }
-        public async Task<FileData> Download(FileModel file)
+        public async Task<FileData> Download(Domain.Entities.File file)
         {
             string filePath = Path.Combine(_baseFolder, file.RelativePath, file.Name);
 
-            if (!File.Exists(filePath))
+            if (!System.IO.File.Exists(filePath))
             {
                 throw new Exception("Файл не найден");
             }
 
-            byte[] fileContent = await File.ReadAllBytesAsync(filePath);
+            byte[] fileContent = await System.IO.File.ReadAllBytesAsync(filePath);
 
             return new FileData
             {
@@ -56,18 +61,18 @@ namespace Ykotika.FileStorage
                 Content = fileContent
             };
         }
-        public bool Delete(FileModel file)
+        public bool Delete(Domain.Entities.File file)
         {
             var filePath = Path.Combine(_baseFolder, file.RelativePath, file.Name);
 
-            if (!File.Exists(filePath))
+            if (!System.IO.File.Exists(filePath))
             {
                 throw new Exception("Файл не найден");
             }
 
             try
             {
-                File.Delete(filePath);
+                System.IO.File.Delete(filePath);
                 return true;
             }
             catch (IOException ex)

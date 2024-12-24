@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Ykotika.Application.Entities.FormRecord.Commands.Create;
-using Ykotika.Application.Entities.FormRecord.Commands.Delete;
-using Ykotika.Application.Entities.FormRecord.Commands.Update;
-using Ykotika.Application.Entities.FormRecord.Queries.GetById;
-using Ykotika.Application.Entities.FormRecord.Queries.GetList;
+using Ykotika.Application.Commands.FormRecord;
+using Ykotika.Application.Queries.FormRecord;
+using Ykotika.Application.ViewModels;
 using Ykotika.WebAPI.Models.Forms;
 
 namespace Ykotika.WebAPI.Controllers

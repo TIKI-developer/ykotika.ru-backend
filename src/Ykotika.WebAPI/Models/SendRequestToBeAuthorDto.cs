@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
+using Ykotika.Application.Commands.Author;
 using Ykotika.Application.Common.Mappings;
-using Ykotika.Application.Entities.Author.Commands;
-using Ykotika.Domain;
+using Ykotika.Domain.ValueObjects;
 
 namespace Ykotika.WebAPI.Models
 {

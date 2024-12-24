@@ -1,19 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Ykotika.Domain;
+using Ykotika.Domain.Entities;
 
 namespace Ykotika.Persistence.EntityTypeConfigurations
 {
-    public class AuthorConfiguration : IEntityTypeConfiguration<AuthorModel>
+    public class AuthorConfiguration : IEntityTypeConfiguration<Author>
     {
-        public void Configure(EntityTypeBuilder<AuthorModel> builder)
+        public void Configure(EntityTypeBuilder<Author> builder)
         {
-            builder
-                .HasKey(e => e.UserId);
-            builder
-                .HasOne(e => e.User)
-                .WithOne()
-                .HasForeignKey<AuthorModel>(e => e.UserId);
             builder
                 .OwnsOne(e => e.Request, request =>
                 {

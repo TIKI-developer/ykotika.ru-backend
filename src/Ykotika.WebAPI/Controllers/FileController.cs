@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Ykotika.Application;
-using Ykotika.Application.Entities.File.Commands.Delete;
-using Ykotika.Application.Entities.File.Commands.Download;
-using Ykotika.Application.Entities.File.Commands.Upload;
+using Ykotika.Application.Commands.File;
+using Ykotika.Application.ViewModels;
+using Ykotika.Domain.ValueObjects;
 using Ykotika.WebAPI.Models;
 
 namespace Ykotika.WebAPI.Controllers
@@ -13,7 +12,7 @@ namespace Ykotika.WebAPI.Controllers
         [HttpPost("upload")]
         public async Task<ActionResult<FileViewModel>> Upload([FromForm] UploadFileDto dto)
         {
-            var command = new UploadCommand { FileData = ConvertToFileData(dto.File), RelativePath = dto.RelativePath };
+            var command = new UploadFileCommand { FileData = ConvertToFileData(dto.File), RelativePath = dto.RelativePath };
             var vm = await Mediator.Send(command);
 
             return Ok(vm);
@@ -21,7 +20,7 @@ namespace Ykotika.WebAPI.Controllers
         [HttpDelete("delete/{id}")]
         public async Task<ActionResult> Delete(Guid id)
         {
-            var command = new DeleteCommand { Id = id };
+            var command = new DeleteFileCommand { Id = id };
             await Mediator.Send(command);
 
             return Ok();
@@ -29,7 +28,7 @@ namespace Ykotika.WebAPI.Controllers
         [HttpGet("download/{id}")]
         public async Task<ActionResult> Download(Guid id)
         {
-            var command = new DownloadCommand { Id = id };
+            var command = new DownloadFileCommand { Id = id };
             var file = await Mediator.Send(command);
             file.ContentType = GetContentType(file.Name);
 

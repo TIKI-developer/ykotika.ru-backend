@@ -1,11 +1,11 @@
-﻿using Ykotika.Domain;
+﻿using Ykotika.Domain.Entities;
 
 namespace Ykotika.WebAPI.Constants
 {
     public static class Roles
     {
-        public const string GUEST_ROLE = nameof(UserRole.Guest);
-        public const string AUTHOR_ROLE = nameof(UserRole.Author);
-        public const string CUSTOMER_ROLE = nameof(UserRole.Customer);
+        public const string GUEST_ROLE = nameof(UserPermission.Unverified);
+        public const string AUTHOR_ROLE = nameof(UserPermission.Author);
+        public const string CUSTOMER_ROLE = nameof(UserPermission.Customer);
     }
 }

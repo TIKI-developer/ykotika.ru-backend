@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Ykotika.Application.Entities.Author.Commands;
-using Ykotika.Application.Entities.User.Commands.Login;
-using Ykotika.Application.Entities.User.Commands.Signup;
-using Ykotika.Application.Entities.User.Commands.VerifyEmail;
-using Ykotika.Application.Entities.User.Queries.GetProfile;
+using Microsoft.IdentityModel.Tokens;
+using Ykotika.Application.Commands.Author;
+using Ykotika.Application.Commands.User;
 using Ykotika.Application.Interfaces;
+using Ykotika.Application.Queries.User;
+using Ykotika.Application.ViewModels;
 using Ykotika.WebAPI.Constants;
 using Ykotika.WebAPI.Models;
 
@@ -16,16 +16,13 @@ namespace Ykotika.WebAPI.Controllers
     public class UserController
         (IMapper mapper,
         IEmailVerifier emailVerifier,
-        IJwtProvider jwtProvider) : BaseController
+        IJwtProvider jwtProvider,
+        Clients clients) : BaseController
     {
         private readonly IMapper _mapper = mapper;
         private readonly IEmailVerifier _emailVerifier = emailVerifier;
         private readonly IJwtProvider _jwtProvider = jwtProvider;
-        private readonly CookieOptions _cookieOptions = new CookieOptions
-        {
-            SameSite = SameSiteMode.Strict,
-            Secure = false
-        };
+        private readonly Clients _clients = clients;
 
         [Route("signup")]
         [HttpPost]
@@ -35,7 +32,7 @@ namespace Ykotika.WebAPI.Controllers
 
             var vm = await Mediator.Send(command);
 
-            HttpContext.Response.Cookies.Append("accessToken", vm.AccessToken);
+            HttpContext.Response.Cookies.Append(Cookies.ACCESS_TOKEN_NAME, vm.AccessToken);
 
             return Ok(vm);
         }
@@ -48,7 +45,7 @@ namespace Ykotika.WebAPI.Controllers
 
             var vm = await Mediator.Send(command);
 
-            HttpContext.Response.Cookies.Append("accessToken", vm.AccessToken);
+            HttpContext.Response.Cookies.Append(Cookies.ACCESS_TOKEN_NAME, vm.AccessToken);
 
             return Ok(vm);
         }
@@ -61,17 +58,22 @@ namespace Ykotika.WebAPI.Controllers
             await Task.Run(() =>
             {
                 var token = _jwtProvider.GenerateEmailVerificationToken(UserId, UserEmail);
-
-                // Without FrontEnd
-                //Console.WriteLine(token);
-                //var confirmationLink = Url.Action(
-                //    "VerifyEmail",
-                //    "User",
-                //    new { token = token! },
-                //    protocol: Request.Scheme
-                //);
+                var confirmationLink = "";
                 var encodeToken = Uri.EscapeDataString(token);
-                var confirmationLink = $"https://infinite-ellipse-ykotika-ru-frontend-9e75.twc1.net/auth/new-verification?token={encodeToken}";
+
+                if (_clients.WebURLs.IsNullOrEmpty())
+                {
+                    confirmationLink = Url.Action(
+                       "VerifyEmail",
+                       "User",
+                       new { token = encodeToken! },
+                       protocol: Request.Scheme
+                   );
+                }
+                else
+                {
+                    confirmationLink = $"{_clients.WebURLs}/auth/new-verification?token={encodeToken}";
+                }
                 _emailVerifier.SendVerificationLink(UserEmail, confirmationLink!);
             });
 
@@ -123,7 +125,7 @@ namespace Ykotika.WebAPI.Controllers
         {
             await Task.Run(() =>
             {
-                HttpContext.Response.Cookies.Delete("accessToken");
+                HttpContext.Response.Cookies.Delete(Cookies.ACCESS_TOKEN_NAME);
             });
 
             return Ok();

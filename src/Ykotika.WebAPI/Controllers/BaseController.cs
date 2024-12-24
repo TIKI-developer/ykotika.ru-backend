@@ -5,7 +5,6 @@ using System.Security.Claims;
 namespace Ykotika.WebAPI.Controllers
 {
     [ApiController]
-    [Route("api")]
     public abstract class BaseController : ControllerBase
     {
         private IMediator _mediator;

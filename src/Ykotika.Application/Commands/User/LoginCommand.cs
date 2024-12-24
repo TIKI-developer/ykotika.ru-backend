@@ -1,0 +1,11 @@
+﻿using MediatR;
+using Ykotika.Application.ViewModels;
+
+namespace Ykotika.Application.Commands.User
+{
+    public class LoginCommand : IRequest<LoginViewModel>
+    {
+        public required string Email { get; set; }
+        public required string Password { get; set; }
+    }
+}

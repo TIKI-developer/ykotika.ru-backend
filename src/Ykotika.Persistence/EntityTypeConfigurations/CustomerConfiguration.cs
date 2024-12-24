@@ -1,19 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Ykotika.Domain;
+using Ykotika.Domain.Entities;
 
 namespace Ykotika.Persistence.EntityTypeConfigurations
 {
-    public class CustomerConfiguration : IEntityTypeConfiguration<CustomerModel>
+    public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
     {
-        public void Configure(EntityTypeBuilder<CustomerModel> builder)
+        public void Configure(EntityTypeBuilder<Customer> builder)
         {
-            builder
-                .HasKey(e => e.UserId);
-            builder
-                .HasOne(e => e.User)
-                .WithOne()
-                .HasForeignKey<CustomerModel>(e => e.UserId);
+
         }
     }
 }

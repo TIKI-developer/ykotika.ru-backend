@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Ykotika.Domain;
+using Ykotika.Domain.Entities;
 
 namespace Ykotika.Persistence.EntityTypeConfigurations
 {
-    public class UserConfiguration : IEntityTypeConfiguration<UserModel>
+    public class UserConfiguration : IEntityTypeConfiguration<User>
     {
-        public void Configure(EntityTypeBuilder<UserModel> builder)
+        public void Configure(EntityTypeBuilder<User> builder)
         {
             builder
                 .HasKey(e => e.Id);
