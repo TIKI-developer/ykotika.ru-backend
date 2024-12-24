@@ -1,6 +1,6 @@
 ﻿namespace Ykotika.Application.ViewModels
 {
-    public class LoginViewModel
+    public class SignupResponse
     {
         public required string AccessToken { get; set; }
     }

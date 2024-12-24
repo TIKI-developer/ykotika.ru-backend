@@ -11,22 +11,22 @@ namespace Ykotika.Application.Queries.FormRecord
         (IYkotikaDbContext dbContext,
         IMapper mapper)
         :
-        IRequestHandler<GetFormRecordListQuery, FormRecordListViewModel>
+        IRequestHandler<GetFormRecordListQuery, FormRecordList>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<FormRecordListViewModel> Handle(GetFormRecordListQuery request, CancellationToken cancellationToken)
+        public async Task<FormRecordList> Handle(GetFormRecordListQuery request, CancellationToken cancellationToken)
         {
             var formRecords = await
                 _dbContext
                 .FormRecords
                 .Include(e => e.Form)
-                .ProjectTo<FormRecordLookupDto>(_mapper.ConfigurationProvider)
+                .ProjectTo<FormRecordItem>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
 
 
-            return new FormRecordListViewModel { FormRecords = formRecords };
+            return new FormRecordList { FormRecords = formRecords };
         }
     }
 }

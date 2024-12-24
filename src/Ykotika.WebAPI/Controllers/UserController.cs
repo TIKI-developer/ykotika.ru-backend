@@ -26,7 +26,7 @@ namespace Ykotika.WebAPI.Controllers
 
         [Route("signup")]
         [HttpPost]
-        public async Task<ActionResult<SignupViewModel>> Signup([FromBody] SignupDto signupDto)
+        public async Task<ActionResult<SignupResponse>> Signup([FromBody] SignupDto signupDto)
         {
             var command = _mapper.Map<SignupCommand>(signupDto);
 
@@ -39,7 +39,7 @@ namespace Ykotika.WebAPI.Controllers
 
         [Route("login")]
         [HttpPost]
-        public async Task<ActionResult<LoginViewModel>> Login([FromBody] LoginDto signupDto)
+        public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginDto signupDto)
         {
             var command = _mapper.Map<LoginCommand>(signupDto);
 
@@ -112,7 +112,7 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpGet("profile")]
-        public async Task<ActionResult<ProfileViewModel>> GetProfile()
+        public async Task<ActionResult<UserDetails>> GetProfile()
         {
             var query = new GetProfileQuery { Id = UserId };
             var vm = await Mediator.Send(query);

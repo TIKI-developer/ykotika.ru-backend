@@ -1,17 +1,17 @@
 ﻿using AutoMapper;
 using Ykotika.Application.Common.Mappings;
-using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.ViewModels
 {
-    public class FormLookupDto : IMapWith<Form>
+    public class UserDetails : IMapWith<Domain.Entities.User>
     {
         public required Guid Id { get; set; }
         public required string Name { get; set; }
+        public required string Email { get; set; }
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Form, FormLookupDto>();
+            profile.CreateMap<Domain.Entities.User, UserDetails>();
         }
     }
 }

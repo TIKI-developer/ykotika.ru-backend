@@ -1,6 +1,6 @@
 ﻿namespace Ykotika.Application.ViewModels
 {
-    public class ProductLookup
+    public class ProductItem
     {
     }
 }

@@ -11,20 +11,20 @@ namespace Ykotika.Application.Queries.Form
         (IYkotikaDbContext dbContext,
         IMapper mapper)
         :
-        IRequestHandler<GetFormsQuery, FormListViewModel>
+        IRequestHandler<GetFormsQuery, FormList>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<FormListViewModel> Handle(GetFormsQuery request, CancellationToken cancellationToken)
+        public async Task<FormList> Handle(GetFormsQuery request, CancellationToken cancellationToken)
         {
             var forms = await
                 _dbContext
                 .Forms
-                .ProjectTo<FormLookupDto>(_mapper.ConfigurationProvider)
+                .ProjectTo<FormItem>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
 
-            return new FormListViewModel { Forms = forms };
+            return new FormList { Forms = forms };
         }
     }
 }

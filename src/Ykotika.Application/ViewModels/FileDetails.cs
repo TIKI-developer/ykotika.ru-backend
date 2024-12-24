@@ -3,14 +3,14 @@ using Ykotika.Application.Common.Mappings;
 
 namespace Ykotika.Application.ViewModels
 {
-    public class FileViewModel : IMapWith<Domain.Entities.File>
+    public class FileDetails : IMapWith<Domain.Entities.File>
     {
         public required Guid Id { get; set; }
         public required string RelativePath { get; set; }
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Domain.Entities.File, FileViewModel>()
+            profile.CreateMap<Domain.Entities.File, FileDetails>()
 
                 .ForMember(to => to.Id,
                 opt => opt.MapFrom(from => from.Id))

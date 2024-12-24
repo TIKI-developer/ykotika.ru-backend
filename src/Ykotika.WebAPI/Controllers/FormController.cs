@@ -40,7 +40,7 @@ namespace Ykotika.WebAPI.Controllers
             return Ok();
         }
         [HttpGet("{id}")]
-        public async Task<ActionResult<FormViewModel>> Get(Guid id)
+        public async Task<ActionResult<FormDetails>> Get(Guid id)
         {
             var query = new GetFormQuery { Id = id };
             var vm = await Mediator.Send(query);
@@ -48,7 +48,7 @@ namespace Ykotika.WebAPI.Controllers
             return Ok(vm);
         }
         [HttpGet]
-        public async Task<ActionResult<FormListViewModel>> Get()
+        public async Task<ActionResult<FormList>> Get()
         {
             var query = new GetFormsQuery();
             var vm = await Mediator.Send(query);

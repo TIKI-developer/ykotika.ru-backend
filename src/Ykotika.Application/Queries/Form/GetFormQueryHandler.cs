@@ -11,12 +11,12 @@ namespace Ykotika.Application.Queries.Form
         (IYkotikaDbContext dbContext,
         IMapper mapper)
         :
-        IRequestHandler<GetFormQuery, FormViewModel>
+        IRequestHandler<GetFormQuery, FormDetails>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<FormViewModel> Handle(GetFormQuery request, CancellationToken cancellationToken)
+        public async Task<FormDetails> Handle(GetFormQuery request, CancellationToken cancellationToken)
         {
             var form = await
                 _dbContext
@@ -25,7 +25,7 @@ namespace Ykotika.Application.Queries.Form
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(Form), request.Id);
 
-            return _mapper.Map<FormViewModel>(form);
+            return _mapper.Map<FormDetails>(form);
         }
     }
 }

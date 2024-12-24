@@ -10,7 +10,7 @@ namespace Ykotika.WebAPI.Controllers
     public class FileController : BaseController
     {
         [HttpPost("upload")]
-        public async Task<ActionResult<FileViewModel>> Upload([FromForm] UploadFileDto dto)
+        public async Task<ActionResult<FileDetails>> Upload([FromForm] UploadFileDto dto)
         {
             var command = new UploadFileCommand { FileData = ConvertToFileData(dto.File), RelativePath = dto.RelativePath };
             var vm = await Mediator.Send(command);

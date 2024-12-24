@@ -10,13 +10,13 @@ namespace Ykotika.Application.Commands.File
         IFileService fileService,
         IMapper mapper)
         :
-        IRequestHandler<UploadFileCommand, FileViewModel>
+        IRequestHandler<UploadFileCommand, FileDetails>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
         private readonly IMapper _mapper = mapper;
         private readonly IFileService _fileService = fileService;
 
-        public async Task<FileViewModel> Handle(UploadFileCommand request, CancellationToken cancellationToken)
+        public async Task<FileDetails> Handle(UploadFileCommand request, CancellationToken cancellationToken)
         {
             Domain.Entities.File file;
             if (request.RelativePath != null)
@@ -27,7 +27,7 @@ namespace Ykotika.Application.Commands.File
             await _dbContext.Files.AddAsync(file, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return _mapper.Map<FileViewModel>(file);
+            return _mapper.Map<FileDetails>(file);
         }
     }
 }

@@ -11,12 +11,12 @@ namespace Ykotika.Application.Queries.User
         (IYkotikaDbContext dbContext,
         IMapper mapper)
         :
-        IRequestHandler<GetProfileQuery, ProfileViewModel>
+        IRequestHandler<GetProfileQuery, UserDetails>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<ProfileViewModel> Handle(GetProfileQuery request, CancellationToken cancellationToken)
+        public async Task<UserDetails> Handle(GetProfileQuery request, CancellationToken cancellationToken)
         {
             var user = await
                 _dbContext
@@ -28,7 +28,7 @@ namespace Ykotika.Application.Queries.User
                 throw new NotFoundException(nameof(Domain.Entities.User), request.Id);
             }
 
-            return _mapper.Map<ProfileViewModel>(user);
+            return _mapper.Map<UserDetails>(user);
         }
     }
 }

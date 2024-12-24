@@ -4,7 +4,7 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.ViewModels
 {
-    public class FormRecordLookupDto : IMapWith<FormRecord>
+    public class FormRecordItem : IMapWith<FormRecord>
     {
         public required Guid Id { get; set; }
         public required string FormName { get; set; }
@@ -12,7 +12,7 @@ namespace Ykotika.Application.ViewModels
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<FormRecord, FormRecordLookupDto>()
+            profile.CreateMap<FormRecord, FormRecordItem>()
                 .ForMember(to => to.FormName,
                 opt => opt.MapFrom(from => from.Form.Name));
         }

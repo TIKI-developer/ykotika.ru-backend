@@ -11,12 +11,12 @@ namespace Ykotika.Application.Commands.User
         (IYkotikaDbContext dbContext,
         IJwtProvider jwtProvider)
         :
-        IRequestHandler<VerifyEmailCommand, LoginViewModel>
+        IRequestHandler<VerifyEmailCommand, LoginResponse>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
         private readonly IJwtProvider _jwtProvider = jwtProvider;
 
-        public async Task<LoginViewModel> Handle(VerifyEmailCommand request, CancellationToken cancellationToken)
+        public async Task<LoginResponse> Handle(VerifyEmailCommand request, CancellationToken cancellationToken)
         {
             var user = await
                 _dbContext
@@ -44,7 +44,7 @@ namespace Ykotika.Application.Commands.User
 
             var token = _jwtProvider.GenerateAccessToken(user);
 
-            return new LoginViewModel { AccessToken = token };
+            return new LoginResponse { AccessToken = token };
         }
     }
 

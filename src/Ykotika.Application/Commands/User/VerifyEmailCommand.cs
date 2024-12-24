@@ -3,7 +3,7 @@ using Ykotika.Application.ViewModels;
 
 namespace Ykotika.Application.Commands.User
 {
-    public class VerifyEmailCommand : IRequest<LoginViewModel>
+    public class VerifyEmailCommand : IRequest<LoginResponse>
     {
         public required Guid UserId { get; set; }
     }
