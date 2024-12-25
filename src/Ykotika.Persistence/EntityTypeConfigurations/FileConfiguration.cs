@@ -8,9 +8,6 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
         public void Configure(EntityTypeBuilder<Domain.Entities.File> builder)
         {
             builder
-                .HasKey(e => e.Id);
-
-            builder
                 .Property(e => e.Id)
                 .IsRequired()
                 .ValueGeneratedNever();

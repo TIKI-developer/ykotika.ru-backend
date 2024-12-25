@@ -6,6 +6,5 @@ namespace Ykotika.Domain.Entities
     {
         public required string Name { get; set; }
         public required string RelativePath { get; set; }
-        public required Timestamps Timestamps { get; set; }
     }
 }

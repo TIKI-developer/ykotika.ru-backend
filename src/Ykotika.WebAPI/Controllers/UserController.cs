@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Ykotika.Application.Commands.Author;
 using Ykotika.Application.Commands.User;
@@ -17,12 +18,12 @@ namespace Ykotika.WebAPI.Controllers
         (IMapper mapper,
         IEmailVerifier emailVerifier,
         IJwtProvider jwtProvider,
-        Clients clients) : BaseController
+        IOptions<Clients> clients) : BaseController
     {
         private readonly IMapper _mapper = mapper;
         private readonly IEmailVerifier _emailVerifier = emailVerifier;
         private readonly IJwtProvider _jwtProvider = jwtProvider;
-        private readonly Clients _clients = clients;
+        private readonly Clients _clients = clients.Value;
 
         [Route("signup")]
         [HttpPost]

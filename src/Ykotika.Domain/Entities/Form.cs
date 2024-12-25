@@ -7,6 +7,5 @@ namespace Ykotika.Domain.Entities
         public required string Name { get; set; }
         public List<Input>? Inputs { get; set; }
         public List<FormRecord>? SubmittedForms { get; set; }
-        public required Timestamps Timestamps { get; set; }
     }
 }

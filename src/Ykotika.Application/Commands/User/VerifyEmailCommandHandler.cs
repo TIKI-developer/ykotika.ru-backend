@@ -31,7 +31,9 @@ namespace Ykotika.Application.Commands.User
 
             var customer = new Customer
             {
-                Id = user.Id,
+                Id = Guid.NewGuid(),
+                User = user,
+                Timestamps = new Domain.ValueObjects.Timestamps()
             };
 
             user.Permissions.Remove(UserPermission.Unverified);

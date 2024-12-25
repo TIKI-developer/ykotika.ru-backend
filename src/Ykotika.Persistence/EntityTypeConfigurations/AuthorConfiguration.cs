@@ -9,9 +9,10 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
         public void Configure(EntityTypeBuilder<Author> builder)
         {
             builder
-                .OwnsOne(e => e.Request, request =>
+                .OwnsOne(e => e.Request, ar =>
                 {
-                    request.WithOwner();
+                    ar.WithOwner();
+                    ar.OwnsOne(e => e.Timestamps);
                 });
         }
     }

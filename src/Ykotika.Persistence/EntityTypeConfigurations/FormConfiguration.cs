@@ -10,8 +10,6 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
         public void Configure(EntityTypeBuilder<Form> builder)
         {
             builder
-                .HasKey(e => e.Id);
-            builder
                 .Property(e => e.Name)
                 .HasMaxLength(100);
             builder

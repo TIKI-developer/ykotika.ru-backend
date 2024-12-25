@@ -44,7 +44,8 @@ namespace Ykotika.Application.Commands.Author
                     WhichSocial = request.WhichSocial,
                     Timestamps = new Domain.ValueObjects.Timestamps()
                 },
-                Status = AuthorStatus.New
+                Status = AuthorStatus.New,
+                Timestamps = new Domain.ValueObjects.Timestamps()
             };
 
             await _dbContext.Authors.AddAsync(author, cancellationToken);

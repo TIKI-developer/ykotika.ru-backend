@@ -11,7 +11,6 @@ namespace Ykotika.Domain.Entities
         public File? Avatar { get; set; }
         public required string PasswordHash { get; set; }
         public required bool ConfirmedPolicy { get; set; }
-        public required Timestamps Timestamps { get; set; }
         public List<UserPermission> Permissions { get; set; } = [UserPermission.Unverified];
         public bool IsEmailVerified => !Permissions.Contains(UserPermission.Unverified);
     }

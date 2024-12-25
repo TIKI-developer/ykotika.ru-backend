@@ -10,8 +10,6 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
         public void Configure(EntityTypeBuilder<FormRecord> builder)
         {
             builder
-                .HasKey(e => e.Id);
-            builder
                 .HasOne(e => e.Form)
                 .WithMany(e => e.SubmittedForms);
             builder

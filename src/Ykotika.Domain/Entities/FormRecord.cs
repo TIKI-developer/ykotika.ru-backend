@@ -7,6 +7,5 @@ namespace Ykotika.Domain.Entities
         public required Form Form { get; set; }
         public required User Author { get; set; }
         public List<InputRecord> InputRecords { get; set; } = [];
-        public required Timestamps Timestamps { get; set; }
     }
 }

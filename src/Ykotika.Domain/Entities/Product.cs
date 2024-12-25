@@ -9,6 +9,5 @@ namespace Ykotika.Domain.Entities
         public List<OutsourceShop>? OutsourceShops { get; set; }
         public List<File>? Images { get; set; }
         public required FormRecord FormRecord { get; set; }
-        public required Timestamps Timestamps { get; set; }
     }
 }

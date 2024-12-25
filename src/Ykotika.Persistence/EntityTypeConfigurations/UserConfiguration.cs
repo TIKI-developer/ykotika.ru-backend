@@ -9,8 +9,6 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder
-                .HasKey(e => e.Id);
-            builder
                 .HasIndex(e => e.Email)
                 .IsUnique();
             builder
