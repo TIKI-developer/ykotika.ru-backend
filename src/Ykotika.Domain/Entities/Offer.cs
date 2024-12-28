@@ -4,5 +4,6 @@
     {
         public required string Content { get; set; }
         public required bool IsPublished { get; set; }
+        public List<Agreement>? Agreements { get; set; }
     }
 }

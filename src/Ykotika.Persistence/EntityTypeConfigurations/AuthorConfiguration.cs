@@ -20,6 +20,13 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
                 {
                     s.WithOwner();
                 });
+
+            builder
+                .HasMany(e => e.Agreements)
+                .WithOne(e => e.Author);
+
+            builder
+                .HasOne(e => e.User);
         }
     }
 }

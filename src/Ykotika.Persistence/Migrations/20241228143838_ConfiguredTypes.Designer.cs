@@ -12,8 +12,8 @@ using Ykotika.Persistence;
 namespace Ykotika.Persistence.Migrations
 {
     [DbContext(typeof(YkotikaDbContext))]
-    [Migration("20241228133923_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20241228143838_ConfiguredTypes")]
+    partial class ConfiguredTypes
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,21 @@ namespace Ykotika.Persistence.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("OutsourceShopProduct", b =>
+                {
+                    b.Property<Guid>("OutsourceShopsId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ProductsId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("OutsourceShopsId", "ProductsId");
+
+                    b.HasIndex("ProductsId");
+
+                    b.ToTable("OutsourceShopProduct");
+                });
 
             modelBuilder.Entity("Ykotika.Domain.Entities.Entity", b =>
                 {
@@ -281,12 +296,7 @@ namespace Ykotika.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("ProductId")
-                        .HasColumnType("uuid");
-
                     b.HasIndex("LogoId");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("OutsourceShops");
                 });
@@ -379,6 +389,21 @@ namespace Ykotika.Persistence.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("OutsourceShopProduct", b =>
+                {
+                    b.HasOne("Ykotika.Domain.Entities.OutsourceShop", null)
+                        .WithMany()
+                        .HasForeignKey("OutsourceShopsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Ykotika.Domain.Entities.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Ykotika.Domain.Entities.Entity", b =>
                 {
                     b.OwnsOne("Ykotika.Domain.ValueObjects.Timestamps", "Timestamps", b1 =>
@@ -458,7 +483,7 @@ namespace Ykotika.Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("Ykotika.Domain.Entities.Offer", "Offer")
-                        .WithMany()
+                        .WithMany("Agreements")
                         .HasForeignKey("OfferId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -639,7 +664,7 @@ namespace Ykotika.Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("Ykotika.Domain.Entities.Form", "Form")
-                        .WithMany("SubmittedForms")
+                        .WithMany("FormRecords")
                         .HasForeignKey("FormId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -694,10 +719,6 @@ namespace Ykotika.Persistence.Migrations
                         .HasForeignKey("LogoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Ykotika.Domain.Entities.Product", null)
-                        .WithMany("OutsourceShops")
-                        .HasForeignKey("ProductId");
 
                     b.Navigation("Logo");
                 });
@@ -767,9 +788,9 @@ namespace Ykotika.Persistence.Migrations
 
             modelBuilder.Entity("Ykotika.Domain.Entities.Form", b =>
                 {
-                    b.Navigation("Inputs");
+                    b.Navigation("FormRecords");
 
-                    b.Navigation("SubmittedForms");
+                    b.Navigation("Inputs");
                 });
 
             modelBuilder.Entity("Ykotika.Domain.Entities.FormRecord", b =>
@@ -777,11 +798,14 @@ namespace Ykotika.Persistence.Migrations
                     b.Navigation("InputRecords");
                 });
 
+            modelBuilder.Entity("Ykotika.Domain.Entities.Offer", b =>
+                {
+                    b.Navigation("Agreements");
+                });
+
             modelBuilder.Entity("Ykotika.Domain.Entities.Product", b =>
                 {
                     b.Navigation("Images");
-
-                    b.Navigation("OutsourceShops");
                 });
 
             modelBuilder.Entity("Ykotika.Domain.Entities.ProductType", b =>

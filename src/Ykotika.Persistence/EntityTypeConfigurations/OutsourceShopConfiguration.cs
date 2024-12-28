@@ -8,6 +8,11 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
     {
         public void Configure(EntityTypeBuilder<OutsourceShop> builder)
         {
+            builder
+                .HasOne(e => e.Logo);
+            builder
+                .HasMany(e => e.Products)
+                .WithMany(e => e.OutsourceShops);
         }
     }
 }

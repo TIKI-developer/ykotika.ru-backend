@@ -11,7 +11,7 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
         {
             builder
                 .HasOne(e => e.Form)
-                .WithMany(e => e.SubmittedForms);
+                .WithMany(e => e.FormRecords);
             builder
                 .HasMany(e => e.InputRecords)
                 .WithOne(e => e.SubmittedFormData);

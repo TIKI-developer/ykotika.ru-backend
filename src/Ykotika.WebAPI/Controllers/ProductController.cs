@@ -55,5 +55,10 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok();
         }
+        [HttpPost("{id}/generate-spreadsheet")]
+        public async Task<IActionResult> GenerateSpreadSheet(Guid id)
+        {
+            return Ok();
+        }
     }
 }

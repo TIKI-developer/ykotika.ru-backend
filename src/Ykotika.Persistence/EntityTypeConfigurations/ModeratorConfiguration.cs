@@ -6,6 +6,10 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
 {
     public class ModeratorConfiguration : IEntityTypeConfiguration<Moderator>
     {
-        public void Configure(EntityTypeBuilder<Moderator> builder) { }
+        public void Configure(EntityTypeBuilder<Moderator> builder) 
+        {
+            builder
+                .HasOne(e => e.User);
+        }
     }
 }

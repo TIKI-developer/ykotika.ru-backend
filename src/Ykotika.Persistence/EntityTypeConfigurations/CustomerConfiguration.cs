@@ -8,7 +8,8 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
     {
         public void Configure(EntityTypeBuilder<Customer> builder)
         {
-
+            builder
+                .HasOne(e => e.User);
         }
     }
 }

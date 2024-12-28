@@ -8,7 +8,9 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
     {
         public void Configure(EntityTypeBuilder<Offer> builder)
         {
-
+            builder
+                .HasMany(e => e.Agreements)
+                .WithOne(e => e.Offer);
         }
     }
 }

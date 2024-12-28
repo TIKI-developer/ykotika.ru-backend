@@ -8,6 +8,13 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
     {
         public void Configure(EntityTypeBuilder<Product> builder)
         {
+            builder
+                .HasMany(e => e.Images);
+            builder
+                .HasMany(e => e.OutsourceShops)
+                .WithMany(e => e.Products);
+            builder
+                .HasOne(e => e.FormRecord);
         }
     }
 }

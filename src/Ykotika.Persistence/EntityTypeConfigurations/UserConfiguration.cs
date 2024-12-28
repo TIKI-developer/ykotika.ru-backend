@@ -14,6 +14,8 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
             builder
                 .Property(e => e.Email)
                 .HasMaxLength(256);
+            builder
+                .HasOne(e => e.Picture);
         }
     }
 }

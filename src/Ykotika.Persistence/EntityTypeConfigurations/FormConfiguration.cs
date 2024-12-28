@@ -15,6 +15,10 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
             builder
                 .HasMany(e => e.Inputs)
                 .WithOne(e => e.Form);
+
+            builder
+                .HasMany(e => e.FormRecords)
+                .WithOne(e => e.Form);
         }
     }
 }
