@@ -10,29 +10,52 @@ namespace Ykotika.SpreadsheetService
     {
         public FileData GenerateProductsTable(List<Product> products)
         {
-            List<ProductType> productTypes = 
+            Dictionary<ProductType, List<Product>> productTypeDictionary =
                 products
-                .Select(x => x.ProductType)
-                .Distinct()
-                .ToList();
-            var workbook = new XLWorkbook();
+                .GroupBy(product => product.ProductType)
+                .ToDictionary(group => group.Key, group => group.ToList());
 
-            foreach (var productType in productTypes)
+            using (var memoryStream = new MemoryStream())
             {
-                var worksheet = workbook.Worksheets.Add(productType.Name);
+                var workbook = new XLWorkbook();
 
-                var headerRow = worksheet.Row(1);
-                Input[] inputs = [.. productType.Form.Inputs];
-
-                for (int col = 1; col <= inputs.Length; col++)
+                foreach (var kvp in productTypeDictionary)
                 {
-                    headerRow.Cell(col).Value = inputs[col - 1].Label;
+                    var productType = kvp.Key;
+                    var productsOfType = kvp.Value;
+
+                    var worksheet = workbook.Worksheets.Add(productType.Name);
+
+                    var headerRow = worksheet.Row(1);
+                    Input[] inputs = productType.Form.Inputs.ToArray();
+
+                    for (int col = 1; col <= inputs.Length; col++)
+                    {
+                        headerRow.Cell(col).Value = inputs[col - 1].Label;
+                    }
+
+                    for (int row = 2; row <= productsOfType.Count + 1; row++)
+                    {
+                        var product = productsOfType[row - 2];
+                        var productInputRecords = product.FormRecord.InputRecords.ToArray();
+                        for (int col = 1; col <= inputs.Length; col++)
+                        {
+                            var propertyValue = productInputRecords[col - 1].Value;
+
+                            worksheet.Cell(row, col).Value = propertyValue?.ToString();
+                        }
+                    }
                 }
-                Console.WriteLine("hello");
+                workbook.SaveAs(memoryStream);
+
+                var fileContent = memoryStream.ToArray();
+
+                return new FileData
+                {
+                    Name = $"Table {DateTime.UtcNow.Ticks}.xlsx",
+                    Content = fileContent,
+                };
             }
-                Console.WriteLine("hi");
-            workbook.SaveAs("output.xlsx");
-            return null;
         }
         public FileData Generate<T>(List<T> dto)
         {

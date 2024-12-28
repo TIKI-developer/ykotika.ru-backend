@@ -30,21 +30,18 @@ namespace Ykotika.Application.Commands
                 .Include(e => e.ProductType)
                 .ThenInclude(e => e.Form)
                 .ThenInclude(e => e.Inputs)
-                //.ProjectTo<ProductSpreadsheetDto>(_mapper.ConfigurationProvider)
+                .Include(e => e.FormRecord)
+                .ThenInclude(e => e.InputRecords)
                 .ToListAsync(cancellationToken);
-            Console.WriteLine(products.Count);
+
             if (products != null && products.Count > 0)
             {
-                //var fileData = _spreadsheetService.Generate(products);
-                //var file = await _fileService.Upload(fileData, "tables", false);
+                var fileData = _spreadsheetService.GenerateProductsTable(products);
+                var file = await _fileService.Upload(fileData, "tables", false);
+                await _dbContext.Files.AddAsync(file, cancellationToken);
+                await _dbContext.SaveChangesAsync(cancellationToken);
 
-                //await _dbContext.Files.AddAsync(file, cancellationToken);
-                //await _dbContext.SaveChangesAsync(cancellationToken);
-
-                //return file.Id;
-                _spreadsheetService.GenerateProductsTable(products);
-
-                return Guid.Empty;
+                return file.Id;
             }
             return Guid.Empty;
         }

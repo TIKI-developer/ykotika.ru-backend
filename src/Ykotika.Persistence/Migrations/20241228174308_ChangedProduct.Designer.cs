@@ -12,7 +12,7 @@ using Ykotika.Persistence;
 namespace Ykotika.Persistence.Migrations
 {
     [DbContext(typeof(YkotikaDbContext))]
-    [Migration("20241228172839_ChangedProduct")]
+    [Migration("20241228174308_ChangedProduct")]
     partial class ChangedProduct
     {
         /// <inheritdoc />
