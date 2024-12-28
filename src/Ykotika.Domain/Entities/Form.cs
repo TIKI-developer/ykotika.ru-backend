@@ -5,5 +5,6 @@
         public required string Name { get; set; }
         public List<Input>? Inputs { get; set; }
         public List<FormRecord>? SubmittedForms { get; set; }
+        public required bool IsPublished { get; set; }
     }
 }

@@ -1,0 +1,32 @@
+﻿using AutoMapper;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Ykotika.Application.Common.Exceptions;
+using Ykotika.Application.Interfaces;
+using Ykotika.Application.ViewModels;
+using Ykotika.Domain.Entities;
+
+namespace Ykotika.Application.Queries
+{
+    public class GetAuthorRequestByUserQueryHandler 
+        (IYkotikaDbContext dbContext,
+        IMapper mapper)
+        : IRequestHandler<GetAuthorRequestByUserQuery, AuthorDetails>
+    {
+        private readonly IMapper _mapper = mapper;
+        private readonly IYkotikaDbContext _dbContext = dbContext;
+
+        public async Task<AuthorDetails> 
+            Handle(GetAuthorRequestByUserQuery request, CancellationToken cancellationToken)
+        {
+            var author = await
+                _dbContext
+                .Authors
+                .Include(e => e.User)
+                .FirstOrDefaultAsync(e => e.User.Id == request.Id, cancellationToken)
+                ?? throw new NotFoundException(nameof(User), request.Id);
+
+            return _mapper.Map<AuthorDetails>(author.Request);
+        }
+    }
+}

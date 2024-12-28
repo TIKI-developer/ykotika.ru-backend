@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Ykotika.Application.Common.Exceptions;
 using Ykotika.Application.Interfaces;
-using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Commands
 {
@@ -18,7 +17,7 @@ namespace Ykotika.Application.Commands
                 _dbContext
                 .Offers
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
-                ?? throw new NotFoundException(nameof(Offer), request.Id);
+                ?? throw new NotFoundException(nameof(Domain.Entities.Offer), request.Id);
 
             offer.Content = request.Content ?? offer.Content;
 

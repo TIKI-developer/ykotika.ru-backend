@@ -6,7 +6,7 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Commands
 {
-    public class UpdateCategoryCommandHandler
+    public class UpdateCategoryCommandHandler 
         (IYkotikaDbContext dbContext)
         : IRequestHandler<UpdateCategoryCommand>
     {
@@ -17,12 +17,18 @@ namespace Ykotika.Application.Commands
             var category = await
                 _dbContext
                 .Categories
-                .Include(e => e.Timestamps)
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(Category), request.Id);
 
             category.Name = request.Name ?? category.Name;
-            category.Timestamps.MarkUpdated();
+            category.Description = request.Description ?? category.Description;
+
+            var image = await
+                _dbContext
+                .Files
+                .FirstOrDefaultAsync(e => e.Id == request.ImageFileId, cancellationToken);
+
+            category.Image = image ?? category.Image;
 
             await _dbContext.SaveChangesAsync(cancellationToken);
         }

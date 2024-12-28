@@ -17,7 +17,7 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok(vm);
         }
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("{id}/delete")]
         public async Task<ActionResult> Delete(Guid id)
         {
             var command = new DeleteFileCommand { Id = id };
@@ -25,7 +25,7 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok();
         }
-        [HttpGet("download/{id}")]
+        [HttpGet("{id}/download")]
         public async Task<ActionResult> Download(Guid id)
         {
             var command = new DownloadFileCommand { Id = id };

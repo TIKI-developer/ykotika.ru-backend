@@ -2,7 +2,7 @@
 
 namespace Ykotika.Application.Queries
 {
-    public class GetQueryCategoriesHandler : IRequest<GetCategoriesQuery>
+    public class GetQueryCategoriesHandler : IRequest<GetProductTypeListQuery>
     {
 
     }

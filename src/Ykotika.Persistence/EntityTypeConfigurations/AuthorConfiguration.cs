@@ -14,6 +14,12 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
                     ar.WithOwner();
                     ar.OwnsOne(e => e.Timestamps);
                 });
+
+            builder
+                .OwnsMany(e => e.Socials, s =>
+                {
+                    s.WithOwner();
+                });
         }
     }
 }

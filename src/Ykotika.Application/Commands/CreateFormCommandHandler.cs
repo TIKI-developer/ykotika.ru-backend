@@ -22,7 +22,8 @@ namespace Ykotika.Application.Commands
                 Id = Guid.NewGuid(),
                 Name = request.Name,
                 Inputs = inputs,
-                Timestamps = new Timestamps()
+                Timestamps = new Timestamps(),
+                IsPublished = false
             };
             foreach (var input in inputs)
             {

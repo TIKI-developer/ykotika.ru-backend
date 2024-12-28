@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Ykotika.Application.Commands;
 using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
+using Ykotika.Domain.Entities;
 using Ykotika.WebAPI.Models;
 
 namespace Ykotika.WebAPI.Controllers
@@ -14,11 +15,20 @@ namespace Ykotika.WebAPI.Controllers
     {
         private readonly IMapper _mapper = mapper;
 
-        [HttpGet("{authorId}")]
-        public async Task<ActionResult<AgreementList>> GetByUser(Guid authorId)
+        [HttpGet]
+        public async Task<ActionResult<AgreementList>> GetAll()
         {
-            var query = new GetAgreementByUserQuery { AuthorId = authorId };
+            var query = new GetAgreementListQuery();
             var vm = await Mediator.Send(query);
+
+            return Ok(vm);
+        }
+        [HttpGet("{id}")]
+        public async Task<ActionResult<AgreementDetails>> GetById(Guid id)
+        {
+            var query = new GetAgreementByIdQuery { Id = id };
+            var vm = await Mediator.Send(query);
+
             return Ok(vm);
         }
         [HttpPost]

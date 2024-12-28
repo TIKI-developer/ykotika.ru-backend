@@ -18,8 +18,8 @@ namespace Ykotika.Application.Commands
             var category = await
                 _dbContext
                 .Categories
-                .FirstOrDefaultAsync(e => e.Id == request.CategoryId, cancellationToken)
-                ?? throw new NotFoundException(nameof(Category), request.CategoryId);
+                .FirstOrDefaultAsync(e => e.Id == request.ProductTypeId, cancellationToken)
+                ?? throw new NotFoundException(nameof(ProductType), request.ProductTypeId);
 
             var formRecord = await
                 _dbContext
@@ -35,7 +35,8 @@ namespace Ykotika.Application.Commands
                 Name = formRecord.InputRecords.FirstOrDefault(e => e.FormInput.Label == "Название")!.Value,
                 Description = formRecord.InputRecords.FirstOrDefault(e => e.FormInput.Label == "Описание")!.Value,
                 Timestamps = new Timestamps(),
-                FormRecord = formRecord
+                FormRecord = formRecord,
+                IsPublished = false
             };
 
             return product.Id;

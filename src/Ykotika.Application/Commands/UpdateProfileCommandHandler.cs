@@ -33,6 +33,8 @@ namespace Ykotika.Application.Commands
 
             user.Name = request.Name ?? user.Name;
             user.Surname = request.Surname ?? user.Surname;
+            user.PhoneNumber = request.PhoneNumber ?? user.PhoneNumber;
+            
 
             await _dbContext.SaveChangesAsync(cancellationToken);
         }

@@ -8,7 +8,7 @@ namespace Ykotika.Application.Commands
         public required Guid Id { get; set; }
         public required string Name { get; set; }
         public required string Description { get; set; }
-        public List<OutsourceShop>? OutsourceShops { get; set; }
-        public List<Domain.Entities.File>? Images { get; set; }
+        public List<Guid>? OutsourceShops { get; set; }
+        public List<Guid>? Images { get; set; }
     }
 }

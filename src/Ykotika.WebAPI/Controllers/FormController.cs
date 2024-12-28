@@ -16,7 +16,6 @@ namespace Ykotika.WebAPI.Controllers
         public async Task<ActionResult<Guid>> Create([FromBody] CreateFormDto dto)
         {
             var command = _mapper.Map<CreateFormCommand>(dto);
-
             var id = await Mediator.Send(command);
 
             return Ok(id);
@@ -49,13 +48,13 @@ namespace Ykotika.WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<FormList>> Get()
         {
-            var query = new GetFormsQuery();
+            var query = new GetFormListQuery();
             var vm = await Mediator.Send(query);
 
             return Ok(vm);
         }
 
-        [HttpPost("add-input/{formId}")]
+        [HttpPost("{formId}/inputs")]
         public async Task<ActionResult<Guid>> AddInput(Guid formId, [FromBody] AddInputDto dto)
         {
             var command = _mapper.Map<AddInputCommand>(dto);
@@ -64,7 +63,7 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok(id);
         }
-        [HttpPut("update-input/{id}")]
+        [HttpPut("inputs/{id}")]
         public async Task<IActionResult> UpdateInput(Guid id, [FromBody] UpdateInputDto dto)
         {
             var command = _mapper.Map<UpdateInputCommand>(dto);
@@ -73,7 +72,7 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok();
         }
-        [HttpDelete("delete-input/{id}")]
+        [HttpDelete("inputs/{id}")]
         public async Task<IActionResult> RemoveInput(Guid id)
         {
             var command = new DeleteInputCommand { Id = id };
@@ -81,6 +80,5 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok();
         }
-
     }
 }

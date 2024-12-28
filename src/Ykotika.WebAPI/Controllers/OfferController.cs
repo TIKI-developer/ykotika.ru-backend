@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Ykotika.Application.Commands;
-
+using Ykotika.Application.Queries;
+using Ykotika.Application.ViewModels;
 using Ykotika.WebAPI.Models;
 
 namespace Ykotika.WebAPI.Controllers
@@ -14,16 +15,20 @@ namespace Ykotika.WebAPI.Controllers
         private readonly IMapper _mapper = mapper;
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<ActionResult<OfferList>> Get()
         {
+            var query = new GetOfferListQuery();
+            var vm = await Mediator.Send(query);
 
-
-            return Ok();
+            return Ok(vm);
         }
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById()
+        public async Task<ActionResult<OfferDetails>> GetById(Guid id)
         {
-            return Ok();
+            var query = new GetOfferByIdQuery { Id = id };
+            var vm = await Mediator.Send(query);
+
+            return Ok(vm);
         }
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateOfferDto dto)

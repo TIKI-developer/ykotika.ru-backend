@@ -20,10 +20,31 @@ namespace Ykotika.Application.Commands
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(Product), request.Id);
 
+
             product.Name = request.Name ?? product.Name;
             product.Description = request.Description ?? product.Description;
-            product.OutsourceShops = request.OutsourceShops ?? product.OutsourceShops;
-            product.Images = request.Images ?? product.Images;
+
+            if (request.Images != null)
+            {
+                var images = await
+                    _dbContext
+                    .Files
+                    .Where(e => request.Images.Contains(e.Id))
+                    .ToListAsync(cancellationToken);
+
+                product.Images = images ?? product.Images;
+            }
+
+            if (request.OutsourceShops != null)
+            {
+                var outsourceShops = await
+                    _dbContext
+                    .OutsourceShops
+                    .Where(e => request.OutsourceShops.Contains(e.Id))
+                    .ToListAsync(cancellationToken);
+
+                product.OutsourceShops = outsourceShops ?? product.OutsourceShops;
+            }
 
             await _dbContext.SaveChangesAsync(cancellationToken);
         }

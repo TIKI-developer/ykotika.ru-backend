@@ -3,12 +3,12 @@
     public class AuthorRequest
     {
         public required string TellAboutYourself { get; set; }
-        public required Social WhichSocial { get; set; }
+        public required ContactSocial WhichSocial { get; set; }
         public required Timestamps Timestamps { get; set; }
-    }
-    public enum Social
-    {
-        Telegram,
-        WhatsApp
+        public enum ContactSocial
+        {
+            Telegram,
+            WhatsApp
+        }
     }
 }

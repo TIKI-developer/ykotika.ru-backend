@@ -22,6 +22,7 @@ namespace Ykotika.Application.Queries
             var user = await
                 _dbContext
                 .Users
+                .Include(e => e.Picture)
                 .FirstOrDefaultAsync(u => u.Id == request.Id, cancellationToken);
 
             if (user == null)

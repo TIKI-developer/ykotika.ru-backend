@@ -1,7 +1,5 @@
 ﻿using MediatR;
 using Ykotika.Application.Interfaces;
-using Ykotika.Domain.Entities;
-using Ykotika.Domain.ValueObjects;
 
 namespace Ykotika.Application.Commands
 {
@@ -13,15 +11,15 @@ namespace Ykotika.Application.Commands
 
         public async Task<Guid> Handle(CreateOfferCommand request, CancellationToken cancellationToken)
         {
-            var offer = new Offer
+            var offer = new Domain.Entities.Offer
             {
                 Id = Guid.NewGuid(),
                 Content = request.Content,
-                Timestamps = new Timestamps()
+                Timestamps = new Domain.ValueObjects.Timestamps()
             };
 
 
-            await _dbContext.Offers.AddAsync(offer, cancellationToken);
+            await _dbContext.Offers.AddAsync(offer);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return offer.Id;

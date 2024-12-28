@@ -1,6 +1,21 @@
-﻿namespace Ykotika.Application.ViewModels
+﻿using AutoMapper;
+using Ykotika.Application.Common.Mappings;
+using Ykotika.Domain.Entities;
+
+namespace Ykotika.Application.ViewModels
 {
-    public class ProductItem
+    public class ProductItem : IMapWith<Product>
     {
+        public required Guid Id { get; set; }
+        public required string Name { get; set; }
+        public required string Description { get; set; }
+        public List<OutsourceShop>? OutsourceShops { get; set; }
+        public List<Domain.Entities.File>? Images { get; set; }
+        public required bool IsPublished { get; set; }
+
+        public void Mapping(Profile profile)
+        {
+            profile.CreateMap <Product, ProductItem>();
+        }
     }
 }

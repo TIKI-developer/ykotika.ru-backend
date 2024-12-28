@@ -6,7 +6,7 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Commands
 {
-    public class DeleteCategoryCommandHandler
+    public class DeleteCategoryCommandHandler 
         (IYkotikaDbContext dbContext)
         : IRequestHandler<DeleteCategoryCommand>
     {
@@ -21,7 +21,6 @@ namespace Ykotika.Application.Commands
                 ?? throw new NotFoundException(nameof(Category), request.Id);
 
             _dbContext.Categories.Remove(category);
-
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }
