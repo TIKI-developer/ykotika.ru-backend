@@ -8,6 +8,11 @@
 
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.104.2" />
+	<PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ykotika.Application\Ykotika.Application.csproj" />
   </ItemGroup>
 
 </Project>

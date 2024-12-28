@@ -15,6 +15,9 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
                 .WithMany(e => e.Products);
             builder
                 .HasOne(e => e.FormRecord);
+            builder
+                .HasOne(e => e.ProductType)
+                .WithMany(e => e.Products);
         }
     }
 }

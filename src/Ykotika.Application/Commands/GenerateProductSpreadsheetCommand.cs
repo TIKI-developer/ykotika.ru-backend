@@ -2,8 +2,8 @@
 
 namespace Ykotika.Application.Commands
 {
-    public class GenerateProductSpreadsheetCommand : IRequest
+    public class GenerateProductSpreadsheetCommand : IRequest<Guid>
     {
-        public required Guid ProductId { get; set; }
+        public required List<Guid> Products { get; set; }
     }
 }

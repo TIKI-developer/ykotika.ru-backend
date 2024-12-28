@@ -55,10 +55,13 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok();
         }
-        [HttpPost("{id}/generate-spreadsheet")]
-        public async Task<IActionResult> GenerateSpreadSheet(Guid id)
+        [HttpPost("generate-spreadsheet")]
+        public async Task<ActionResult<Guid>> GenerateSpreadSheet([FromBody] GenerateProductSpreadsheetDto dto)
         {
-            return Ok();
+            var command = _mapper.Map<GenerateProductSpreadsheetCommand>(dto);
+            var id = await Mediator.Send(command);
+
+            return Ok(id);
         }
     }
 }

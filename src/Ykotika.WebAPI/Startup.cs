@@ -35,6 +35,7 @@ namespace Ykotika.WebAPI
             services.AddPersistence(Configuration);
             services.AddFileStorage();
             services.AddSecurity(Configuration);
+            services.AddSpreadsheet();
             services.AddApiAuthentication();
             services.AddApplication();
             services.AddControllers();

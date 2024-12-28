@@ -27,6 +27,7 @@
     <ProjectReference Include="..\Ykotika.FileStorage\Ykotika.FileStorage.csproj" />
     <ProjectReference Include="..\Ykotika.Persistence\Ykotika.Persistence.csproj" />
     <ProjectReference Include="..\Ykotika.Security\Ykotika.Security.csproj" />
+    <ProjectReference Include="..\Ykotika.SpreadsheetService\Ykotika.SpreadsheetService.csproj" />
   </ItemGroup>
 
 </Project>

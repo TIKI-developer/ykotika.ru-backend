@@ -15,9 +15,9 @@ namespace Ykotika.Application.Commands
 
         public async Task<Guid> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
-            var category = await
+            var productType = await
                 _dbContext
-                .Categories
+                .ProductTypes
                 .FirstOrDefaultAsync(e => e.Id == request.ProductTypeId, cancellationToken)
                 ?? throw new NotFoundException(nameof(ProductType), request.ProductTypeId);
 
@@ -32,12 +32,16 @@ namespace Ykotika.Application.Commands
             var product = new Product
             {
                 Id = Guid.NewGuid(),
-                Name = formRecord.InputRecords.FirstOrDefault(e => e.FormInput.Label == "Название")!.Value,
-                Description = formRecord.InputRecords.FirstOrDefault(e => e.FormInput.Label == "Описание")!.Value,
+                Name = request.Name ?? formRecord.InputRecords.FirstOrDefault(e => e.FormInput.Label == "Название").Value,
+                Description = request.Description ?? formRecord.InputRecords.FirstOrDefault(e => e.FormInput.Label == "Описание").Value,
                 Timestamps = new Timestamps(),
                 FormRecord = formRecord,
-                IsPublished = false
+                IsPublished = false,
+                ProductType = productType,
             };
+
+            await _dbContext.Products.AddAsync(product, cancellationToken);
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             return product.Id;
         }

@@ -19,10 +19,15 @@ namespace Ykotika.FileStorage
         }
         private readonly string _baseFolder = Path.Combine(AppContext.BaseDirectory, "uploads");
 
-        public async Task<Domain.Entities.File> Upload(FileData data, string relativePath = "static")
+        public async Task<Domain.Entities.File> Upload(FileData data, string relativePath = "static", bool needUniqueName = true)
         {
             Guid id = Guid.NewGuid();
-            string uniqueName = id + Path.GetExtension(data.Name);
+            string uniqueName;
+            if (needUniqueName)
+            {
+               uniqueName = id + Path.GetExtension(data.Name);
+            }
+            uniqueName = data.Name;
             string fullPath = Path.Combine(_baseFolder, relativePath, uniqueName);
             string directory = Path.GetDirectoryName(fullPath);
 

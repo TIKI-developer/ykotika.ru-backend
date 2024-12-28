@@ -7,6 +7,7 @@
         public List<OutsourceShop>? OutsourceShops { get; set; }
         public List<File>? Images { get; set; }
         public required bool IsPublished { get; set; }
-        public required FormRecord FormRecord { get; set; }
+        public required FormRecord FormRecord { get; init; }
+        public required ProductType ProductType { get; init; }
     }
 }
