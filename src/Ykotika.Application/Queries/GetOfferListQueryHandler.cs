@@ -22,6 +22,7 @@ namespace Ykotika.Application.Queries
                 .Offers
                 .Include(e => e.Timestamps)
                 .ProjectTo<OfferItem>(_mapper.ConfigurationProvider)
+                .AsNoTracking()
                 .ToListAsync(cancellationToken);
 
             return new OfferList { Offers = offers };

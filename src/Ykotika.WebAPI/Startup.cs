@@ -25,8 +25,8 @@ namespace Ykotika.WebAPI
                 config.AddProfile(new AssemblyMappingProfile(typeof(IYkotikaDbContext).Assembly));
             });
 
-            var jwtOptionsSection = configuration.GetSection(nameof(Clients));
-            string[]? webURLs = jwtOptionsSection.GetValue<string[]>("WebURLs");
+            var corsOptionsSection = configuration.GetSection(nameof(Clients));
+            string[]? webURLs = corsOptionsSection.GetValue<string[]>("WebURLs");
             services.Configure<Clients>(options =>
             {
                 options.WebURLs = webURLs;

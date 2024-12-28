@@ -9,11 +9,11 @@ namespace Ykotika.Application.Commands
 {
     public class UpdateOfferCommandHandler
         (IYkotikaDbContext dbContext)
-        : IRequestHandler<UpdateOfferCommand>
+        : IRequestHandler<UpdateOfferCommand, Guid>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
 
-        public async Task Handle(UpdateOfferCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(UpdateOfferCommand request, CancellationToken cancellationToken)
         {
             var offer = await
                 _dbContext
@@ -22,17 +22,37 @@ namespace Ykotika.Application.Commands
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(Offer), request.Id);
 
-
-            var newOffer = new Offer
+            if (!offer.IsPublished)
             {
-                Id = Guid.NewGuid(),
-                Content = request.Content ?? offer.Content,
-                Timestamps = new Timestamps()
-            };
-            newOffer.Timestamps.MarkUpdated();
+                offer.Content = request.Content ?? offer.Content;
+                offer.IsPublished = request.IsPublished ?? offer.IsPublished;
+            }
+            else
+            {
+                if (request.Content != null)
+                {
+                    if (request.Content.Equals(offer.Content))
+                    {
+                        return Guid.Empty;
+                    }
 
-            await _dbContext.Offers.AddAsync(newOffer, cancellationToken);
+                    var newOffer = new Offer
+                    {
+                        Id = Guid.NewGuid(),
+                        Content = request.Content ?? offer.Content,
+                        Timestamps = new Timestamps(),
+                        IsPublished = true
+                    };
+
+                    await _dbContext.Offers.AddAsync(newOffer, cancellationToken);
+
+                    return newOffer.Id; 
+                }
+            }
+
             await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return Guid.Empty;
         }
     }
 }

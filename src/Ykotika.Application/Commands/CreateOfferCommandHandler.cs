@@ -17,7 +17,8 @@ namespace Ykotika.Application.Commands
             {
                 Id = Guid.NewGuid(),
                 Content = request.Content,
-                Timestamps = new Timestamps()
+                Timestamps = new Timestamps(),
+                IsPublished = false
             };
 
             await _dbContext.Offers.AddAsync(offer, cancellationToken);
