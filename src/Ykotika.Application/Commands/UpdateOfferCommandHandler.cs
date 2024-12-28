@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Ykotika.Application.Common.Exceptions;
 using Ykotika.Application.Interfaces;
+using Ykotika.Domain.Entities;
+using Ykotika.Domain.ValueObjects;
 
 namespace Ykotika.Application.Commands
 {
@@ -16,11 +18,20 @@ namespace Ykotika.Application.Commands
             var offer = await
                 _dbContext
                 .Offers
+                .Include(e => e.Timestamps)
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
-                ?? throw new NotFoundException(nameof(Domain.Entities.Offer), request.Id);
+                ?? throw new NotFoundException(nameof(Offer), request.Id);
 
-            offer.Content = request.Content ?? offer.Content;
 
+            var newOffer = new Offer
+            {
+                Id = Guid.NewGuid(),
+                Content = request.Content ?? offer.Content,
+                Timestamps = new Timestamps()
+            };
+            newOffer.Timestamps.MarkUpdated();
+
+            await _dbContext.Offers.AddAsync(newOffer, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }

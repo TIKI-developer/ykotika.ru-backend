@@ -21,6 +21,7 @@ namespace Ykotika.Application.Queries
             var productType = await
                 _dbContext
                 .ProductTypes
+                .Include(e => e.Form)
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(ProductType), request.Id);
 

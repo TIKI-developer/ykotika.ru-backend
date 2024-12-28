@@ -19,7 +19,7 @@ namespace Ykotika.Application.Commands
                 .FirstOrDefaultAsync(e => e.Id == request.FormId, cancellationToken)
                 ?? throw new NotFoundException(nameof(Form), request.FormId);
 
-            var category = new ProductType
+            var productType = new ProductType
             {
                 Id = Guid.NewGuid(),
                 Name = form.Name,
@@ -28,7 +28,10 @@ namespace Ykotika.Application.Commands
                 IsPublished = false
             };
 
-            return category.Id;
+            await _dbContext.ProductTypes.AddAsync(productType, cancellationToken);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return productType.Id;
         }
     }
 }

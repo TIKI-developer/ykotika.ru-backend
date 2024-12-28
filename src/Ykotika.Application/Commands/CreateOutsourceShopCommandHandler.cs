@@ -23,7 +23,7 @@ namespace Ykotika.Application.Commands
 
             var outsourceShop = new OutsourceShop
             {
-                Id = request.LogoFileId,
+                Id = Guid.NewGuid(),
                 Timestamps = new Timestamps(),
                 Name = request.Name,
                 Link = request.Link,

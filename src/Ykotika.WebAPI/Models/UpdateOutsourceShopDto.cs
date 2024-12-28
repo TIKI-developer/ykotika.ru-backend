@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
 using Ykotika.Application.Commands;
+using Ykotika.Application.Common.Mappings;
 
 namespace Ykotika.WebAPI.Models
 {
-    public class UpdateOutsourceShopDto
+    public class UpdateOutsourceShopDto : IMapWith<UpdateOutsourceShopCommand>
     {
         public string? Name { get; set; }
         public string? Link { get; set; }

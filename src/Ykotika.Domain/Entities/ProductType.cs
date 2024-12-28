@@ -4,7 +4,7 @@
     {
         public required string Name { get; set; }
         public required Form Form { get; set; }
-        public List<Product>? Products { get; set; }
         public required bool IsPublished { get; set; }
+        public List<Product>? Products { get; set; }
     }
 }
