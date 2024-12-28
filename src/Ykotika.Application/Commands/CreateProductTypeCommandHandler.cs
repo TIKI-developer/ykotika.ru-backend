@@ -22,6 +22,7 @@ namespace Ykotika.Application.Commands
             var productType = new ProductType
             {
                 Id = Guid.NewGuid(),
+                ArticlePattern = request.ArticlePattern,
                 Name = form.Name,
                 Form = form,
                 Timestamps = new Timestamps(),

@@ -32,6 +32,7 @@ namespace Ykotika.Application.Commands
             var product = new Product
             {
                 Id = Guid.NewGuid(),
+                Article = GenerateArticle(productType.ArticlePattern, formRecord),
                 Name = request.Name ?? formRecord.InputRecords.FirstOrDefault(e => e.FormInput.Label == "Название").Value,
                 Description = request.Description ?? formRecord.InputRecords.FirstOrDefault(e => e.FormInput.Label == "Описание").Value,
                 Timestamps = new Timestamps(),
@@ -44,6 +45,29 @@ namespace Ykotika.Application.Commands
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return product.Id;
+        }
+
+        private static string GenerateArticle(string pattern, FormRecord record)
+        {
+            string article = "";
+
+            List<string> patternItems = [.. pattern.Split('_')];
+
+            if (record.InputRecords != null)
+            {
+                foreach (var patternItem in patternItems)
+                {
+                    string articleItem = record
+                        .InputRecords
+                        .FirstOrDefault(e => e.FormInput.Label == patternItem)!.Value
+                        ?? "";
+
+                    article += $"-{articleItem}"; 
+                }
+            }
+            article = article.TrimStart('-');
+
+            return article;
         }
     }
 }
