@@ -1,6 +1,4 @@
-﻿using Ykotika.Domain.ValueObjects;
-
-namespace Ykotika.Domain.Entities
+﻿namespace Ykotika.Domain.Entities
 {
     public class File : Entity
     {

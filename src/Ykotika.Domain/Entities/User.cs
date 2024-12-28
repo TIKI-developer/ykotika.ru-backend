@@ -1,6 +1,4 @@
-﻿using Ykotika.Domain.ValueObjects;
-
-namespace Ykotika.Domain.Entities
+﻿namespace Ykotika.Domain.Entities
 {
     public class User : Entity
     {
@@ -8,7 +6,7 @@ namespace Ykotika.Domain.Entities
         public string? Surname { get; set; }
         public string? PhoneNumber { get; set; }
         public required string Email { get; set; }
-        public File? Avatar { get; set; }
+        public File? Picture { get; set; }
         public required string PasswordHash { get; set; }
         public required bool ConfirmedPolicy { get; set; }
         public List<UserPermission> Permissions { get; set; } = [UserPermission.Unverified];

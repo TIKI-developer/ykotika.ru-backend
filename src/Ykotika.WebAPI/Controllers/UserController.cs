@@ -3,10 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Ykotika.Application.Commands.Author;
-using Ykotika.Application.Commands.User;
+using Ykotika.Application.Commands;
 using Ykotika.Application.Interfaces;
-using Ykotika.Application.Queries.User;
+using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
 using Ykotika.WebAPI.Constants;
 using Ykotika.WebAPI.Models;
@@ -27,7 +26,7 @@ namespace Ykotika.WebAPI.Controllers
 
         [Route("signup")]
         [HttpPost]
-        public async Task<ActionResult<SignupResponse>> Signup([FromBody] SignupDto signupDto)
+        public async Task<ActionResult<Signup>> Signup([FromBody] SignupDto signupDto)
         {
             var command = _mapper.Map<SignupCommand>(signupDto);
 
@@ -95,13 +94,13 @@ namespace Ykotika.WebAPI.Controllers
             var command = new VerifyEmailCommand
             { UserId = UserId };
 
-            var vm = await Mediator.Send(command);
+            await Mediator.Send(command);
 
-            return Ok(vm);
+            return Ok();
         }
 
         [Authorize(Roles = $"{Roles.CUSTOMER_ROLE}")]
-        [Route("send-request-to-be-author")]
+        [Route("authors/requests")]
         [HttpPut]
         public async Task<IActionResult> SendRequestToBeAuthor([FromBody] SendRequestToBeAuthorDto dto)
         {
@@ -119,6 +118,14 @@ namespace Ykotika.WebAPI.Controllers
             var vm = await Mediator.Send(query);
 
             return Ok(vm);
+        }
+        [HttpPut("profile")]
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileDto dto)
+        {
+            var command = _mapper.Map<UpdateProfileCommand>(dto);
+            await Mediator.Send(command);
+
+            return Ok();
         }
 
         [HttpPost("logout")]

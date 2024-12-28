@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Ykotika.Application.Commands.Author;
+using Ykotika.Application.Commands;
 using Ykotika.Application.Common.Mappings;
 using Ykotika.Domain.ValueObjects;
 
@@ -7,7 +7,7 @@ namespace Ykotika.WebAPI.Models
 {
     public class SendRequestToBeAuthorDto : IMapWith<SendRequestToBeCommand>
     {
-        public string? UserName { get; set; }
+        public string? Name { get; set; }
         public required string Surname { get; set; }
         public required string PhoneNumber { get; set; }
         public required string Socials { get; set; }

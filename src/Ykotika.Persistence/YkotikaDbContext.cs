@@ -5,13 +5,16 @@ using Ykotika.Persistence.EntityTypeConfigurations;
 
 namespace Ykotika.Persistence
 {
-    public class YkotikaDbContext(DbContextOptions<YkotikaDbContext> options) : DbContext(options), IYkotikaDbContext
+    public class YkotikaDbContext(DbContextOptions<YkotikaDbContext> options)
+        : DbContext(options), IYkotikaDbContext
     {
         public DbSet<Entity> Entities { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Author> Authors { get; set; }
+        public DbSet<Offer> Offers { get; set; }
         public DbSet<Moderator> Moderators { get; set; }
+        public DbSet<Agreement> Agreements { get; set; }
         public DbSet<Admin> Admin { get; set; }
         public DbSet<Director> Directors { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -29,6 +32,14 @@ namespace Ykotika.Persistence
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new CustomerConfiguration());
             modelBuilder.ApplyConfiguration(new AuthorConfiguration());
+            modelBuilder.ApplyConfiguration(new ModeratorConfiguration());
+            modelBuilder.ApplyConfiguration(new AdminConfiguration());
+            modelBuilder.ApplyConfiguration(new DirectorConfiguration());
+            modelBuilder.ApplyConfiguration(new ProductConfiguration());
+            modelBuilder.ApplyConfiguration(new OfferConfiguration());
+            modelBuilder.ApplyConfiguration(new AgreementConfiguration());
+            modelBuilder.ApplyConfiguration(new CategoryConfiguration());
+            modelBuilder.ApplyConfiguration(new OutsourceShopConfiguration());
             modelBuilder.ApplyConfiguration(new FileConfiguration());
             modelBuilder.ApplyConfiguration(new FormConfiguration());
             modelBuilder.ApplyConfiguration(new FormInputConfiguration());

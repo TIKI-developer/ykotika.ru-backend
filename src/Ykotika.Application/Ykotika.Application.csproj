@@ -18,18 +18,4 @@
     <ProjectReference Include="..\Ykotika.Domain\Ykotika.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Commands\InputRecord\" />
-    <Folder Include="Commands\Admin\" />
-    <Folder Include="Commands\Agreement\" />
-    <Folder Include="Commands\Customer\" />
-    <Folder Include="Commands\Director\" />
-    <Folder Include="Queries\Admin\" />
-    <Folder Include="Queries\Agreement\" />
-    <Folder Include="Queries\Customer\" />
-    <Folder Include="Queries\Director\" />
-    <Folder Include="Queries\Offer\" />
-    <Folder Include="Queries\Product\" />
-  </ItemGroup>
-
 </Project>

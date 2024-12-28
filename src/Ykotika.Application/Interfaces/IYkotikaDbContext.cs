@@ -8,7 +8,10 @@ namespace Ykotika.Application.Interfaces
         DbSet<Entity> Entities { get; set; }
         DbSet<User> Users { get; set; }
         DbSet<Author> Authors { get; set; }
+        DbSet<OutsourceShop> OutsourceShops { get; set; }
         DbSet<Customer> Customers { get; set; }
+        DbSet<Agreement> Agreements { get; set; }
+        DbSet<Offer> Offers { get; set; }
         DbSet<Moderator> Moderators { get; set; }
         DbSet<Admin> Admin { get; set; }
         DbSet<Director> Directors { get; set; }

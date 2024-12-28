@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Ykotika.Application.Commands.File;
+using Ykotika.Application.Commands;
 using Ykotika.Application.ViewModels;
 using Ykotika.Domain.ValueObjects;
 using Ykotika.WebAPI.Models;

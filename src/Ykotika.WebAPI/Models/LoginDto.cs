@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Ykotika.Application.Commands.User;
+using Ykotika.Application.Commands;
 using Ykotika.Application.Common.Mappings;
 
 namespace Ykotika.WebAPI.Models

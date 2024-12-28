@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Ykotika.Application.Commands.Form;
-using Ykotika.Application.Commands.Input;
-using Ykotika.Application.Queries.Form;
+using Ykotika.Application.Commands;
+using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
-using Ykotika.WebAPI.Models.Forms;
+using Ykotika.WebAPI.Models;
 
 namespace Ykotika.WebAPI.Controllers
 {
