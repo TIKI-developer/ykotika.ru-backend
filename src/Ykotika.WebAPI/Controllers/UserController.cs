@@ -1,13 +1,8 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using Ykotika.Application.Commands;
-using Ykotika.Application.Interfaces;
 using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
-using Ykotika.WebAPI.Constants;
 using Ykotika.WebAPI.Models;
 
 namespace Ykotika.WebAPI.Controllers
@@ -35,6 +30,22 @@ namespace Ykotika.WebAPI.Controllers
             await Mediator.Send(command);
 
             return Ok();
+        }
+        [HttpGet]
+        public async Task<ActionResult<UserList>> Get()
+        {
+            var query = new GetUserListQuery();
+            var vm = await Mediator.Send(query);
+
+            return Ok(vm);
+        }
+        [HttpGet("{id}")]
+        public async Task<ActionResult<UserList>> Get(Guid id)
+        {
+            var query = new GetUserByIdQuery { Id = id };
+            var vm = await Mediator.Send(query);
+
+            return Ok(vm);
         }
     }
 }

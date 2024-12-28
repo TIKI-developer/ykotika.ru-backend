@@ -16,7 +16,8 @@ namespace Ykotika.Application.Commands
             var user = await
                 _dbContext
                 .Authors
-                .FirstOrDefaultAsync(e => e.Id == request.UserId, cancellationToken)
+                .Include(e => e.User)
+                .FirstOrDefaultAsync(e => e.User.Id == request.UserId, cancellationToken)
                 ?? throw new NotFoundException(nameof(Domain.Entities.Author), request.UserId);
 
             var offer = await

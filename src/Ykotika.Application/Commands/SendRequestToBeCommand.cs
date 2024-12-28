@@ -3,7 +3,7 @@ using Ykotika.Domain.ValueObjects;
 
 namespace Ykotika.Application.Commands
 {
-    public class SendRequestToBeCommand : IRequest<Unit>
+    public class SendRequestToBeCommand : IRequest<Guid>
     {
         public required Guid UserId { get; set; }
         public required string Name { get; set; }

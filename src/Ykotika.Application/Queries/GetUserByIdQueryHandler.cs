@@ -8,25 +8,23 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Queries
 {
-    public class GetAgreementByIdQueryHandler 
+    public class GetUserByIdQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
-        : IRequestHandler<GetAgreementByIdQuery, AgreementDetails>
+        : IRequestHandler<GetUserByIdQuery, UserDetails>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<AgreementDetails> Handle(GetAgreementByIdQuery request, CancellationToken cancellationToken)
+        public async Task<UserDetails> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
-            var agreement = await
+            var user = await
                 _dbContext
-                .Agreements
-                .Include(e => e.Offer)
-                .Include(e => e.Author)
+                .Users
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
-                ?? throw new NotFoundException(nameof(Agreement), request.Id);
+                ?? throw new NotFoundException(nameof(User), request.Id);
 
-            return _mapper.Map<AgreementDetails>(agreement);
+            return _mapper.Map<UserDetails>(user);
         }
     }
 }

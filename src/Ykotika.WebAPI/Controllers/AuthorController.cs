@@ -17,13 +17,13 @@ namespace Ykotika.WebAPI.Controllers
 
         [Authorize(Roles = $"{Roles.CUSTOMER_ROLE}")]
         [HttpPost]
-        public async Task<IActionResult> SendRequestToBeAuthor([FromBody] SendRequestToBeAuthorDto dto)
+        public async Task<ActionResult<Guid>> SendRequestToBeAuthor([FromBody] SendRequestToBeAuthorDto dto)
         {
             var command = _mapper.Map<SendRequestToBeCommand>(dto);
             command.UserId = UserId;
-            await Mediator.Send(command);
+            var id = await Mediator.Send(command);
 
-            return Ok();
+            return Ok(id);
         }
         [Authorize(Roles = $"{Roles.AUTHOR_ROLE}")]
         [HttpGet("me")]

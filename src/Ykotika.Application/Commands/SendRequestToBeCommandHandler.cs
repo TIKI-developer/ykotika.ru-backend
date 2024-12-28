@@ -9,11 +9,11 @@ namespace Ykotika.Application.Commands
     public class SendRequestToBeCommandHandler
         (IYkotikaDbContext dbContext)
         :
-        IRequestHandler<SendRequestToBeCommand, Unit>
+        IRequestHandler<SendRequestToBeCommand, Guid>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
 
-        public async Task<Unit> Handle(SendRequestToBeCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(SendRequestToBeCommand request, CancellationToken cancellationToken)
         {
             var user = await
                 _dbContext
@@ -36,7 +36,7 @@ namespace Ykotika.Application.Commands
 
             var author = new Author
             {
-                Id = request.UserId,
+                Id = Guid.NewGuid(),
                 Socials = request.Socials,
                 User = user,
                 Request = new Domain.ValueObjects.AuthorRequest
@@ -52,7 +52,7 @@ namespace Ykotika.Application.Commands
             await _dbContext.Authors.AddAsync(author, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return Unit.Value;
+            return author.Id;
         }
     }
 }
