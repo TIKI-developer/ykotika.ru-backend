@@ -10,7 +10,7 @@ namespace Ykotika.Article
         {
             string article = "";
 
-            List<string> patternItems = [.. pattern.Split('_')];
+            List<string> patternItems = [.. pattern.Split('-')];
 
             if (record.InputRecords != null)
             {
