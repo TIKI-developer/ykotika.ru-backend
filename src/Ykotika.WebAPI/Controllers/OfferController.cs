@@ -22,6 +22,7 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok(vm);
         }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<OfferDetails>> GetById(Guid id)
         {
@@ -30,6 +31,13 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok(vm);
         }
+
+        [HttpGet("current")]
+        public async Task<ActionResult<OfferDetails>> GetCurrent()
+        {
+            return Ok();
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateOfferDto dto)
         {
@@ -38,6 +46,7 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok(id);
         }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] UpdateOfferDto dto)
         {
@@ -47,6 +56,7 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok();
         }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {

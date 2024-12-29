@@ -40,7 +40,7 @@ namespace Ykotika.WebAPI.Controllers
         public async Task<ActionResult<AuthorList>> GetAll()
         {
             var query = new GetAuthorListQuery();
-            var vm = await Mediator.Send( query);
+            var vm = await Mediator.Send(query);
 
             return Ok(vm);
         }

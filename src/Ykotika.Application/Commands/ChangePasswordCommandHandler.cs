@@ -6,7 +6,7 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Commands
 {
-    public class ChangePasswordCommandHandler 
+    public class ChangePasswordCommandHandler
         (IYkotikaDbContext dbContext,
         IPasswordHasher passwordHasher)
         : IRequestHandler<ChangePasswordCommand>

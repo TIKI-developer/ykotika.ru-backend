@@ -6,7 +6,7 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Commands
 {
-    public class DeleteCategoryCommandHandler 
+    public class DeleteCategoryCommandHandler
         (IYkotikaDbContext dbContext)
         : IRequestHandler<DeleteCategoryCommand>
     {

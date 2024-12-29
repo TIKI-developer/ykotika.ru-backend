@@ -7,7 +7,7 @@ using Ykotika.Application.ViewModels;
 
 namespace Ykotika.Application.Queries
 {
-    public class GetProductTypeListQueryHandler 
+    public class GetProductTypeListQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
         : IRequestHandler<GetProductTypeListQuery, ProductTypeList>
@@ -15,12 +15,17 @@ namespace Ykotika.Application.Queries
         private readonly IYkotikaDbContext _dbContext = dbContext;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<ProductTypeList> 
+        public async Task<ProductTypeList>
             Handle(GetProductTypeListQuery request, CancellationToken cancellationToken)
         {
-            var productTypes = await
-                _dbContext
-                .ProductTypes
+            var query = _dbContext.ProductTypes.AsQueryable();
+
+            if (request.IsPublished.HasValue)
+            {
+                query = query.Where(pt => pt.IsPublished == request.IsPublished.Value);
+            }
+
+            var productTypes = await query
                 .ProjectTo<ProductTypeItem>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
 

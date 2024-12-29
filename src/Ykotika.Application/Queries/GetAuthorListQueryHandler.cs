@@ -7,7 +7,7 @@ using Ykotika.Application.ViewModels;
 
 namespace Ykotika.Application.Queries
 {
-    public class GetAuthorListQueryHandler 
+    public class GetAuthorListQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
         : IRequestHandler<GetAuthorListQuery, AuthorList>

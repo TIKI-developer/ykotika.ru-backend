@@ -11,7 +11,7 @@ namespace Ykotika.WebAPI.Models
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<CreateProductTypeDto, CreateProductTypeCommand>();        
+            profile.CreateMap<CreateProductTypeDto, CreateProductTypeCommand>();
         }
     }
 }

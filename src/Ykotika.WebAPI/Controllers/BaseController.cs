@@ -15,6 +15,7 @@ namespace Ykotika.WebAPI.Controllers
             ? Guid.Empty
             : Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
+
         internal string UserEmail => !User.Identity.IsAuthenticated
             ? ""
             : User.FindFirst(ClaimTypes.Email).Value;

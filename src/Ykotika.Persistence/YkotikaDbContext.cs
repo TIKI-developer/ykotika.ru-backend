@@ -29,7 +29,7 @@ namespace Ykotika.Persistence
         public DbSet<InputRecord> FormInputRecords { get; set; }
 
         public DbSet<Domain.Entities.File> Files { get; set; }
-        public DbSet<ProductType> ProductTypes { get; set; }    
+        public DbSet<ProductType> ProductTypes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

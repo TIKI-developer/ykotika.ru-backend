@@ -8,7 +8,7 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Queries
 {
-    public class GetOfferByIdQueryHandler 
+    public class GetOfferByIdQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
         : IRequestHandler<GetOfferByIdQuery, OfferDetails>

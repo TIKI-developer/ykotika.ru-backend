@@ -7,7 +7,7 @@ using Ykotika.Application.ViewModels;
 
 namespace Ykotika.Application.Queries
 {
-    public class GetCategoryListQueryHandler 
+    public class GetCategoryListQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
         : IRequestHandler<GetCategoryListQuery, CategoryList>
@@ -15,7 +15,7 @@ namespace Ykotika.Application.Queries
         private readonly IYkotikaDbContext _dbContext = dbContext;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<CategoryList> 
+        public async Task<CategoryList>
             Handle(GetCategoryListQuery request, CancellationToken cancellationToken)
         {
             var categories = await

@@ -8,7 +8,7 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Queries
 {
-    public class GetProductByIdQueryHandler 
+    public class GetProductByIdQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
         : IRequestHandler<GetProductByIdQuery, ProductDetails>
@@ -24,7 +24,7 @@ namespace Ykotika.Application.Queries
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(Product), request.Id);
 
-            return _mapper.Map<ProductDetails>(product);  
+            return _mapper.Map<ProductDetails>(product);
         }
     }
 }

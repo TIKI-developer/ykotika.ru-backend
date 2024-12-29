@@ -2,6 +2,6 @@
 {
     public class AuthorList
     {
-        public List<AuthorItem>? Authors {  get; set; } 
+        public List<AuthorItem>? Authors { get; set; }
     }
 }

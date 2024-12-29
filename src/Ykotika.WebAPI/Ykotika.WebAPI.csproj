@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ykotika.Application\Ykotika.Application.csproj" />
+    <ProjectReference Include="..\Ykotika.Article\Ykotika.Article.csproj" />
     <ProjectReference Include="..\Ykotika.FileStorage\Ykotika.FileStorage.csproj" />
     <ProjectReference Include="..\Ykotika.Persistence\Ykotika.Persistence.csproj" />
     <ProjectReference Include="..\Ykotika.Security\Ykotika.Security.csproj" />

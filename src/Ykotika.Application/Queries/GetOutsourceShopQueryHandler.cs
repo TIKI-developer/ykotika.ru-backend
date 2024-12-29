@@ -8,7 +8,7 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Queries
 {
-    public class GetOutsourceShopQueryHandler 
+    public class GetOutsourceShopQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
         : IRequestHandler<GetOutsourceShopQuery, OutsourceShopDetails>
@@ -16,7 +16,7 @@ namespace Ykotika.Application.Queries
         private readonly IYkotikaDbContext _dbContext = dbContext;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<OutsourceShopDetails> 
+        public async Task<OutsourceShopDetails>
             Handle(GetOutsourceShopQuery request, CancellationToken cancellationToken)
         {
             var outsourceShop = await

@@ -12,7 +12,7 @@ namespace Ykotika.Application.ViewModels
         public void Mapping(Profile profile)
         {
             profile.CreateMap<Agreement, AgreementDetails>()
-                .ForMember(to => to.OfferId, 
+                .ForMember(to => to.OfferId,
                 opt => opt.MapFrom(from => from.Offer.Id))
                 .ForMember(to => to.AuthorId,
                 opt => opt.MapFrom(from => from.Author.Id));

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using MediatR;
 using AutoMapper.QueryableExtensions;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Ykotika.Application.Interfaces;
 using Ykotika.Application.ViewModels;

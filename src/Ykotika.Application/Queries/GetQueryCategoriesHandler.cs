@@ -1,8 +1,6 @@
-﻿using MediatR;
-
-namespace Ykotika.Application.Queries
+﻿namespace Ykotika.Application.Queries
 {
-    public class GetQueryCategoriesHandler : IRequest<GetProductTypeListQuery>
+    public class GetQueryCategoriesHandler
     {
 
     }

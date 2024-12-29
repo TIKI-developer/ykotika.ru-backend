@@ -9,8 +9,6 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
         public void Configure(EntityTypeBuilder<Product> builder)
         {
             builder
-                .HasMany(e => e.Images);
-            builder
                 .HasMany(e => e.OutsourceShops)
                 .WithMany(e => e.Products);
             builder
@@ -18,6 +16,11 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
             builder
                 .HasOne(e => e.ProductType)
                 .WithMany(e => e.Products);
+            builder
+                .OwnsMany(e => e.Images, image =>
+                {
+                    image.WithOwner();
+                });
         }
     }
 }

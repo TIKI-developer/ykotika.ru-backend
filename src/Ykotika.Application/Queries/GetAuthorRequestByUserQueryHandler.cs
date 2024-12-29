@@ -8,7 +8,7 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Queries
 {
-    public class GetAuthorRequestByUserQueryHandler 
+    public class GetAuthorRequestByUserQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
         : IRequestHandler<GetAuthorRequestByUserQuery, AuthorDetails>
@@ -16,7 +16,7 @@ namespace Ykotika.Application.Queries
         private readonly IMapper _mapper = mapper;
         private readonly IYkotikaDbContext _dbContext = dbContext;
 
-        public async Task<AuthorDetails> 
+        public async Task<AuthorDetails>
             Handle(GetAuthorRequestByUserQuery request, CancellationToken cancellationToken)
         {
             var author = await

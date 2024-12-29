@@ -9,7 +9,7 @@ namespace Ykotika.WebAPI.Controllers
 {
     [Route("categories")]
     public class CategoryController
-        (IMapper mapper) 
+        (IMapper mapper)
         : BaseController
     {
         private readonly IMapper _mapper = mapper;

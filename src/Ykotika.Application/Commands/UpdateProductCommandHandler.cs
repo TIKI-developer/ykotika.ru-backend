@@ -1,16 +1,20 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Ykotika.Application.Common.Exceptions;
 using Ykotika.Application.Interfaces;
 using Ykotika.Domain.Entities;
+using Ykotika.Domain.ValueObjects;
 
 namespace Ykotika.Application.Commands
 {
     public class UpdateProductCommandHandler
-        (IYkotikaDbContext dbContext)
+        (IYkotikaDbContext dbContext,
+        IMapper mapper)
         : IRequestHandler<UpdateProductCommand>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
+        private readonly IMapper _mapper = mapper;
 
         public async Task Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
@@ -29,10 +33,18 @@ namespace Ykotika.Application.Commands
                 var images = await
                     _dbContext
                     .Files
-                    .Where(e => request.Images.Contains(e.Id))
+                    .Where(e => request.Images.Select(i => i.FileId).Contains(e.Id))
                     .ToListAsync(cancellationToken);
+                var productImages = request.Images
+                    .Select(dto => new ImageListItem
+                    {
+                        OrderIndex = dto.OrderIndex,
+                        File = images.FirstOrDefault(e => e.Id == dto.FileId)
+                    })
+                    .OrderBy(image => image.OrderIndex)
+                    .ToList();
 
-                product.Images = images ?? product.Images;
+                product.Images = productImages ?? product.Images;
             }
 
             if (request.OutsourceShops != null)

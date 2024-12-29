@@ -204,15 +204,10 @@ namespace Ykotika.Persistence.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
-                    b.Property<Guid?>("ProductId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("RelativePath")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
-
-                    b.HasIndex("ProductId");
 
                     b.HasIndex("Name", "RelativePath")
                         .IsUnique();
@@ -645,10 +640,6 @@ namespace Ykotika.Persistence.Migrations
                         .HasForeignKey("Ykotika.Domain.Entities.File", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Ykotika.Domain.Entities.Product", null)
-                        .WithMany("Images")
-                        .HasForeignKey("ProductId");
                 });
 
             modelBuilder.Entity("Ykotika.Domain.Entities.Form", b =>
@@ -748,7 +739,44 @@ namespace Ykotika.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.OwnsMany("Ykotika.Domain.ValueObjects.ImageListItem", "Images", b1 =>
+                        {
+                            b1.Property<Guid>("ProductId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
+
+                            b1.Property<Guid>("FileId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("OrderIndex")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("ProductId", "Id");
+
+                            b1.HasIndex("FileId");
+
+                            b1.ToTable("ImageListItem");
+
+                            b1.HasOne("Ykotika.Domain.Entities.File", "File")
+                                .WithMany()
+                                .HasForeignKey("FileId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProductId");
+
+                            b1.Navigation("File");
+                        });
+
                     b.Navigation("FormRecord");
+
+                    b.Navigation("Images");
 
                     b.Navigation("ProductType");
                 });
@@ -810,11 +838,6 @@ namespace Ykotika.Persistence.Migrations
             modelBuilder.Entity("Ykotika.Domain.Entities.Offer", b =>
                 {
                     b.Navigation("Agreements");
-                });
-
-            modelBuilder.Entity("Ykotika.Domain.Entities.Product", b =>
-                {
-                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("Ykotika.Domain.Entities.ProductType", b =>

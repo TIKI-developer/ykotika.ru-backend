@@ -46,7 +46,7 @@ namespace Ykotika.Application.Commands
 
                     await _dbContext.Offers.AddAsync(newOffer, cancellationToken);
 
-                    return newOffer.Id; 
+                    return newOffer.Id;
                 }
             }
 

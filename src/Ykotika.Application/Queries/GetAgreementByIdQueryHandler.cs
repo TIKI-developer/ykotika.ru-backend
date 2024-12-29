@@ -8,7 +8,7 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Queries
 {
-    public class GetAgreementByIdQueryHandler 
+    public class GetAgreementByIdQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
         : IRequestHandler<GetAgreementByIdQuery, AgreementDetails>

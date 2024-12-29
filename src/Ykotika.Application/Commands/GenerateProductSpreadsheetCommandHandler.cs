@@ -1,11 +1,7 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Ykotika.Application.Common.Exceptions;
 using Ykotika.Application.Interfaces;
-using Ykotika.Application.Models;
-using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Commands
 {

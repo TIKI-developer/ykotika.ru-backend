@@ -22,6 +22,8 @@ namespace Ykotika.Application.Commands
                 ?? throw new NotFoundException(nameof(ProductType), request.Id);
 
             productType.Name = request.Name ?? productType.Name;
+            productType.ArticlePattern = request.ArticlePattern ?? productType.ArticlePattern;
+            productType.IsPublished = request.IsPublished ?? productType.IsPublished;
             productType.Timestamps.MarkUpdated();
 
             await _dbContext.SaveChangesAsync(cancellationToken);

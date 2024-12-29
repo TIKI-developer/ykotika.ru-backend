@@ -8,7 +8,7 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Queries
 {
-    public class GetProductTypeByIdQueryHandler 
+    public class GetProductTypeByIdQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
         : IRequestHandler<GetProductTypeByIdQuery, ProductTypeDetails>

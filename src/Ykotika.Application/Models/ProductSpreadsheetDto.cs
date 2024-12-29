@@ -6,7 +6,7 @@ namespace Ykotika.Application.Models
 {
     public class ProductSpreadsheetDto : IMapWith<Product>
     {
-        public required string Article {  get; set; }
+        public required string Article { get; set; }
         public required string Name { get; set; }
         public void Mapping(Profile profile)
         {

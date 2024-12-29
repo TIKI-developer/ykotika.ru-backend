@@ -1,5 +1,4 @@
 ﻿using ClosedXML.Excel;
-using System.IO;
 using Ykotika.Application.Interfaces;
 using Ykotika.Domain.Entities;
 using Ykotika.Domain.ValueObjects;
@@ -29,23 +28,32 @@ namespace Ykotika.SpreadsheetService
                     var headerRow = worksheet.Row(1);
                     Input[] inputs = productType.Form.Inputs.ToArray();
 
-                    for (int col = 1; col <= inputs.Length; col++)
+                    // Заполняем заголовки: первый столбец - Article, затем динамические поля
+                    headerRow.Cell(1).Value = "Article";
+
+                    for (int col = 2; col <= inputs.Length + 1; col++)
                     {
-                        headerRow.Cell(col).Value = inputs[col - 1].Label;
+                        headerRow.Cell(col).Value = inputs[col - 2].Label;
                     }
 
+                    // Заполняем данные
                     for (int row = 2; row <= productsOfType.Count + 1; row++)
                     {
                         var product = productsOfType[row - 2];
-                        var productInputRecords = product.FormRecord.InputRecords.ToArray();
-                        for (int col = 1; col <= inputs.Length; col++)
-                        {
-                            var propertyValue = productInputRecords[col - 1].Value;
 
+                        // Первый столбец - Article
+                        worksheet.Cell(row, 1).Value = product.Article;
+
+                        // Динамические поля из InputRecords
+                        var productInputRecords = product.FormRecord.InputRecords.ToArray();
+                        for (int col = 2; col <= inputs.Length + 1; col++)
+                        {
+                            var propertyValue = productInputRecords[col - 2].Value;
                             worksheet.Cell(row, col).Value = propertyValue?.ToString();
                         }
                     }
                 }
+
                 workbook.SaveAs(memoryStream);
 
                 var fileContent = memoryStream.ToArray();
@@ -57,6 +65,7 @@ namespace Ykotika.SpreadsheetService
                 };
             }
         }
+
         public FileData Generate<T>(List<T> dto)
         {
             if (dto == null || dto.Count == 0)

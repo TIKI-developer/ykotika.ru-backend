@@ -9,7 +9,7 @@ namespace Ykotika.WebAPI.Controllers
 {
     [Route("users")]
     public class UserController
-        (IMapper mapper) 
+        (IMapper mapper)
         : BaseController
     {
         private readonly IMapper _mapper = mapper;
@@ -43,6 +43,15 @@ namespace Ykotika.WebAPI.Controllers
         public async Task<ActionResult<UserList>> Get(Guid id)
         {
             var query = new GetUserByIdQuery { Id = id };
+            var vm = await Mediator.Send(query);
+
+            return Ok(vm);
+        }
+
+        [HttpGet("{id}/agreements")]
+        public async Task<ActionResult<AgreementList>> GetUserAgreements(Guid id)
+        {
+            var query = new GetAgreementListByAuthorQuery { Id = id };
             var vm = await Mediator.Send(query);
 
             return Ok(vm);

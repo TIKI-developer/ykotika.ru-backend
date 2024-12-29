@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks.Dataflow;
 using Ykotika.Application.Commands;
 using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
+using Ykotika.WebAPI.Constants;
 using Ykotika.WebAPI.Models;
 
 namespace Ykotika.WebAPI.Controllers
@@ -15,10 +16,51 @@ namespace Ykotika.WebAPI.Controllers
     {
         private readonly IMapper _mapper = mapper;
 
+        [Authorize(Roles = $"{Roles.MODERATOR_ROLE}")]
         [HttpGet]
-        public async Task<ActionResult<ProductList>> Get()
+        public async Task<ActionResult<ProductList>>
+            Get([FromQuery] ProductFilterDto filter)
         {
-            var query = new GetProductListQuery();
+            var query = new GetProductListQuery
+            {
+                IsPublished = filter.IsPublished,
+                UserId = filter.UserId,
+                ProductType = filter.ProductType
+            };
+
+            var vm = await Mediator.Send(query);
+            return Ok(vm);
+        }
+
+        [Authorize(Roles = $"{Roles.AUTHOR_ROLE}")]
+        [HttpGet("my")]
+        public async Task<ActionResult<ProductList>>
+        GetMy([FromQuery] Guid? productType,
+              [FromQuery] bool? isPublished)
+        {
+            var query = new GetProductListQuery
+            {
+                IsPublished = isPublished,
+                UserId = UserId,
+                ProductType = productType
+            };
+
+            var vm = await Mediator.Send(query);
+            return Ok(vm);
+        }
+
+        [HttpGet("published")]
+        public async Task<ActionResult<ProductList>>
+            GetPublished([FromQuery] Guid? userId,
+                         [FromQuery] Guid? productType)
+        {
+            var query = new GetProductListQuery
+            {
+                UserId = userId,
+                ProductType = productType,
+                IsPublished = true
+            };
+
             var vm = await Mediator.Send(query);
             return Ok(vm);
         }
@@ -27,6 +69,13 @@ namespace Ykotika.WebAPI.Controllers
         {
             var query = new GetProductByIdQuery() { Id = id };
             var vm = await Mediator.Send(query);
+
+            if (vm.IsPublished == false &&
+                !User.IsInRole(Roles.MODERATOR_ROLE) &&
+                UserId != vm.FormRecord.Author.Id)
+            {
+                return Forbid();
+            }
 
             return Ok(vm);
         }

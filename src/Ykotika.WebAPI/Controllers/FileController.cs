@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Ykotika.Application.Commands;
+using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
 using Ykotika.Domain.ValueObjects;
 using Ykotika.WebAPI.Models;
@@ -17,6 +18,7 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok(vm);
         }
+
         [HttpDelete("{id}/delete")]
         public async Task<ActionResult> Delete(Guid id)
         {
@@ -25,6 +27,7 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok();
         }
+
         [HttpGet("{id}/download")]
         public async Task<ActionResult> Download(Guid id)
         {
@@ -34,6 +37,15 @@ namespace Ykotika.WebAPI.Controllers
 
 
             return Ok(File(file.Content, file.ContentType, file.Name));
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<FileList>> Get()
+        {
+            var query = new GetFileListQuery();
+            var vm = await Mediator.Send(query);
+
+            return Ok(vm);
         }
         private static FileData ConvertToFileData(IFormFile file)
         {
@@ -48,7 +60,7 @@ namespace Ykotika.WebAPI.Controllers
                 };
             }
         }
-        private string GetContentType(string fileName)
+        private static string GetContentType(string fileName)
         {
             var provider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider();
 

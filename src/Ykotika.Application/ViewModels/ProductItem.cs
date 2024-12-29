@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Ykotika.Application.Common.Mappings;
 using Ykotika.Domain.Entities;
+using Ykotika.Domain.ValueObjects;
 
 namespace Ykotika.Application.ViewModels
 {
@@ -10,12 +11,12 @@ namespace Ykotika.Application.ViewModels
         public required string Name { get; set; }
         public required string Description { get; set; }
         public List<OutsourceShop>? OutsourceShops { get; set; }
-        public List<Domain.Entities.File>? Images { get; set; }
+        public List<ImageListItem>? Images { get; set; }
         public required bool IsPublished { get; set; }
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap <Product, ProductItem>();
+            profile.CreateMap<Product, ProductItem>();
         }
     }
 }

@@ -8,7 +8,7 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Queries
 {
-    public class GetCategoryByIdQueryHandler 
+    public class GetCategoryByIdQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
         : IRequestHandler<GetCategoryByIdQuery, CategoryDetails>

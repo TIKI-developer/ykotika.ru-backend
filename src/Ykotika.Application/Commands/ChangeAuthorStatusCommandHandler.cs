@@ -6,12 +6,12 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Commands
 {
-    public class ChangeAuthorStatusCommandHandler 
+    public class ChangeAuthorStatusCommandHandler
         (IYkotikaDbContext dbContext)
         : IRequestHandler<ChangeAuthorStatusCommand>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
-        
+
         public async Task Handle(ChangeAuthorStatusCommand request, CancellationToken cancellationToken)
         {
             var author = await

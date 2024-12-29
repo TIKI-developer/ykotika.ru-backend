@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Ykotika.Domain.Entities;
+using Ykotika.Application.Models;
 
 namespace Ykotika.Application.Commands
 {
@@ -9,6 +9,6 @@ namespace Ykotika.Application.Commands
         public required string Name { get; set; }
         public required string Description { get; set; }
         public List<Guid>? OutsourceShops { get; set; }
-        public List<Guid>? Images { get; set; }
+        public List<ProductImageDto>? Images { get; set; }
     }
 }

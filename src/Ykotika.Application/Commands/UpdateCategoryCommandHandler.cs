@@ -6,7 +6,7 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Commands
 {
-    public class UpdateCategoryCommandHandler 
+    public class UpdateCategoryCommandHandler
         (IYkotikaDbContext dbContext)
         : IRequestHandler<UpdateCategoryCommand>
     {

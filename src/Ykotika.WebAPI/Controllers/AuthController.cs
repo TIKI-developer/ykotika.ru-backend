@@ -5,7 +5,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Ykotika.Application.Commands;
 using Ykotika.Application.Interfaces;
-using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
 using Ykotika.WebAPI.Constants;
 using Ykotika.WebAPI.Models;
@@ -115,7 +114,7 @@ namespace Ykotika.WebAPI.Controllers
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
         {
             var command = _mapper.Map<ChangePasswordCommand>(dto);
-            command.UserId = UserId;   
+            command.UserId = UserId;
             await Mediator.Send(command);
 
             return Ok();

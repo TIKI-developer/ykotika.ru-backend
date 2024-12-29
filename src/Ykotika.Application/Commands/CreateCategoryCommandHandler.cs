@@ -8,7 +8,7 @@ using Ykotika.Domain.ValueObjects;
 
 namespace Ykotika.Application.Commands
 {
-    public class CreateCategoryCommandHandler 
+    public class CreateCategoryCommandHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
         : IRequestHandler<CreateCategoryCommand, Guid>
