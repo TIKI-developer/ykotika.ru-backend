@@ -6,6 +6,7 @@ namespace Ykotika.WebAPI.Models
 {
     public class CreateProductTypeDto : IMapWith<CreateProductTypeCommand>
     {
+        public required string Name { get; set; }
         public required Guid FormId { get; set; }
         public required string ArticlePattern { get; set; }
 
