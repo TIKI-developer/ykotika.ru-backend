@@ -48,7 +48,7 @@ namespace Ykotika.WebAPI
                     options.AddPolicy(_policyCORSName, policy =>
                     {
                         policy
-                            .WithOrigins(webURLs!)
+                            .WithOrigins("http://localhost:3000")
                             .AllowCredentials()
                             .AllowAnyHeader()
                             .AllowAnyMethod();
