@@ -26,10 +26,13 @@ namespace Ykotika.WebAPI
             });
 
             var corsOptionsSection = Configuration.GetSection($"{nameof(ClientsOptions)}:WebURLs");
+            var clientOptionsSection = Configuration.GetSection($"{nameof(ClientsOptions)}");
+            var generalClientUrl = clientOptionsSection.GetValue<string>("GeneralClientUrl");
             string[]? webURLs = corsOptionsSection.Get<string[]>();
 
             services.Configure<ClientsOptions>(options =>
             {
+                options.GeneralClientUrl = generalClientUrl ?? string.Empty;
                 options.WebURLs = webURLs ?? Array.Empty<string>();
             });
 
