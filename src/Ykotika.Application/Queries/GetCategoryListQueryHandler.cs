@@ -21,6 +21,7 @@ namespace Ykotika.Application.Queries
             var categories = await
                 _dbContext
                 .Categories
+                .Include(e => e.Image)
                 .ProjectTo<CategoryItem>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
 

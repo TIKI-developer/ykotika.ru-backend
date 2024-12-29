@@ -53,12 +53,12 @@ namespace Ykotika.WebAPI.Controllers
         }
         [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         [HttpGet]
-        public async Task<ActionResult<FormList>> 
+        public async Task<ActionResult<FormList>>
             Get([FromQuery] FormFilterDto filter)
         {
-            var query = new GetFormListQuery 
-            { 
-                IsPublished = filter.IsPublished 
+            var query = new GetFormListQuery
+            {
+                IsPublished = filter.IsPublished
             };
             var vm = await Mediator.Send(query);
 
@@ -69,7 +69,7 @@ namespace Ykotika.WebAPI.Controllers
         [HttpGet("published")]
         public async Task<ActionResult<FormList>> GetPublished()
         {
-            var query = new GetFormListQuery 
+            var query = new GetFormListQuery
             {
                 IsPublished = true
             };

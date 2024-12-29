@@ -25,8 +25,25 @@ namespace Ykotika.Application.Commands
                 ?? throw new NotFoundException(nameof(Product), request.Id);
 
 
+            if (product.Status is not ProductStatus.New)
+            {
+                throw new Exception("Сейчас товар изменить нельзя!");
+            }
+
             product.Name = request.Name ?? product.Name;
             product.Description = request.Description ?? product.Description;
+            product.Tags = request.Tags ?? product.Tags;
+
+            if (request.SourceId != null)
+            {
+                var source = await
+                    _dbContext
+                    .Files
+                    .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
+                    ?? throw new NotFoundException(nameof(Domain.Entities.File), request.SourceId);
+
+                product.Source = source;
+            }
 
             if (request.Images != null)
             {
@@ -47,16 +64,16 @@ namespace Ykotika.Application.Commands
                 product.Images = productImages ?? product.Images;
             }
 
-            if (request.OutsourceShops != null)
-            {
-                var outsourceShops = await
-                    _dbContext
-                    .OutsourceShops
-                    .Where(e => request.OutsourceShops.Contains(e.Id))
-                    .ToListAsync(cancellationToken);
+            //if (request.OutsourceShops != null)
+            //{
+            //    var outsourceShops = await
+            //        _dbContext
+            //        .OutsourceShops
+            //        .Where(e => request.OutsourceShops.Contains(e.Id))
+            //        .ToListAsync(cancellationToken);
 
-                product.OutsourceShops = outsourceShops ?? product.OutsourceShops;
-            }
+            //    product.OutsourceShops = outsourceShops ?? product.OutsourceShops;
+            //}
 
             await _dbContext.SaveChangesAsync(cancellationToken);
         }

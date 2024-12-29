@@ -23,12 +23,8 @@ namespace Ykotika.Application.Queries
                 _dbContext
                 .Users
                 .Include(e => e.Picture)
-                .FirstOrDefaultAsync(u => u.Id == request.Id, cancellationToken);
-
-            if (user == null)
-            {
-                throw new NotFoundException(nameof(User), request.Id);
-            }
+                .FirstOrDefaultAsync(u => u.Id == request.Id, cancellationToken)
+                ?? throw new NotFoundException(nameof(User), request.Id);
 
             return _mapper.Map<UserDetails>(user);
         }

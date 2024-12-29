@@ -22,6 +22,7 @@ namespace Ykotika.Application.Queries
             var outsourceShop = await
                 _dbContext
                 .OutsourceShops
+                .Include(e => e.Logo)
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(OutsourceShop), request.Id);
 

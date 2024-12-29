@@ -21,6 +21,14 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
                 {
                     image.WithOwner();
                 });
+
+            builder
+                .HasOne(e => e.Source);
+            builder
+                .OwnsMany(e => e.Tags, tag =>
+                {
+                    tag.WithOwner();
+                });
         }
     }
 }

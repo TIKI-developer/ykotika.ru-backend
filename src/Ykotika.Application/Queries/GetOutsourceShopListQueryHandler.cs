@@ -21,6 +21,7 @@ namespace Ykotika.Application.Queries
             var outsourceShops = await
                 _dbContext
                 .OutsourceShops
+                .Include(e => e.Logo)
                 .ProjectTo<OutsourceShopItem>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
 

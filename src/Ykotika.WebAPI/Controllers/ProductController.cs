@@ -112,5 +112,22 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok(id);
         }
+        [HttpPost("generate-catalog")]
+        public async Task<IActionResult> GenerateCatalog([FromBody] GenerateProductSourcesDto dto)
+        {
+            var command = _mapper.Map<GenerateProductSourcesCommand>(dto);
+            await Mediator.Send(command);
+
+            return Ok();
+        }
+        [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
+        [HttpPatch("outsource-shops")]
+        public async Task<IActionResult> ChangeOutsourceShops([FromBody] ChangeProductOutsourceShopDto dto)
+        {
+            var command = _mapper.Map<ChangeProductOutsourceShopCommand>(dto);
+            await Mediator.Send(command);
+
+            return Ok();
+        }
     }
 }

@@ -7,7 +7,7 @@ using Ykotika.Application.ViewModels;
 
 namespace Ykotika.Application.Queries
 {
-    public class GetFormListQueryHandler 
+    public class GetFormListQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
         : IRequestHandler<GetFormListQuery, FormList>
@@ -17,7 +17,7 @@ namespace Ykotika.Application.Queries
 
         public async Task<FormList> Handle(GetFormListQuery request, CancellationToken cancellationToken)
         {
-            var query = 
+            var query =
                 _dbContext
                 .Forms
                 .AsQueryable();

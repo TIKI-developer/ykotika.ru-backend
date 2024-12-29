@@ -19,6 +19,7 @@ namespace Ykotika.Application.Queries
         {
             var query = _dbContext.Products
                 .Include(e => e.Images)
+                .ThenInclude(e => e.File)
                 .Include(e => e.FormRecord)
                 .ThenInclude(e => e.Author)
                 .AsQueryable();

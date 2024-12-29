@@ -318,9 +318,14 @@ namespace Ykotika.Persistence.Migrations
                     b.Property<Guid>("ProductTypeId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("SourceId")
+                        .HasColumnType("uuid");
+
                     b.HasIndex("FormRecordId");
 
                     b.HasIndex("ProductTypeId");
+
+                    b.HasIndex("SourceId");
 
                     b.ToTable("Products");
                 });
@@ -739,6 +744,12 @@ namespace Ykotika.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Ykotika.Domain.Entities.File", "Source")
+                        .WithMany()
+                        .HasForeignKey("SourceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.OwnsMany("Ykotika.Domain.ValueObjects.ImageListItem", "Images", b1 =>
                         {
                             b1.Property<Guid>("ProductId")
@@ -779,6 +790,8 @@ namespace Ykotika.Persistence.Migrations
                     b.Navigation("Images");
 
                     b.Navigation("ProductType");
+
+                    b.Navigation("Source");
                 });
 
             modelBuilder.Entity("Ykotika.Domain.Entities.ProductType", b =>

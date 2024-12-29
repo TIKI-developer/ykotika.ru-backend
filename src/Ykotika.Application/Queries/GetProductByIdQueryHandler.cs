@@ -21,6 +21,8 @@ namespace Ykotika.Application.Queries
             var product = await
                 _dbContext
                 .Products
+                .Include(e => e.Images)
+                .ThenInclude(e => e.File)
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(Product), request.Id);
 

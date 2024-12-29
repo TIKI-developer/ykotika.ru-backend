@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Ykotika.Application.Commands;
 using Ykotika.Application.Common.Mappings;
+using Ykotika.Application.Models;
 
 namespace Ykotika.WebAPI.Models
 {
@@ -8,8 +9,9 @@ namespace Ykotika.WebAPI.Models
     {
         public required string Name { get; set; }
         public required string Description { get; set; }
-        public List<Guid>? OutsourceShops { get; set; }
-        public List<Guid>? Images { get; set; }
+        public required List<string> Tags { get; set; }
+        public List<ImageListItemDto>? Images { get; set; }
+        public required Guid SourceId { get; set; }
 
         public void Mapping(Profile profile)
         {

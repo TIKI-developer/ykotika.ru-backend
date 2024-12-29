@@ -21,6 +21,7 @@ namespace Ykotika.Application.Queries
             var user = await
                 _dbContext
                 .Users
+                .Include(e => e.Picture)
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(User), request.Id);
 
