@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Ykotika.Application;
-using Ykotika.Application.Entities.File.Commands.Delete;
-using Ykotika.Application.Entities.File.Commands.Download;
-using Ykotika.Application.Entities.File.Commands.Upload;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Ykotika.Application.Commands;
+using Ykotika.Application.Queries;
+using Ykotika.Application.ViewModels;
+using Ykotika.Domain.ValueObjects;
+using Ykotika.WebAPI.Constants;
 using Ykotika.WebAPI.Models;
 
 namespace Ykotika.WebAPI.Controllers
@@ -11,30 +13,42 @@ namespace Ykotika.WebAPI.Controllers
     public class FileController : BaseController
     {
         [HttpPost("upload")]
-        public async Task<ActionResult<FileViewModel>> Upload([FromForm] UploadFileDto dto)
+        public async Task<ActionResult<FileDetails>> Upload([FromForm] UploadFileDto dto)
         {
-            var command = new UploadCommand { FileData = ConvertToFileData(dto.File), RelativePath = dto.RelativePath };
+            var command = new UploadFileCommand { FileData = ConvertToFileData(dto.File), RelativePath = dto.RelativePath };
             var vm = await Mediator.Send(command);
 
             return Ok(vm);
         }
-        [HttpDelete("delete/{id}")]
+
+        [HttpDelete("{id}/delete")]
         public async Task<ActionResult> Delete(Guid id)
         {
-            var command = new DeleteCommand { Id = id };
+            var command = new DeleteFileCommand { Id = id };
             await Mediator.Send(command);
 
             return Ok();
         }
-        [HttpGet("download/{id}")]
+
+        [HttpGet("{id}/download")]
         public async Task<ActionResult> Download(Guid id)
         {
-            var command = new DownloadCommand { Id = id };
+            var command = new DownloadFileCommand { Id = id };
             var file = await Mediator.Send(command);
             file.ContentType = GetContentType(file.Name);
 
 
             return Ok(File(file.Content, file.ContentType, file.Name));
+        }
+
+        [Authorize(Roles = $"{Roles.ADMIN_ROLE}")]
+        [HttpGet]
+        public async Task<ActionResult<FileList>> Get()
+        {
+            var query = new GetFileListQuery();
+            var vm = await Mediator.Send(query);
+
+            return Ok(vm);
         }
         private static FileData ConvertToFileData(IFormFile file)
         {
@@ -49,7 +63,7 @@ namespace Ykotika.WebAPI.Controllers
                 };
             }
         }
-        private string GetContentType(string fileName)
+        private static string GetContentType(string fileName)
         {
             var provider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider();
 

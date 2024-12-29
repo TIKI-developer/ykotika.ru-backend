@@ -7,6 +7,36 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Commands\Admin\**" />
+    <Compile Remove="Commands\Customer\**" />
+    <Compile Remove="Commands\Director\**" />
+    <Compile Remove="Commands\InputRecord\**" />
+    <Compile Remove="Queries\Admin\**" />
+    <Compile Remove="Queries\Customer\**" />
+    <Compile Remove="Queries\Director\**" />
+    <Compile Remove="Queries\Offer\**" />
+    <Compile Remove="Queries\Product\**" />
+    <EmbeddedResource Remove="Commands\Admin\**" />
+    <EmbeddedResource Remove="Commands\Customer\**" />
+    <EmbeddedResource Remove="Commands\Director\**" />
+    <EmbeddedResource Remove="Commands\InputRecord\**" />
+    <EmbeddedResource Remove="Queries\Admin\**" />
+    <EmbeddedResource Remove="Queries\Customer\**" />
+    <EmbeddedResource Remove="Queries\Director\**" />
+    <EmbeddedResource Remove="Queries\Offer\**" />
+    <EmbeddedResource Remove="Queries\Product\**" />
+    <None Remove="Commands\Admin\**" />
+    <None Remove="Commands\Customer\**" />
+    <None Remove="Commands\Director\**" />
+    <None Remove="Commands\InputRecord\**" />
+    <None Remove="Queries\Admin\**" />
+    <None Remove="Queries\Customer\**" />
+    <None Remove="Queries\Director\**" />
+    <None Remove="Queries\Offer\**" />
+    <None Remove="Queries\Product\**" />
+  </ItemGroup>
+
+  <ItemGroup>
 	<PackageReference Include="AutoMapper" Version="13.0.1" />
 	<PackageReference Include="FluentValidation" Version="11.10.0" />
 	<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.10.0" />
@@ -17,5 +47,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Ykotika.Domain\Ykotika.Domain.csproj" />
   </ItemGroup>
-
 </Project>

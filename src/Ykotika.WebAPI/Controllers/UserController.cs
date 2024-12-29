@@ -1,12 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Ykotika.Application.Entities.Author.Commands;
-using Ykotika.Application.Entities.User.Commands.Login;
-using Ykotika.Application.Entities.User.Commands.Signup;
-using Ykotika.Application.Entities.User.Commands.VerifyEmail;
-using Ykotika.Application.Entities.User.Queries.GetProfile;
-using Ykotika.Application.Interfaces;
+using Ykotika.Application.Commands;
+using Ykotika.Application.Queries;
+using Ykotika.Application.ViewModels;
 using Ykotika.WebAPI.Constants;
 using Ykotika.WebAPI.Models;
 
@@ -14,119 +11,65 @@ namespace Ykotika.WebAPI.Controllers
 {
     [Route("users")]
     public class UserController
-        (IMapper mapper,
-        IEmailVerifier emailVerifier,
-        IJwtProvider jwtProvider) : BaseController
+        (IMapper mapper)
+        : BaseController
     {
         private readonly IMapper _mapper = mapper;
-        private readonly IEmailVerifier _emailVerifier = emailVerifier;
-        private readonly IJwtProvider _jwtProvider = jwtProvider;
-        private readonly CookieOptions _cookieOptions = new CookieOptions
-        {
-            SameSite = SameSiteMode.Strict,
-            Secure = false
-        };
-
-        [Route("signup")]
-        [HttpPost]
-        public async Task<ActionResult<SignupViewModel>> Signup([FromBody] SignupDto signupDto)
-        {
-            var command = _mapper.Map<SignupCommand>(signupDto);
-
-            var vm = await Mediator.Send(command);
-
-            HttpContext.Response.Cookies.Append("accessToken", vm.AccessToken);
-
-            return Ok(vm);
-        }
-
-        [Route("login")]
-        [HttpPost]
-        public async Task<ActionResult<LoginViewModel>> Login([FromBody] LoginDto signupDto)
-        {
-            var command = _mapper.Map<LoginCommand>(signupDto);
-
-            var vm = await Mediator.Send(command);
-
-            HttpContext.Response.Cookies.Append("accessToken", vm.AccessToken);
-
-            return Ok(vm);
-        }
-
-        [Authorize(Roles = $"{Roles.GUEST_ROLE}")]
-        [Route("send-verify")]
-        [HttpPost]
-        public async Task<IActionResult> SendVerifyEmailMessage()
-        {
-            await Task.Run(() =>
-            {
-                var token = _jwtProvider.GenerateEmailVerificationToken(UserId, UserEmail);
-
-                // Without FrontEnd
-                //Console.WriteLine(token);
-                //var confirmationLink = Url.Action(
-                //    "VerifyEmail",
-                //    "User",
-                //    new { token = token! },
-                //    protocol: Request.Scheme
-                //);
-                var encodeToken = Uri.EscapeDataString(token);
-                var confirmationLink = $"https://infinite-ellipse-ykotika-ru-frontend-9e75.twc1.net/auth/new-verification?token={encodeToken}";
-                _emailVerifier.SendVerificationLink(UserEmail, confirmationLink!);
-            });
-
-            return Ok();
-        }
-
-        [Authorize(Roles = $"{Roles.GUEST_ROLE}")]
-        [Route("verify")]
-        [HttpGet]
-        public async Task<IActionResult> VerifyEmail([FromQuery] string token)
-        {
-            var decodedToken = Uri.UnescapeDataString(token);
-            if (!_jwtProvider.VerifyEmailToken(decodedToken, UserId, UserEmail))
-            {
-                return BadRequest("Invalid token!");
-            }
-
-            var command = new VerifyEmailCommand
-            { UserId = UserId };
-
-            var vm = await Mediator.Send(command);
-
-            return Ok(vm);
-        }
-
-        [Authorize(Roles = $"{Roles.CUSTOMER_ROLE}")]
-        [Route("send-request-to-be-author")]
-        [HttpPut]
-        public async Task<IActionResult> SendRequestToBeAuthor([FromBody] SendRequestToBeAuthorDto dto)
-        {
-            var command = _mapper.Map<SendRequestToBeCommand>(dto);
-            command.UserId = UserId;
-            await Mediator.Send(command);
-
-            return Ok();
-        }
 
         [HttpGet("profile")]
-        public async Task<ActionResult<ProfileViewModel>> GetProfile()
+        public async Task<ActionResult<UserDetails>> GetProfile()
         {
             var query = new GetProfileQuery { Id = UserId };
             var vm = await Mediator.Send(query);
 
             return Ok(vm);
         }
-
-        [HttpPost("logout")]
-        public async Task<IActionResult> Logout()
+        [HttpPut("profile")]
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileDto dto)
         {
-            await Task.Run(() =>
-            {
-                HttpContext.Response.Cookies.Delete("accessToken");
-            });
+            var command = _mapper.Map<UpdateProfileCommand>(dto);
+            command.Id = UserId;
+            await Mediator.Send(command);
 
             return Ok();
+        }
+        [Authorize(Roles = $"{Roles.ADMIN_ROLE}")]
+        [HttpGet]
+        public async Task<ActionResult<UserList>> Get()
+        {
+            var query = new GetUserListQuery();
+            var vm = await Mediator.Send(query);
+
+            return Ok(vm);
+        }
+        [Authorize(Roles = $"{Roles.ADMIN_ROLE}")]
+        [HttpGet("{id}")]
+        public async Task<ActionResult<UserList>> Get(Guid id)
+        {
+            var query = new GetUserByIdQuery { Id = id };
+            var vm = await Mediator.Send(query);
+
+            return Ok(vm);
+        }
+        [Authorize(Roles = $"{Roles.ADMIN_ROLE}")]
+        [HttpPatch("{id}")]
+        public async Task<IActionResult>
+            ChangePermissions(Guid id, [FromBody] ChangeUserPermissionsDto dto)
+        {
+            var command = _mapper.Map<ChangeUserPermissionsCommand>(dto);
+            command.Id = id;
+            await Mediator.Send(command);
+
+            return Ok();
+        }
+
+        [HttpGet("{id}/agreements")]
+        public async Task<ActionResult<AgreementList>> GetUserAgreements(Guid id)
+        {
+            var query = new GetAgreementListByAuthorQuery { Id = id };
+            var vm = await Mediator.Send(query);
+
+            return Ok(vm);
         }
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Ykotika.Security;
 using Ykotika.WebAPI.Constants;
+using Ykotika.WebAPI.Models;
 
 namespace Ykotika.WebApi.Extensions
 {
@@ -46,6 +47,16 @@ namespace Ykotika.WebApi.Extensions
                 options.AddPolicy("RequireGuestRole", policy => policy.RequireRole(Roles.GUEST_ROLE));
                 options.AddPolicy("RequireCustomerRole", policy => policy.RequireRole(Roles.CUSTOMER_ROLE));
                 options.AddPolicy("RequireAuthorRole", policy => policy.RequireRole(Roles.AUTHOR_ROLE));
+                options.AddPolicy("RequireModeratorRole", policy => policy.RequireRole(Roles.MODERATOR_ROLE));
+                options.AddPolicy("RequireDirectorRole", policy => policy.RequireRole(Roles.DIRECTOR_ROLE));
+                options.AddPolicy("RequireAdminRole", policy => policy.RequireRole(Roles.ADMIN_ROLE));
+                options.AddPolicy("ProductListGuard", policy =>
+                policy.RequireAssertion(context =>
+                {
+                    var filter = context.Resource as ProductFilterDto;
+
+                    return true;
+                }));
             });
         }
     }

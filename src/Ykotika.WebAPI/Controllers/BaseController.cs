@@ -5,7 +5,6 @@ using System.Security.Claims;
 namespace Ykotika.WebAPI.Controllers
 {
     [ApiController]
-    [Route("api")]
     public abstract class BaseController : ControllerBase
     {
         private IMediator _mediator;
@@ -15,6 +14,7 @@ namespace Ykotika.WebAPI.Controllers
         internal Guid UserId => !User.Identity.IsAuthenticated
             ? Guid.Empty
             : Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
 
         internal string UserEmail => !User.Identity.IsAuthenticated
             ? ""

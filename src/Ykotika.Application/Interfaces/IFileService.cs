@@ -1,12 +1,12 @@
-﻿using Ykotika.Domain;
+﻿using Ykotika.Domain.ValueObjects;
 
 namespace Ykotika.Application.Interfaces
 {
     public interface IFileService
     {
-        Task<FileModel> Upload(FileData data, string relativePath = "static");
-        Task<FileData> Download(FileModel file);
-        bool Delete(FileModel file);
+        Task<Domain.Entities.File> Upload(FileData data, string relativePath = "static", bool needUniqueName = true);
+        Task<FileData> Download(Domain.Entities.File file);
+        bool Delete(Domain.Entities.File file);
         string BaseStaticFolder { get; }
     }
 }

@@ -1,30 +1,24 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Ykotika.Domain;
+using Ykotika.Domain.Entities;
 
 namespace Ykotika.Persistence.EntityTypeConfigurations
 {
     public class FormConfiguration
-        : IEntityTypeConfiguration<FormModel>
+        : IEntityTypeConfiguration<Form>
     {
-        public void Configure(EntityTypeBuilder<FormModel> builder)
+        public void Configure(EntityTypeBuilder<Form> builder)
         {
-            builder
-                .HasKey(e => e.Id);
             builder
                 .Property(e => e.Name)
                 .HasMaxLength(100);
             builder
                 .HasMany(e => e.Inputs)
                 .WithOne(e => e.Form);
+
             builder
-                .Property(e => e.CreatedAt)
-                .ValueGeneratedOnAdd()
-                .HasDefaultValueSql("timezone('UTC', now())");
-            builder
-                .Property(e => e.UpdatedAt)
-                .ValueGeneratedOnAddOrUpdate()
-                .HasDefaultValueSql("timezone('UTC', now())");
+                .HasMany(e => e.FormRecords)
+                .WithOne(e => e.Form);
         }
     }
 }

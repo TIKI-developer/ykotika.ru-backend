@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using Ykotika.Application.Commands;
 using Ykotika.Application.Common.Mappings;
-using Ykotika.Application.Entities.User.Commands.Login;
 
 namespace Ykotika.WebAPI.Models
 {

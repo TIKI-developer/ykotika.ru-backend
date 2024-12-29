@@ -1,0 +1,114 @@
+﻿using ClosedXML.Excel;
+using Ykotika.Application.Interfaces;
+using Ykotika.Domain.Entities;
+using Ykotika.Domain.ValueObjects;
+
+namespace Ykotika.SpreadsheetService
+{
+    public class SpreadsheetGenerator : ISpreadsheetService
+    {
+        public FileData GenerateProductsTable(List<Product> products)
+        {
+            Dictionary<ProductType, List<Product>> productTypeDictionary =
+                products
+                .GroupBy(product => product.ProductType)
+                .ToDictionary(group => group.Key, group => group.ToList());
+
+            using (var memoryStream = new MemoryStream())
+            {
+                var workbook = new XLWorkbook();
+
+                foreach (var kvp in productTypeDictionary)
+                {
+                    var productType = kvp.Key;
+                    var productsOfType = kvp.Value;
+
+                    var worksheet = workbook.Worksheets.Add(productType.Name);
+
+                    var headerRow = worksheet.Row(1);
+                    Input[] inputs = productType.Form.Inputs.ToArray();
+
+                    // Заполняем заголовки: первый столбец - Article, затем динамические поля
+                    headerRow.Cell(1).Value = "Article";
+
+                    for (int col = 2; col <= inputs.Length + 1; col++)
+                    {
+                        headerRow.Cell(col).Value = inputs[col - 2].Label;
+                    }
+
+                    // Заполняем данные
+                    for (int row = 2; row <= productsOfType.Count + 1; row++)
+                    {
+                        var product = productsOfType[row - 2];
+
+                        // Первый столбец - Article
+                        worksheet.Cell(row, 1).Value = product.Article;
+
+                        // Динамические поля из InputRecords
+                        var productInputRecords = product.FormRecord.InputRecords.ToArray();
+                        for (int col = 2; col <= inputs.Length + 1; col++)
+                        {
+                            var propertyValue = productInputRecords[col - 2].Value;
+                            worksheet.Cell(row, col).Value = propertyValue?.ToString();
+                        }
+                    }
+                }
+
+                workbook.SaveAs(memoryStream);
+
+                var fileContent = memoryStream.ToArray();
+
+                return new FileData
+                {
+                    Name = $"Table {DateTime.UtcNow.Ticks}.xlsx",
+                    Content = fileContent,
+                };
+            }
+        }
+
+        public FileData Generate<T>(List<T> dto)
+        {
+            if (dto == null || dto.Count == 0)
+                throw new ArgumentException("DTO list cannot be null or empty.");
+            using (var memoryStream = new MemoryStream())
+            {
+                var workbook = new XLWorkbook();
+                var worksheet = workbook.Worksheets.Add("Data");
+
+                var properties = dto.First().GetType().GetProperties();
+                var headerRow = worksheet.Row(1);
+
+                for (int col = 1; col <= properties.Length; col++)
+                {
+                    headerRow.Cell(col).Value = properties[col - 1].Name;
+                }
+
+                for (int row = 2; row <= dto.Count + 1; row++)
+                {
+                    var currentItem = dto[row - 2];
+                    var currentProperties = currentItem.GetType().GetProperties();
+
+                    for (int col = 1; col <= currentProperties.Length; col++)
+                    {
+                        var value = currentProperties[col - 1].GetValue(currentItem);
+                        worksheet.Cell(row, col).Value = value.ToString();
+                    }
+                }
+
+                worksheet.Rows().AdjustToContents();
+                worksheet.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+
+                workbook.SaveAs(memoryStream);
+
+                var fileContent = memoryStream.ToArray();
+
+                return new FileData
+                {
+                    Name = $"Table {DateTime.UtcNow.Ticks}.xlsx",
+                    Content = fileContent,
+                };
+            }
+
+        }
+    }
+}

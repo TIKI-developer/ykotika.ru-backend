@@ -1,16 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Ykotika.Domain;
 
 namespace Ykotika.Persistence.EntityTypeConfigurations
 {
-    public class FileConfiguration : IEntityTypeConfiguration<FileModel>
+    public class FileConfiguration : IEntityTypeConfiguration<Domain.Entities.File>
     {
-        public void Configure(EntityTypeBuilder<FileModel> builder)
+        public void Configure(EntityTypeBuilder<Domain.Entities.File> builder)
         {
-            builder
-                .HasKey(e => e.Id);
-
             builder
                 .Property(e => e.Id)
                 .IsRequired()

@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Ykotika.Application.Entities.FormRecord.Commands.Create;
-using Ykotika.Application.Entities.FormRecord.Commands.Delete;
-using Ykotika.Application.Entities.FormRecord.Commands.Update;
-using Ykotika.Application.Entities.FormRecord.Queries.GetById;
-using Ykotika.Application.Entities.FormRecord.Queries.GetList;
-using Ykotika.WebAPI.Models.Forms;
+using Ykotika.Application.Commands;
+using Ykotika.Application.Queries;
+using Ykotika.Application.ViewModels;
+using Ykotika.WebAPI.Models;
 
 namespace Ykotika.WebAPI.Controllers
 {
@@ -42,7 +40,7 @@ namespace Ykotika.WebAPI.Controllers
             return Ok();
         }
         [HttpGet("{id}")]
-        public async Task<ActionResult<FormRecordViewModel>> Get(Guid id)
+        public async Task<ActionResult<FormRecordDetails>> Get(Guid id)
         {
             var query = new GetFormRecordQuery { Id = id };
             var vm = await Mediator.Send(query);
@@ -50,7 +48,7 @@ namespace Ykotika.WebAPI.Controllers
             return Ok(vm);
         }
         [HttpGet]
-        public async Task<ActionResult<FormRecordListViewModel>> Get()
+        public async Task<ActionResult<FormRecordList>> Get()
         {
             var query = new GetFormRecordListQuery();
             var vm = await Mediator.Send(query);

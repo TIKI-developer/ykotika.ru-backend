@@ -1,16 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Ykotika.Domain;
+using Ykotika.Domain.Entities;
 
 namespace Ykotika.Persistence.EntityTypeConfigurations
 {
     public class FormInputConfiguration
-        : IEntityTypeConfiguration<FormInputModel>
+        : IEntityTypeConfiguration<Input>
     {
-        public void Configure(EntityTypeBuilder<FormInputModel> builder)
+        public void Configure(EntityTypeBuilder<Input> builder)
         {
-            builder
-                .HasKey(e => e.Id);
             builder
                 .HasOne(e => e.Form)
                 .WithMany(e => e.Inputs);

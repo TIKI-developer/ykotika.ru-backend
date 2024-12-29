@@ -1,18 +1,33 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Ykotika.Domain;
+using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Interfaces
 {
     public interface IYkotikaDbContext
     {
-        DbSet<UserModel> Users { get; set; }
-        DbSet<AuthorModel> Authors { get; set; }
-        DbSet<CustomerModel> Customers { get; set; }
-        DbSet<FileModel> Files { get; set; }
-        DbSet<FormModel> Forms { get; set; }
-        DbSet<FormInputModel> FormInputs { get; set; }
-        DbSet<FormRecordModel> FormRecords { get; set; }
-        DbSet<FormInputRecordModel> FormInputRecords { get; set; }
+        DbSet<Entity> Entities { get; set; }
+
+        DbSet<User> Users { get; set; }
+        DbSet<Author> Authors { get; set; }
+        DbSet<Customer> Customers { get; set; }
+        DbSet<Moderator> Moderators { get; set; }
+        DbSet<Admin> Admin { get; set; }
+        DbSet<Director> Directors { get; set; }
+
+        DbSet<OutsourceShop> OutsourceShops { get; set; }
+        DbSet<Agreement> Agreements { get; set; }
+        DbSet<Offer> Offers { get; set; }
+
+        DbSet<Form> Forms { get; set; }
+        DbSet<Input> FormInputs { get; set; }
+        DbSet<FormRecord> FormRecords { get; set; }
+        DbSet<InputRecord> FormInputRecords { get; set; }
+
+        DbSet<ProductType> ProductTypes { get; set; }
+        DbSet<Category> Categories { get; set; }
+        DbSet<Product> Products { get; set; }
+
+        DbSet<Domain.Entities.File> Files { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
