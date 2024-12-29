@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Ykotika.Application.Commands;
 using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
 using Ykotika.Domain.ValueObjects;
+using Ykotika.WebAPI.Constants;
 using Ykotika.WebAPI.Models;
 
 namespace Ykotika.WebAPI.Controllers
@@ -39,6 +41,7 @@ namespace Ykotika.WebAPI.Controllers
             return Ok(File(file.Content, file.ContentType, file.Name));
         }
 
+        [Authorize(Roles = $"{Roles.ADMIN_ROLE}")]
         [HttpGet]
         public async Task<ActionResult<FileList>> Get()
         {

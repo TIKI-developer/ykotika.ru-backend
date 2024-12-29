@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ykotika.Application.Commands;
 using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
+using Ykotika.WebAPI.Constants;
 using Ykotika.WebAPI.Models;
 
 namespace Ykotika.WebAPI.Controllers
@@ -14,6 +16,7 @@ namespace Ykotika.WebAPI.Controllers
     {
         private readonly IMapper _mapper = mapper;
 
+        [Authorize(Roles =$"{Roles.DIRECTOR_ROLE}")]
         [HttpGet]
         public async Task<ActionResult<AgreementList>> GetAll()
         {
@@ -22,6 +25,8 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok(vm);
         }
+
+        [Authorize(Roles=$"{Roles.DIRECTOR_ROLE}")]
         [HttpGet("{id}")]
         public async Task<ActionResult<AgreementDetails>> GetById(Guid id)
         {
@@ -30,6 +35,8 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok(vm);
         }
+
+        [Authorize(Roles=$"{Roles.AUTHOR_ROLE}")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateAgreementDto dto)
         {
