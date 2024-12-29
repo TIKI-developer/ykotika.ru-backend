@@ -16,12 +16,12 @@ namespace Ykotika.WebAPI.Controllers
         (IMapper mapper,
         IEmailVerifier emailVerifier,
         IJwtProvider jwtProvider,
-        IOptions<Clients> clients) : BaseController
+        IOptions<ClientsOptions> clients) : BaseController
     {
         private readonly IMapper _mapper = mapper;
         private readonly IEmailVerifier _emailVerifier = emailVerifier;
         private readonly IJwtProvider _jwtProvider = jwtProvider;
-        private readonly Clients _clients = clients.Value;
+        private readonly ClientsOptions _clients = clients.Value;
 
         [Route("signup")]
         [HttpPost]

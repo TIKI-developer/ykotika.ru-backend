@@ -25,11 +25,12 @@ namespace Ykotika.WebAPI
                 config.AddProfile(new AssemblyMappingProfile(typeof(IYkotikaDbContext).Assembly));
             });
 
-            var corsOptionsSection = configuration.GetSection(nameof(Clients));
-            string[]? webURLs = corsOptionsSection.GetValue<string[]>("WebURLs");
-            services.Configure<Clients>(options =>
+            var corsOptionsSection = Configuration.GetSection($"{nameof(ClientsOptions)}:WebURLs");
+            string[]? webURLs = corsOptionsSection.Get<string[]>();
+
+            services.Configure<ClientsOptions>(options =>
             {
-                options.WebURLs = webURLs;
+                options.WebURLs = webURLs ?? Array.Empty<string>();
             });
 
             services.AddPersistence(Configuration);
@@ -48,7 +49,7 @@ namespace Ykotika.WebAPI
                     options.AddPolicy(_policyCORSName, policy =>
                     {
                         policy
-                            .WithOrigins("http://localhost:3000")
+                            .WithOrigins(webURLs!)
                             .AllowCredentials()
                             .AllowAnyHeader()
                             .AllowAnyMethod();
