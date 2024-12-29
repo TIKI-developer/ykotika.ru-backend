@@ -27,7 +27,11 @@ namespace Ykotika.FileStorage
             {
                 uniqueName = id + Path.GetExtension(data.Name);
             }
-            uniqueName = data.Name;
+            else
+            {
+                uniqueName = data.Name;
+            }
+
             string fullPath = Path.Combine(_baseFolder, relativePath, uniqueName);
             string directory = Path.GetDirectoryName(fullPath);
 

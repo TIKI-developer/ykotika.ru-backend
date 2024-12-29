@@ -70,7 +70,7 @@ namespace Ykotika.WebAPI.Controllers
                 var confirmationLink = "";
                 var encodeToken = Uri.EscapeDataString(token);
 
-                if (_clients.WebURLs.IsNullOrEmpty() || _clients.GeneralClientUrl.IsNullOrEmpty())
+                if (_clients.GeneralClientUrl.IsNullOrEmpty())
                 {
                     confirmationLink = Url.Action(
                        "VerifyEmail",
