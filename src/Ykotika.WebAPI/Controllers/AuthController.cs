@@ -70,7 +70,7 @@ namespace Ykotika.WebAPI.Controllers
                 var confirmationLink = "";
                 var encodeToken = Uri.EscapeDataString(token);
 
-                if (_clients.WebURLs.IsNullOrEmpty())
+                if (_clients.WebURLs.IsNullOrEmpty() || _clients.GeneralClientUrl.IsNullOrEmpty())
                 {
                     confirmationLink = Url.Action(
                        "VerifyEmail",
@@ -81,7 +81,7 @@ namespace Ykotika.WebAPI.Controllers
                 }
                 else
                 {
-                    confirmationLink = $"{_clients.WebURLs}/auth/new-verification?token={encodeToken}";
+                    confirmationLink = $"{_clients.GeneralClientUrl}/auth/new-verification?token={encodeToken}";
                 }
                 _emailVerifier.SendVerificationLink(UserEmail, confirmationLink!);
             });
