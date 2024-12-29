@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      SERVER_IP: ${{ secrets.SERVER_IP }}  # Переменная для IP-адреса из секретов
+      SERVER_IP: ${{ vars.SERVER_IP }}  # Переменная для IP-адреса из секретов
 
     steps:
       - name: Checkout code
@@ -27,7 +27,7 @@ jobs:
 
       - name: Deploy to server
         env:  # Передача SERVER_IP в эту команду
-          SERVER_IP: ${{ secrets.SERVER_IP }}
+          SERVER_IP: ${{ vars.SERVER_IP }}
         run: |
           ssh -v -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa root@$SERVER_IP "
             cd /var/www/ykotika/dev/ykotika.ru-backend/ && 
