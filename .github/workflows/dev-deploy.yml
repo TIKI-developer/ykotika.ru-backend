@@ -26,6 +26,8 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
 
       - name: Deploy to server
+        env:  # Передача SERVER_IP в эту команду
+          SERVER_IP: ${{ secrets.SERVER_IP }}
         run: |
           ssh -v -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa root@$SERVER_IP "
             cd /var/www/ykotika/dev/ykotika.ru-backend/ && 
