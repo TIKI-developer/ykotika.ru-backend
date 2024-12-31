@@ -2,6 +2,6 @@
 {
     public class FormList
     {
-        public required List<FormItem> Forms { get; set; }
+        public List<FormItem>? Forms { get; set; }
     }
 }

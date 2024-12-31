@@ -1,22 +1,37 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
+using NanoidDotNet;
 using Ykotika.Application.Interfaces;
 using Ykotika.Domain.Entities;
 using Ykotika.Domain.ValueObjects;
+
 namespace Ykotika.Application.Commands
 {
     public class CreateFormCommandHandler
-        (IYkotikaDbContext dbContext,
-        IMapper mapper)
+        (IYkotikaDbContext dbContext)
         :
         IRequestHandler<CreateFormCommand, Guid>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
 
-        public async Task<Guid> Handle(CreateFormCommand request, CancellationToken cancellationToken)
+        public async Task<Guid>
+            Handle(CreateFormCommand request, CancellationToken cancellationToken)
         {
-            var inputs = _mapper.Map<List<Input>>(request.Inputs);
+            var inputs = new List<Form.Input>();
+
+            foreach (var (dto, index) in request.Inputs.Select((dto, index) => (dto, index)))
+            {
+                var input = new Form.Input
+                {
+                    Id = Nanoid.Generate(size: 6),
+                    OrderIndex = index,
+                    Label = dto.Label,
+                    Placeholder = dto.Placeholder,
+                    Type = dto.Type,
+                    IsRequired = dto.IsRequired
+                };
+                inputs.Add(input);
+            }
+
             var form = new Form
             {
                 Id = Guid.NewGuid(),
@@ -25,12 +40,6 @@ namespace Ykotika.Application.Commands
                 Timestamps = new Timestamps(),
                 IsPublished = false
             };
-            foreach (var input in inputs)
-            {
-                input.Id = Guid.NewGuid();
-                input.Form = form;
-                await _dbContext.FormInputs.AddAsync(input, cancellationToken);
-            }
 
             await _dbContext.Forms.AddAsync(form, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);

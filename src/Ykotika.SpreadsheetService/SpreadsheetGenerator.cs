@@ -26,7 +26,7 @@ namespace Ykotika.SpreadsheetService
                     var worksheet = workbook.Worksheets.Add(productType.Name);
 
                     var headerRow = worksheet.Row(1);
-                    Input[] inputs = productType.Form.Inputs.ToArray();
+                    Form.Input[] inputs = productType.Form.Inputs.ToArray();
 
                     // Заполняем заголовки: первый столбец - Article, затем динамические поля
                     headerRow.Cell(1).Value = "Article";

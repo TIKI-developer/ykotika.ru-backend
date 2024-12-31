@@ -19,9 +19,7 @@ namespace Ykotika.Application.Interfaces
         DbSet<Offer> Offers { get; set; }
 
         DbSet<Form> Forms { get; set; }
-        DbSet<Input> FormInputs { get; set; }
         DbSet<FormRecord> FormRecords { get; set; }
-        DbSet<InputRecord> FormInputRecords { get; set; }
 
         DbSet<ProductType> ProductTypes { get; set; }
         DbSet<Category> Categories { get; set; }

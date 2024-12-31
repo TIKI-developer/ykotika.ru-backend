@@ -4,16 +4,17 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.ViewModels
 {
-    public class FormInputDto : IMapWith<Input>
+    public class FormInputDetails : IMapWith<Form.Input>
     {
+        public required string Id { get; set; }
         public required string Label { get; set; }
-        public required InputType Type { get; set; }
+        public required string Placeholder { get; set; }
+        public required Form.InputType Type { get; set; }
         public bool IsRequired { get; set; }
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<FormInputDto, Input>();
-            profile.CreateMap<Input, FormInputDto>();
+            profile.CreateMap<Form.Input, FormInputDetails>();
         }
     }
 }

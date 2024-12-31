@@ -77,34 +77,5 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok(vm);
         }
-        [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
-        [HttpPost("{formId}/inputs")]
-        public async Task<ActionResult<Guid>> AddInput(Guid formId, [FromBody] AddInputDto dto)
-        {
-            var command = _mapper.Map<AddInputCommand>(dto);
-            command.FormId = formId;
-            var id = await Mediator.Send(command);
-
-            return Ok(id);
-        }
-        [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
-        [HttpPut("inputs/{id}")]
-        public async Task<IActionResult> UpdateInput(Guid id, [FromBody] UpdateInputDto dto)
-        {
-            var command = _mapper.Map<UpdateInputCommand>(dto);
-            command.Id = id;
-            await Mediator.Send(command);
-
-            return Ok();
-        }
-        [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
-        [HttpDelete("inputs/{id}")]
-        public async Task<IActionResult> RemoveInput(Guid id)
-        {
-            var command = new DeleteInputCommand { Id = id };
-            await Mediator.Send(command);
-
-            return Ok();
-        }
     }
 }

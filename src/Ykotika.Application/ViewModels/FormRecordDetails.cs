@@ -1,16 +1,16 @@
 ﻿using AutoMapper;
 using Ykotika.Application.Common.Mappings;
 using Ykotika.Domain.Entities;
+using Ykotika.Domain.ValueObjects;
 
 namespace Ykotika.Application.ViewModels
 {
     public class FormRecordDetails : IMapWith<FormRecord>
     {
-        public required Guid Id { get; set; }
         public required string FormName { get; set; }
-        public List<FormInputRecordDto> InputRecords { get; set; } = [];
-        public required DateTime CreatedAt { get; set; }
-        public required DateTime UpdatedAt { get; set; }
+        public required User Author { get; set; }
+        public List<FormInputRecordDetails> InputRecords { get; set; } = [];
+        public required Timestamps Timestamps { get; set; }
 
         public void Mapping(Profile profile)
         {

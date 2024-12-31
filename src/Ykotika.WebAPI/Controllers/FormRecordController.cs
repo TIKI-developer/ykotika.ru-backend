@@ -8,7 +8,9 @@ using Ykotika.WebAPI.Models;
 namespace Ykotika.WebAPI.Controllers
 {
     [Route("forms/records")]
-    public class FormRecordsController(IMapper mapper) : BaseController
+    public class FormRecordController
+        (IMapper mapper)
+        : BaseController
     {
         private readonly IMapper _mapper = mapper;
 

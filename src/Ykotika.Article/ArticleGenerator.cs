@@ -16,9 +16,14 @@ namespace Ykotika.Article
             {
                 foreach (var patternItem in patternItems)
                 {
-                    string articleItem = record
+                    string articleItem =
+                        record
                         .InputRecords
-                        .FirstOrDefault(e => e.FormInput.Label == patternItem)!.Value
+                        .FirstOrDefault(e => 
+                        e.Id == record
+                                .Form
+                                .Inputs
+                                .FirstOrDefault(e => e.Label == patternItem).Id)!.Value
                         ?? "";
 
                     articleItem = Transliteration.CyrillicToLatin(articleItem);

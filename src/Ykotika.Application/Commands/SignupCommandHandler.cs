@@ -12,13 +12,13 @@ namespace Ykotika.Application.Commands
         IYkotikaDbContext dbContext,
         IPasswordHasher passwordHasher,
         IJwtProvider jwtProvider)
-        : IRequestHandler<SignupCommand, Signup>
+        : IRequestHandler<SignupCommand, SignupResponse>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
         private readonly IPasswordHasher _passwordHasher = passwordHasher;
         private readonly IJwtProvider _jwtProvider = jwtProvider;
 
-        public async Task<Signup> Handle(SignupCommand request, CancellationToken cancellationToken)
+        public async Task<SignupResponse> Handle(SignupCommand request, CancellationToken cancellationToken)
         {
             var existUser = await
                 _dbContext
@@ -65,7 +65,7 @@ namespace Ykotika.Application.Commands
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return new Signup { AccessToken = token };
+            return new SignupResponse { AccessToken = token };
         }
     }
 }

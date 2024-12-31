@@ -25,7 +25,7 @@ namespace Ykotika.WebAPI.Controllers
 
         [Route("signup")]
         [HttpPost]
-        public async Task<ActionResult<Signup>> Signup([FromBody] SignupDto signupDto)
+        public async Task<ActionResult<SignupResponse>> Signup([FromBody] SignupDto signupDto)
         {
             var command = _mapper.Map<SignupCommand>(signupDto);
 

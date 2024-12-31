@@ -13,8 +13,10 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
                 .HasOne(e => e.Form)
                 .WithMany(e => e.FormRecords);
             builder
-                .HasMany(e => e.InputRecords)
-                .WithOne(e => e.SubmittedFormData);
+                .OwnsMany(e => e.InputRecords, ir =>
+                {
+                    ir.WithOwner();
+                });
         }
     }
 }
