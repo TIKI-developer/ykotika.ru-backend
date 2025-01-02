@@ -16,10 +16,10 @@ namespace Ykotika.WebAPI.Controllers
     {
         private readonly IMapper _mapper = mapper;
 
-
         [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         [HttpGet]
-        public async Task<ActionResult<ProductTypeList>> Get([FromQuery] bool? isPublished)
+        public async Task<ActionResult<ProductTypeList>>
+            Get([FromQuery] bool? isPublished)
         {
             var query = new GetProductTypeListQuery()
             {
@@ -32,7 +32,8 @@ namespace Ykotika.WebAPI.Controllers
 
         [Authorize(Roles = $"{Roles.AUTHOR_ROLE}")]
         [HttpGet("published")]
-        public async Task<ActionResult<ProductTypeList>> GetPublished()
+        public async Task<ActionResult<ProductTypeList>>
+            GetPublished()
         {
             var query = new GetProductTypeListQuery()
             {
@@ -45,7 +46,8 @@ namespace Ykotika.WebAPI.Controllers
 
         [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}, {Roles.AUTHOR_ROLE}")]
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProductTypeDetails>> GetById(Guid id)
+        public async Task<ActionResult<ProductTypeDetails>>
+            GetById(Guid id)
         {
             var query = new GetProductTypeByIdQuery { Id = id };
             var vm = await Mediator.Send(query);
@@ -63,16 +65,19 @@ namespace Ykotika.WebAPI.Controllers
 
         [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         [HttpPost]
-        public async Task<ActionResult<Guid>> Create([FromBody] CreateProductTypeDto dto)
+        public async Task<ActionResult<Guid>>
+            Create([FromBody] CreateProductTypeDto dto)
         {
             var command = _mapper.Map<CreateProductTypeCommand>(dto);
             var id = await Mediator.Send(command);
 
             return Ok(id);
         }
+
         [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateProductTypeDto dto)
+        public async Task<IActionResult>
+            Update(Guid id, [FromBody] UpdateProductTypeDto dto)
         {
             var command = _mapper.Map<UpdateProductTypeCommand>(dto);
             command.Id = id;
@@ -80,9 +85,11 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok();
         }
+
         [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult>
+            Delete(Guid id)
         {
             var command = new DeleteProductTypeCommand { Id = id };
             await Mediator.Send(command);

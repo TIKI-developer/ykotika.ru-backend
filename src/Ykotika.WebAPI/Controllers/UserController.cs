@@ -17,15 +17,18 @@ namespace Ykotika.WebAPI.Controllers
         private readonly IMapper _mapper = mapper;
 
         [HttpGet("profile")]
-        public async Task<ActionResult<UserDetails>> GetProfile()
+        public async Task<ActionResult<UserDetails>>
+            GetProfile()
         {
             var query = new GetProfileQuery { Id = UserId };
             var vm = await Mediator.Send(query);
 
             return Ok(vm);
         }
+
         [HttpPut("profile")]
-        public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileDto dto)
+        public async Task<IActionResult>
+            UpdateProfile([FromBody] UpdateProfileDto dto)
         {
             var command = _mapper.Map<UpdateProfileCommand>(dto);
             command.Id = UserId;
@@ -33,24 +36,29 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok();
         }
+
         [Authorize(Roles = $"{Roles.ADMIN_ROLE}")]
         [HttpGet]
-        public async Task<ActionResult<UserList>> Get()
+        public async Task<ActionResult<UserList>>
+            Get()
         {
             var query = new GetUserListQuery();
             var vm = await Mediator.Send(query);
 
             return Ok(vm);
         }
+
         [Authorize(Roles = $"{Roles.ADMIN_ROLE}")]
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserList>> Get(Guid id)
+        public async Task<ActionResult<UserList>>
+            Get(Guid id)
         {
             var query = new GetUserByIdQuery { Id = id };
             var vm = await Mediator.Send(query);
 
             return Ok(vm);
         }
+
         [Authorize(Roles = $"{Roles.ADMIN_ROLE}")]
         [HttpPatch("{id}")]
         public async Task<IActionResult>
@@ -64,7 +72,8 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpGet("{id}/agreements")]
-        public async Task<ActionResult<AgreementList>> GetUserAgreements(Guid id)
+        public async Task<ActionResult<AgreementList>>
+            GetUserAgreements(Guid id)
         {
             var query = new GetAgreementListByAuthorQuery { Id = id };
             var vm = await Mediator.Send(query);

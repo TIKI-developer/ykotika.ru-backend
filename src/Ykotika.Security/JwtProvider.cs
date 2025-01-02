@@ -9,9 +9,9 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Security
 {
-    public class JwtProvider(IOptions<JwtOptions> options) : IJwtProvider
+    public class JwtProvider(IOptions<AccessTokenOptions> options) : IJwtProvider
     {
-        private readonly JwtOptions _options = options.Value;
+        private readonly AccessTokenOptions _options = options.Value;
         private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler = new();
         private const string AES_IV = "sdofisldjfklsd3ldedddsddhiew";
 
@@ -30,7 +30,7 @@ namespace Ykotika.Security
 
             var signingCredentials = new SigningCredentials(
 
-                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey)),
+                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.JwtOptions.SecretKey)),
 
                     SecurityAlgorithms.HmacSha256
                 );
@@ -41,7 +41,7 @@ namespace Ykotika.Security
 
                     signingCredentials: signingCredentials,
 
-                    expires: DateTime.UtcNow.AddHours(_options.ExpiresHours)
+                    expires: DateTime.UtcNow.AddHours(_options.JwtOptions.ExpiresHours)
                 );
 
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
@@ -58,7 +58,7 @@ namespace Ykotika.Security
             };
             var signingCredentials = new SigningCredentials(
 
-                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey)),
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.JwtOptions.SecretKey)),
 
                 SecurityAlgorithms.HmacSha256
             );
@@ -97,7 +97,7 @@ namespace Ykotika.Security
                 ValidateAudience = false,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey))
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.JwtOptions.SecretKey))
             };
 
             try
@@ -123,7 +123,7 @@ namespace Ykotika.Security
         private string EncryptToken(string token)
         {
             using var aes = Aes.Create();
-            aes.Key = Encoding.UTF8.GetBytes(_options.SecretKey.PadRight(32).Substring(0, 32));
+            aes.Key = Encoding.UTF8.GetBytes(_options.JwtOptions.SecretKey.PadRight(32).Substring(0, 32));
             aes.IV = Encoding.UTF8.GetBytes(AES_IV.PadRight(16).Substring(0, 16));
 
             using var encryptor = aes.CreateEncryptor();
@@ -132,11 +132,10 @@ namespace Ykotika.Security
 
             return Convert.ToBase64String(encryptedBytes);
         }
-
         private string DecryptToken(string encryptedToken)
         {
             using var aes = Aes.Create();
-            aes.Key = Encoding.UTF8.GetBytes(_options.SecretKey.PadRight(32).Substring(0, 32));
+            aes.Key = Encoding.UTF8.GetBytes(_options.JwtOptions.SecretKey.PadRight(32).Substring(0, 32));
             aes.IV = Encoding.UTF8.GetBytes(AES_IV.PadRight(16).Substring(0, 16));
 
             using var decryptor = aes.CreateDecryptor();
@@ -145,11 +144,43 @@ namespace Ykotika.Security
 
             return Encoding.UTF8.GetString(decryptedBytes);
         }
-    }
+        public string GenerateRefreshToken()
+        {
+            var signingCredentials = new SigningCredentials(
 
-    public class JwtOptions
-    {
-        public string SecretKey { get; set; } = string.Empty;
-        public int ExpiresHours { get; set; }
+                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.JwtOptions.SecretKey)),
+
+                    SecurityAlgorithms.HmacSha256
+                );
+
+            var token = new JwtSecurityToken(
+
+                    signingCredentials: signingCredentials,
+
+                    expires: DateTime.UtcNow.AddHours(_options.JwtOptions.ExpiresHours)
+                );
+
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return tokenString;
+        }
+        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.JwtOptions.SecretKey)),
+                ValidateLifetime = false 
+            };
+            var tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken securityToken;
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+            var jwtSecurityToken = securityToken as JwtSecurityToken;
+            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                throw new SecurityTokenException("Invalid token");
+            return principal;
+        }
     }
 }

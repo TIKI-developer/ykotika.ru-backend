@@ -20,7 +20,8 @@ namespace Ykotika.Application.Queries
             var agreements = await
                 _dbContext
                 .Agreements
-                .Include(e => e.Author)
+                .Include(e => e.Timestamps)
+                .Include(e => e.Offer)
                 .ProjectTo<AgreementItem>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
 

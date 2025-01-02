@@ -27,7 +27,7 @@ namespace Ykotika.Application.Commands
                 .FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
 
             bool userExist = existUser != null;
-            string token;
+            string accessToken;
 
             if (!userExist)
             {
@@ -43,7 +43,7 @@ namespace Ykotika.Application.Commands
 
                 await _dbContext.Users.AddAsync(user, cancellationToken);
 
-                token = _jwtProvider.GenerateAccessToken(user);
+                accessToken = _jwtProvider.GenerateAccessToken(user);
             }
             else
             {
@@ -55,7 +55,7 @@ namespace Ykotika.Application.Commands
                     existUser.Email = request.Email;
                     existUser.PasswordHash = _passwordHasher.Generate(request.Password);
                     existUser.Timestamps.MarkUpdated();
-                    token = _jwtProvider.GenerateAccessToken(existUser);
+                    accessToken = _jwtProvider.GenerateAccessToken(existUser);
                 }
                 else
                 {
@@ -65,7 +65,7 @@ namespace Ykotika.Application.Commands
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return new SignupResponse { AccessToken = token };
+            return new SignupResponse { AccessToken = accessToken };
         }
     }
 }

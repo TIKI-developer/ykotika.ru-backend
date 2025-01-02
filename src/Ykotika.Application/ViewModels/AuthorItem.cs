@@ -19,7 +19,7 @@ namespace Ykotika.Application.ViewModels
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Author, AuthorDetails>()
+            profile.CreateMap<Author, AuthorItem>()
                 .ForMember(to => to.Name,
                 opt => opt.MapFrom(from => from.User.Name))
                 .ForMember(to => to.Surname,

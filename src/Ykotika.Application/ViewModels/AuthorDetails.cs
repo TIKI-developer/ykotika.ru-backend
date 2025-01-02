@@ -15,7 +15,7 @@ namespace Ykotika.Application.ViewModels
         public required List<Social> Socials { get; set; }
         public required AuthorStatus Status { get; set; }
         public required string TellAboutYourself { get; set; }
-        public required Social WhichSocial { get; set; }
+        public required AuthorRequest.ContactSocial WhichSocial { get; set; }
         public required Timestamps Timestamps { get; set; }
 
         public void Mapping(Profile profile)

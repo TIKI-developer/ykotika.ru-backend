@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using Ykotika.Application.Commands;
 using Ykotika.Application.Interfaces;
 using Ykotika.Application.ViewModels;
@@ -15,13 +16,12 @@ namespace Ykotika.WebAPI.Controllers
     public class AuthController
         (IMapper mapper,
         IEmailVerifier emailVerifier,
-        IJwtProvider jwtProvider,
-        IOptions<ClientsOptions> clients) : BaseController
+        IJwtProvider jwtProvider) 
+        : BaseController
     {
         private readonly IMapper _mapper = mapper;
         private readonly IEmailVerifier _emailVerifier = emailVerifier;
         private readonly IJwtProvider _jwtProvider = jwtProvider;
-        private readonly ClientsOptions _clients = clients.Value;
 
         [Route("signup")]
         [HttpPost]
@@ -39,12 +39,13 @@ namespace Ykotika.WebAPI.Controllers
         [Route("login")]
         [HttpPost]
         public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginDto signupDto)
-        {
+        { 
             var command = _mapper.Map<LoginCommand>(signupDto);
 
             var vm = await Mediator.Send(command);
 
             HttpContext.Response.Cookies.Append(Cookies.ACCESS_TOKEN_NAME, vm.AccessToken);
+            HttpContext.Response.Cookies.Append(Cookies.REFRESH_TOKEN_NAME, vm.RefreshToken);
 
             return Ok(vm);
         }
@@ -55,36 +56,47 @@ namespace Ykotika.WebAPI.Controllers
             await Task.Run(() =>
             {
                 HttpContext.Response.Cookies.Delete(Cookies.ACCESS_TOKEN_NAME);
+                HttpContext.Response.Cookies.Delete(Cookies.REFRESH_TOKEN_NAME);
             });
 
             return Ok();
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult<LoginResponse>> NewRefreshToken()
+        {
+            if (Request.Cookies.TryGetValue(Cookies.REFRESH_TOKEN_NAME, out var refreshToken) &&
+                Request.Cookies.TryGetValue(Cookies.ACCESS_TOKEN_NAME, out var accessToken))
+            {
+                var command = new GenerateRefreshTokenCommand
+                {
+                    UserId = Guid.Parse(_jwtProvider
+                    .GetPrincipalFromExpiredToken(accessToken)
+                    .FindFirstValue(ClaimTypes.NameIdentifier)),
+                    RefreshToken = refreshToken
+                };
+                var vm = await Mediator.Send(command);
+
+                HttpContext.Response.Cookies.Append(Cookies.ACCESS_TOKEN_NAME, vm.AccessToken);
+                HttpContext.Response.Cookies.Append(Cookies.REFRESH_TOKEN_NAME, vm.RefreshToken);
+
+                return Ok(vm);
+            }
+            else
+            {
+                return Forbid();
+            }
         }
 
         [Authorize(Roles = $"{Roles.GUEST_ROLE}")]
         [HttpPost("verifications/email")]
         public async Task<IActionResult> SendVerifyEmailMessage()
         {
-            await Task.Run(() =>
-            {
-                var token = _jwtProvider.GenerateEmailVerificationToken(UserId, UserEmail);
-                var confirmationLink = "";
-                var encodeToken = Uri.EscapeDataString(token);
+            var token = _jwtProvider.GenerateEmailVerificationToken(UserId, UserEmail);
+            var encodeToken = Uri.EscapeDataString(token);
 
-                if (_clients.GeneralClientUrl.IsNullOrEmpty())
-                {
-                    confirmationLink = Url.Action(
-                       "VerifyEmail",
-                       "Auth",
-                       new { token = encodeToken! },
-                       protocol: Request.Scheme
-                   );
-                }
-                else
-                {
-                    confirmationLink = $"{_clients.GeneralClientUrl}/auth/new-verification?token={encodeToken}";
-                }
-                _emailVerifier.SendVerificationLink(UserEmail, confirmationLink!);
-            });
+            var confirmationLink = $"{Request.Headers.Origin}/auth/verifications/email?token={encodeToken}";
+            await _emailVerifier.SendVerificationLinkAsync(UserEmail, confirmationLink!);
 
             return Ok();
         }
@@ -105,12 +117,13 @@ namespace Ykotika.WebAPI.Controllers
             var vm = await Mediator.Send(command);
 
             HttpContext.Response.Cookies.Append(Cookies.ACCESS_TOKEN_NAME, vm.AccessToken);
+            HttpContext.Response.Cookies.Append(Cookies.REFRESH_TOKEN_NAME, vm.RefreshToken);
 
             return Ok();
         }
 
         [Authorize(Roles = $"{Roles.CUSTOMER_ROLE}")]
-        [HttpPatch("change-password")]
+        [HttpPatch("password")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
         {
             var command = _mapper.Map<ChangePasswordCommand>(dto);

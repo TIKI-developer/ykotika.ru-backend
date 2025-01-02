@@ -19,7 +19,7 @@ namespace Ykotika.Article
                     string articleItem =
                         record
                         .InputRecords
-                        .FirstOrDefault(e => 
+                        .FirstOrDefault(e =>
                         e.Id == record
                                 .Form
                                 .Inputs

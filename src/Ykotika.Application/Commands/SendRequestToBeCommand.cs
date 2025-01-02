@@ -12,6 +12,5 @@ namespace Ykotika.Application.Commands
         public required List<Social> Socials { get; set; }
         public required string TellAboutYourself { get; set; }
         public required AuthorRequest.ContactSocial WhichSocial { get; set; }
-        public required bool ConfirmedOffer { get; set; }
     }
 }

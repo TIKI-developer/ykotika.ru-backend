@@ -4,7 +4,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Ykotika.Security;
 using Ykotika.WebAPI.Constants;
-using Ykotika.WebAPI.Models;
 
 namespace Ykotika.WebApi.Extensions
 {
@@ -13,9 +12,9 @@ namespace Ykotika.WebApi.Extensions
         public static void AddApiAuthentication(this IServiceCollection services)
         {
             using var provider = services.BuildServiceProvider();
-            var jwtOptions = provider.GetRequiredService<IOptions<JwtOptions>>().Value;
+            var jwtOptions = provider.GetRequiredService<IOptions<AccessTokenOptions>>().Value;
 
-            if (string.IsNullOrEmpty(jwtOptions.SecretKey))
+            if (string.IsNullOrEmpty(jwtOptions.JwtOptions.SecretKey))
             {
                 throw new InvalidOperationException("SecretKey для JWT не найден.");
             }
@@ -29,14 +28,14 @@ namespace Ykotika.WebApi.Extensions
                         ValidateAudience = false,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.JwtOptions.SecretKey))
                     };
 
                     options.Events = new JwtBearerEvents
                     {
                         OnMessageReceived = context =>
                         {
-                            context.Token = context.Request.Cookies["accessToken"];
+                            context.Token = context.Request.Cookies[Cookies.ACCESS_TOKEN_NAME];
                             return Task.CompletedTask;
                         }
                     };
@@ -50,11 +49,10 @@ namespace Ykotika.WebApi.Extensions
                 options.AddPolicy("RequireModeratorRole", policy => policy.RequireRole(Roles.MODERATOR_ROLE));
                 options.AddPolicy("RequireDirectorRole", policy => policy.RequireRole(Roles.DIRECTOR_ROLE));
                 options.AddPolicy("RequireAdminRole", policy => policy.RequireRole(Roles.ADMIN_ROLE));
-                options.AddPolicy("ProductListGuard", policy =>
+                options.AddPolicy("AuthorConfirmed", policy =>
                 policy.RequireAssertion(context =>
                 {
-                    var filter = context.Resource as ProductFilterDto;
-
+                    //return context.User.HasClaim("Status") && context.User.
                     return true;
                 }));
             });
