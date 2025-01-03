@@ -101,7 +101,7 @@ namespace Ykotika.WebAPI
             }
             string staticFilesPath = serviceProvider.GetService<IFileService>().BaseStaticFolder;
             app.UseRouting();
-            app.UseCors(_)
+            app.UseCors(_policyCORSName)
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
