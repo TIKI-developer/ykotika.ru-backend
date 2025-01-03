@@ -15,7 +15,7 @@ namespace Ykotika.WebAPI
 {
     public class Startup(IConfiguration configuration)
     {
-        private required string _policyCORSName = "CORSOrigins";
+        private readonly string _policyCORSName = "CORSOrigins";
 
         public IConfiguration Configuration { get; } = configuration;
 
