@@ -15,6 +15,8 @@ namespace Ykotika.WebAPI
 {
     public class Startup(IConfiguration configuration)
     {
+        private required string _policyCORSName = "CORSOrigins";
+
         public IConfiguration Configuration { get; } = configuration;
 
         public void ConfigureServices(IServiceCollection services)
@@ -72,6 +74,18 @@ namespace Ykotika.WebAPI
             //        });
             //    });
             //}
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(_policyCORSName, policy =>
+                {
+                    policy
+                        .WithOrigins("http://localhost:3000", "https://ykotika.tw1.ru")
+                        .AllowCredentials()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
             services.AddSwaggerGen();
         }
 
@@ -87,6 +101,7 @@ namespace Ykotika.WebAPI
             }
             string staticFilesPath = serviceProvider.GetService<IFileService>().BaseStaticFolder;
             app.UseRouting();
+            app.UseCors(_policyCORSName);
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
