@@ -17,15 +17,29 @@ namespace Ykotika.Verification
             _options = options.Value ?? throw new ArgumentNullException(nameof(options));
         }
 
-        private string LoadTemplate(string path, Dictionary<string, string> placeholders)
+        private string LoadTemplate(string resourceName, Dictionary<string, string> placeholders)
         {
-            if (!File.Exists(path)) throw new FileNotFoundException($"Шаблон не найден: {path}");
+            var assembly = typeof(EmailVerifier).Assembly;
 
-            string template = File.ReadAllText(path, Encoding.UTF8);
+            var fullResourceName = assembly.GetManifestResourceNames()
+                .FirstOrDefault(name => name.EndsWith(resourceName, StringComparison.OrdinalIgnoreCase));
+
+            if (fullResourceName == null)
+            {
+                throw new FileNotFoundException($"Ресурс с именем {resourceName} не найден в сборке.");
+            }
+
+            using var stream = assembly.GetManifestResourceStream(fullResourceName);
+            if (stream == null) throw new InvalidOperationException($"Не удалось получить поток для ресурса {fullResourceName}.");
+
+            using var reader = new StreamReader(stream, Encoding.UTF8);
+            string template = reader.ReadToEnd();
+
             foreach (var placeholder in placeholders)
             {
                 template = template.Replace($"{{{{{placeholder.Key}}}}}", placeholder.Value);
             }
+
             return template;
         }
 
@@ -33,8 +47,6 @@ namespace Ykotika.Verification
         {
             if (string.IsNullOrWhiteSpace(userEmail)) throw new ArgumentException("Email не должен быть пустым.", nameof(userEmail));
             if (string.IsNullOrWhiteSpace(link)) throw new ArgumentException("Ссылка не должна быть пустой.", nameof(link));
-
-            var templatePath = Path.Combine(Directory.GetCurrentDirectory(), "Templates", "VerificationMessage.html");
 
             var placeholders = new Dictionary<string, string>
             {
@@ -44,7 +56,7 @@ namespace Ykotika.Verification
             string message;
             try
             {
-                message = LoadTemplate(templatePath, placeholders);
+                message = LoadTemplate("Templates.VerificationMessage.html", placeholders);
                 Console.WriteLine("Сообщение после замены плейсхолдеров:");
                 Console.WriteLine(message);
             }

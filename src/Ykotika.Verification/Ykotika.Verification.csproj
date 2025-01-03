@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Templates\VerificationMessage.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\VerificationMessage.html" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Ykotika.Application\Ykotika.Application.csproj" />
 	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.10" />
 	<PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
