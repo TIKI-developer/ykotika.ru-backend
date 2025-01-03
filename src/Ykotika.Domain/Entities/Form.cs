@@ -10,15 +10,22 @@
         {
             public required string Id { get; set; }
             public required int OrderIndex { get; set; }
+            public required InputType Type { get; set; }
+            public required InputExtraAttributes ExtraAttributes { get; set; }
+        }
+        public class InputExtraAttributes
+        {
             public required string Label { get; set; }
             public required string Placeholder { get; set; }
-            public required InputType Type { get; set; }
             public required bool IsRequired { get; set; }
         }
         public enum InputType
         {
             Text,
-            File,
+            Number,
+            Textarea,
+            Select,
+            MultiSelect,
         }
     }
 }

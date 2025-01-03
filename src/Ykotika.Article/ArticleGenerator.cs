@@ -23,7 +23,7 @@ namespace Ykotika.Article
                         e.Id == record
                                 .Form
                                 .Inputs
-                                .FirstOrDefault(e => e.Label == patternItem).Id)!.Value
+                                .FirstOrDefault(e => e.ExtraAttributes.Label == patternItem).Id)!.Value
                         ?? "";
 
                     articleItem = Transliteration.CyrillicToLatin(articleItem);

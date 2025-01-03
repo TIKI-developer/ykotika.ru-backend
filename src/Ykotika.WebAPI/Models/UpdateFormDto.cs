@@ -8,6 +8,7 @@ namespace Ykotika.WebAPI.Models
     public class UpdateFormDto : IMapWith<UpdateFormCommand>
     {
         public string? Name { get; set; }
+        public bool? IsPublished { get; set; }
         public List<UpdateFormInputDto>? Inputs { get; set; }
 
         public void Mapping(Profile profile)
@@ -16,15 +17,15 @@ namespace Ykotika.WebAPI.Models
         }
         public class UpdateFormInputDto : IMapWith<UpdateFormCommand.InputDto>
         {
-            public required string Id { get; set; }
-            public required string Label { get; set; }
-            public required string Placeholder { get; set; }
-            public required Form.InputType Type { get; set; }
-            public bool IsRequired { get; set; }
+            public string? Id { get; set; }
+            public string? Type { get; set; }
+            public Form.InputExtraAttributes? ExtraAttributes { get; set; }
 
             public void Mapping(Profile profile)
             {
-                profile.CreateMap<UpdateFormInputDto, UpdateFormCommand.InputDto>();
+                profile.CreateMap<UpdateFormInputDto, UpdateFormCommand.InputDto>()
+                    .ForMember(to => to.Type,
+                    opt => opt.MapFrom(from => Enum.Parse(typeof(Form.InputType), from.Type)));
             }
         }
     }

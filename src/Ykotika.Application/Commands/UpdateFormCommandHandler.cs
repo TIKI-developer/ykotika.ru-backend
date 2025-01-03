@@ -23,10 +23,14 @@ namespace Ykotika.Application.Commands
                 _dbContext
                 .Forms
                 .Include(f => f.Inputs)
+                .ThenInclude(e => e.ExtraAttributes)
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(Form), request.Id);
 
             form.Name = request.Name ?? form.Name;
+            form.IsPublished = request.IsPublished ?? form.IsPublished;
+
+            List<string> inputsToSaveIds = [];
 
             if (request.Inputs != null)
             {
@@ -35,28 +39,35 @@ namespace Ykotika.Application.Commands
                     var formInput = form
                     .Inputs
                     .FirstOrDefault(e => e.Id == input.Id);
+
+                    string id;
+
                     if (formInput == null)
                     {
                         var newInput = new Form.Input
                         {
                             Id = Nanoid.Generate(size: 6),
                             OrderIndex = index,
-                            Label = input.Label,
-                            Placeholder = input.Placeholder,
+                            ExtraAttributes = input.ExtraAttributes,
                             Type = input.Type,
-                            IsRequired = input.IsRequired
                         };
                         form.Inputs.Add(newInput);
+                        id = newInput.Id;
                     }
                     else
                     {
-                        formInput.Label = input.Label ?? formInput.Label;
-                        formInput.OrderIndex = index;
-                        formInput.Placeholder = input.Placeholder ?? formInput.Placeholder;
-                        formInput.IsRequired = input.IsRequired;
                         formInput.Type = input.Type;
+                        formInput.OrderIndex = index;
+                        formInput.ExtraAttributes = input.ExtraAttributes;
+                        id = formInput.Id;
                     }
+                    inputsToSaveIds.Add(id);
                 }
+                form.Inputs.RemoveAll(input => !inputsToSaveIds.Contains(input.Id));
+            } 
+            else
+            {
+                throw new Exception("Form must have at least one input!");
             }
 
             await _dbContext.SaveChangesAsync(cancellationToken);
