@@ -14,7 +14,9 @@ namespace Ykotika.Application.ViewModels
         {
             profile.CreateMap<FormRecord, FormRecordItem>()
                 .ForMember(to => to.FormName,
-                opt => opt.MapFrom(from => from.Form.Name));
+                opt => opt.MapFrom(from => from.Form.Name))
+                .ForMember(to => to.UpdatedAt,
+                opt => opt.MapFrom(from => from.Timestamps.UpdatedAt));
         }
     }
 }

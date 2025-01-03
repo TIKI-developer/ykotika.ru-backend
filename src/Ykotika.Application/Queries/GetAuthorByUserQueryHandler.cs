@@ -8,16 +8,16 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Queries
 {
-    public class GetAuthorRequestByUserQueryHandler
+    public class GetAuthorByUserQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
-        : IRequestHandler<GetAuthorRequestByUserQuery, AuthorDetails>
+        : IRequestHandler<GetAuthorByUserQuery, AuthorDetails>
     {
         private readonly IMapper _mapper = mapper;
         private readonly IYkotikaDbContext _dbContext = dbContext;
 
         public async Task<AuthorDetails>
-            Handle(GetAuthorRequestByUserQuery request, CancellationToken cancellationToken)
+            Handle(GetAuthorByUserQuery request, CancellationToken cancellationToken)
         {
             var author = await
                 _dbContext
@@ -26,7 +26,7 @@ namespace Ykotika.Application.Queries
                 .FirstOrDefaultAsync(e => e.User.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(User), request.Id);
 
-            return _mapper.Map<AuthorDetails>(author.Request);
+            return _mapper.Map<AuthorDetails>(author);
         }
     }
 }

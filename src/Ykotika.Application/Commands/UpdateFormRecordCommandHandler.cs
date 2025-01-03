@@ -18,14 +18,19 @@ namespace Ykotika.Application.Commands
 
         public async Task Handle(UpdateFormRecordCommand request, CancellationToken cancellationToken)
         {
-            foreach (var inputRecordRequest in request.InputRecords)
+            var formRecord = await
+                _dbContext
+                .FormRecords
+                .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
+                ?? throw new NotFoundException(nameof(FormRecord), request.Id);
+
+            foreach (var inputRecordRequest in formRecord.InputRecords)
             {
-                var inputRecord = await
-                    _dbContext
-                    .FormInputRecords
-                    .FirstOrDefaultAsync(e => e.Id == inputRecordRequest.Id)
-                    ?? throw new NotFoundException(nameof(Input), inputRecordRequest.Id);
-                inputRecord.Value = inputRecordRequest.Value;
+                formRecord
+                    .InputRecords
+                    .FirstOrDefault
+                    (e => e.Id == inputRecordRequest.Id)!
+                    .Value = inputRecordRequest.Value;
             }
 
             await _dbContext.SaveChangesAsync(cancellationToken);

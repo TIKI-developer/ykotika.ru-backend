@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Ykotika.Application.Commands;
 using Ykotika.Application.Common.Mappings;
-using Ykotika.Application.ViewModels;
 
 namespace Ykotika.WebAPI.Models
 {
@@ -13,6 +12,15 @@ namespace Ykotika.WebAPI.Models
         public void Mapping(Profile profile)
         {
             profile.CreateMap<CreateFormRecordDto, CreateFormRecordCommand>();
+        }
+        public class CreateFormInputRecordDto : IMapWith<CreateFormRecordCommand.InputRecordDto>
+        {
+            public required string Id { get; set; }
+            public required string Value { get; set; }
+            public void Mapping(Profile profile)
+            {
+                profile.CreateMap<CreateFormInputRecordDto, CreateFormRecordCommand.InputRecordDto>();
+            }
         }
     }
 }

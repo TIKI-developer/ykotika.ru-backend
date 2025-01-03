@@ -19,8 +19,9 @@ namespace Ykotika.Application.Queries
         {
             var agreements = await
                 _dbContext
-                .Authors
-                .Where(e => e.Id == request.Id)
+                .Agreements
+                .Include(x => x.Author)
+                .Where(e => e.Author.Id == request.Id)
                 .ProjectTo<AgreementItem>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
 

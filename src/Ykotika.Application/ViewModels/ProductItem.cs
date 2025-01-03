@@ -10,7 +10,7 @@ namespace Ykotika.Application.ViewModels
         public required Guid Id { get; set; }
         public required string Name { get; set; }
         public required string Description { get; set; }
-        public List<OutsourceShop>? OutsourceShops { get; set; }
+        public List<OutsourceShopDetails>? OutsourceShops { get; set; }
         public List<ImageListItem>? Images { get; set; }
         public required bool IsPublished { get; set; }
 

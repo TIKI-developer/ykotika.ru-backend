@@ -10,28 +10,31 @@ namespace Ykotika.Security
         public static IServiceCollection AddSecurity(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IPasswordHasher, PasswordHasher>();
+            services.AddScoped<IRefreshTokenHasher, RefreshTokenHasher>();
             services.AddScoped<IJwtProvider, JwtProvider>();
-            services.AddScoped<IEmailVerifier, EmailVerifier>();
 
-            var jwtOptionsSection = configuration.GetSection(nameof(JwtOptions));
-            var secretKey = jwtOptionsSection.GetValue<string>("SecretKey")
-                            ?? Environment.GetEnvironmentVariable("JwtOptions_SecretKey");
+            services.Configure<AccessTokenOptions>(options =>
+            configuration.GetSection(nameof(AccessTokenOptions)).Bind(options));
 
-            int expiresHours = jwtOptionsSection.GetValue<int?>("ExpiresHours")
-                               ?? (int.TryParse(Environment.GetEnvironmentVariable("JwtOptions_ExpiresHours"), out var parsedHours) ? parsedHours : 24);
-
-            if (string.IsNullOrEmpty(secretKey))
-            {
-                throw new InvalidOperationException("SecretKey для JWT не найден. Укажите его в appsettings.json или переменной окружения 'JwtOptions_SecretKey'.");
-            }
-
-            services.Configure<JwtOptions>(options =>
-            {
-                options.SecretKey = secretKey;
-                options.ExpiresHours = expiresHours;
-            });
+            services.Configure<RefreshTokenOptions>(options => 
+            configuration.GetSection(nameof(RefreshTokenOptions)).Bind(options));
 
             return services;
         }
+    }
+    public class JwtOptions
+    {
+        public string SecretKey { get; set; } = string.Empty;
+        public double ExpiresHours { get; set; }
+    }
+
+    public class AccessTokenOptions
+    {
+        public required JwtOptions JwtOptions { get; set; }
+    }
+
+    public class RefreshTokenOptions
+    {
+        public required JwtOptions JwtOptions { get; set; }
     }
 }

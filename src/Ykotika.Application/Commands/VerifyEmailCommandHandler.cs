@@ -9,12 +9,14 @@ namespace Ykotika.Application.Commands
 {
     public class VerifyEmailCommandHandler
         (IYkotikaDbContext dbContext,
+        IRefreshTokenHasher refreshTokenHasher,
         IJwtProvider jwtProvider)
         :
         IRequestHandler<VerifyEmailCommand, LoginResponse>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
         private readonly IJwtProvider _jwtProvider = jwtProvider;
+        private readonly IRefreshTokenHasher _refreshTokenHasher = refreshTokenHasher;
 
         public async Task<LoginResponse> Handle(VerifyEmailCommand request, CancellationToken cancellationToken)
         {
@@ -45,8 +47,12 @@ namespace Ykotika.Application.Commands
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             string accessToken = _jwtProvider.GenerateAccessToken(user);
+            string refreshToken = _jwtProvider.GenerateRefreshToken();
+            user.RefreshTokenHash = _refreshTokenHasher.Encode(refreshToken);
 
-            return new LoginResponse { AccessToken = accessToken };
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return new LoginResponse { AccessToken = accessToken, RefreshToken = refreshToken };
         }
     }
 

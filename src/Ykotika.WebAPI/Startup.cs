@@ -7,6 +7,7 @@ using Ykotika.Application.Interfaces;
 using Ykotika.FileStorage;
 using Ykotika.Persistence;
 using Ykotika.Security;
+using Ykotika.Verification;
 using Ykotika.WebApi.Extensions;
 using Ykotika.WebAPI.Middleware;
 
@@ -15,7 +16,6 @@ namespace Ykotika.WebAPI
     public class Startup(IConfiguration configuration)
     {
         public IConfiguration Configuration { get; } = configuration;
-        private readonly string _policyCORSName = "AllowSpecificOrigin";
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -25,19 +25,9 @@ namespace Ykotika.WebAPI
                 config.AddProfile(new AssemblyMappingProfile(typeof(IYkotikaDbContext).Assembly));
             });
 
-            var corsOptionsSection = Configuration.GetSection($"{nameof(ClientsOptions)}:WebURLs");
-            var clientOptionsSection = Configuration.GetSection($"{nameof(ClientsOptions)}");
-            var generalClientUrl = clientOptionsSection.GetValue<string>("GeneralClientUrl");
-            string[]? webURLs = corsOptionsSection.Get<string[]>();
-
-            services.Configure<ClientsOptions>(options =>
-            {
-                options.GeneralClientUrl = generalClientUrl ?? string.Empty;
-                options.WebURLs = webURLs ?? Array.Empty<string>();
-            });
-
             services.AddPersistence(Configuration);
             services.AddFileStorage();
+            services.AddVerification(Configuration);
             services.AddSecurity(Configuration);
             services.AddArticle();
             services.AddSpreadsheet();
@@ -45,32 +35,43 @@ namespace Ykotika.WebAPI
             services.AddApplication();
             services.AddControllers();
 
-            if (!webURLs.IsNullOrEmpty())
-            {
-                services.AddCors(options =>
-                {
-                    options.AddPolicy(_policyCORSName, policy =>
-                    {
-                        policy
-                            .WithOrigins(webURLs!)
-                            .AllowCredentials()
-                            .AllowAnyHeader()
-                            .AllowAnyMethod();
-                    });
-                });
-            }
-            else
-            {
-                services.AddCors(options =>
-                {
-                    options.AddPolicy(_policyCORSName, policy =>
-                    {
-                        policy
-                            .AllowAnyHeader()
-                            .AllowAnyMethod();
-                    });
-                });
-            }
+
+            //var corsOptionsSection = Configuration.GetSection($"{nameof(ClientsOptions)}:WebURLs");
+            //var clientOptionsSection = Configuration.GetSection($"{nameof(ClientsOptions)}");
+            //var generalClientUrl = clientOptionsSection.GetValue<string>("GeneralClientUrl");
+            //string[]? webURLs = corsOptionsSection.Get<string[]>();
+
+            //services.Configure<ClientsOptions>(options =>
+            //{
+            //    options.GeneralClientUrl = generalClientUrl ?? string.Empty;
+            //    options.WebURLs = webURLs ?? Array.Empty<string>();
+            //});
+            //if (!webURLs.IsNullOrEmpty())
+            //{
+            //    services.AddCors(options =>
+            //    {
+            //        options.AddPolicy(_policyCORSName, policy =>
+            //        {
+            //            policy
+            //                .WithOrigins(webURLs!)
+            //                .AllowCredentials()
+            //                .AllowAnyHeader()
+            //                .AllowAnyMethod();
+            //        });
+            //    });
+            //}
+            //else
+            //{
+            //    services.AddCors(options =>
+            //    {
+            //        options.AddPolicy(_policyCORSName, policy =>
+            //        {
+            //            policy
+            //                .AllowAnyHeader()
+            //                .AllowAnyMethod();
+            //        });
+            //    });
+            //}
             services.AddSwaggerGen();
         }
 
@@ -86,7 +87,6 @@ namespace Ykotika.WebAPI
             }
             string staticFilesPath = serviceProvider.GetService<IFileService>().BaseStaticFolder;
             app.UseRouting();
-            app.UseCors(_policyCORSName);
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
             {

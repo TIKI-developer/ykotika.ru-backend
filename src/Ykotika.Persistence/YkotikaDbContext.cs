@@ -24,9 +24,7 @@ namespace Ykotika.Persistence
         public DbSet<OutsourceShop> OutsourceShops { get; set; }
 
         public DbSet<Form> Forms { get; set; }
-        public DbSet<Input> FormInputs { get; set; }
         public DbSet<FormRecord> FormRecords { get; set; }
-        public DbSet<InputRecord> FormInputRecords { get; set; }
 
         public DbSet<Domain.Entities.File> Files { get; set; }
         public DbSet<ProductType> ProductTypes { get; set; }
@@ -47,9 +45,7 @@ namespace Ykotika.Persistence
             modelBuilder.ApplyConfiguration(new OutsourceShopConfiguration());
             modelBuilder.ApplyConfiguration(new FileConfiguration());
             modelBuilder.ApplyConfiguration(new FormConfiguration());
-            modelBuilder.ApplyConfiguration(new FormInputConfiguration());
             modelBuilder.ApplyConfiguration(new FormRecordConfiguration());
-            modelBuilder.ApplyConfiguration(new FormInputRecordConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

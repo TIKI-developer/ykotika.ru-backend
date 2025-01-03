@@ -17,7 +17,8 @@ namespace Ykotika.WebAPI.Controllers
 
         [Authorize(Roles = $"{Roles.CUSTOMER_ROLE}")]
         [HttpPost]
-        public async Task<ActionResult<Guid>> SendRequestToBeAuthor([FromBody] SendRequestToBeAuthorDto dto)
+        public async Task<ActionResult<Guid>>
+            SendRequestToBeAuthor([FromBody] SendRequestToBeAuthorDto dto)
         {
             var command = _mapper.Map<SendRequestToBeCommand>(dto);
             command.UserId = UserId;
@@ -27,9 +28,10 @@ namespace Ykotika.WebAPI.Controllers
         }
         [Authorize(Roles = $"{Roles.AUTHOR_ROLE}")]
         [HttpGet("me")]
-        public async Task<ActionResult<AuthorDetails>> GetMyRequest()
+        public async Task<ActionResult<AuthorDetails>>
+            GetMyRequest()
         {
-            var query = new GetAuthorRequestByUserQuery { Id = UserId };
+            var query = new GetAuthorByUserQuery { Id = UserId };
             var vm = await Mediator.Send(query);
 
             return Ok(vm);
@@ -37,7 +39,8 @@ namespace Ykotika.WebAPI.Controllers
 
         [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         [HttpGet]
-        public async Task<ActionResult<AuthorList>> GetAll()
+        public async Task<ActionResult<AuthorList>>
+            GetAll()
         {
             var query = new GetAuthorListQuery();
             var vm = await Mediator.Send(query);
@@ -46,16 +49,18 @@ namespace Ykotika.WebAPI.Controllers
         }
         [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(Guid id)
+        public async Task<IActionResult>
+            GetById(Guid id)
         {
-            var query = new GetAuthorRequestByUserQuery { Id = id };
+            var query = new GetAuthorByUserQuery { Id = id };
             var vm = await Mediator.Send(query);
 
             return Ok(vm);
         }
         [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         [HttpPatch("{id}")]
-        public async Task<IActionResult> ChangeAuthorStatus(Guid id, [FromBody] ChangeAuthorStatusDto dto)
+        public async Task<IActionResult>
+            ChangeAuthorStatus(Guid id, [FromBody] ChangeAuthorStatusDto dto)
         {
             var command = _mapper.Map<ChangeAuthorStatusCommand>(dto);
             command.Id = id;
@@ -65,7 +70,8 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpGet("{id}/agreements")]
-        public async Task<ActionResult<AgreementList>> GetAgreements(Guid id)
+        public async Task<ActionResult<AgreementList>>
+            GetAgreements(Guid id)
         {
             var query = new GetAgreementListByAuthorQuery { Id = id };
             var vm = await Mediator.Send(query);

@@ -20,6 +20,10 @@ namespace Ykotika.Application.Queries
             var authors = await
                 _dbContext
                 .Authors
+                .Include(e => e.User)
+                .Include(e => e.Request)
+                .Include(e => e.Timestamps)
+                .AsNoTracking()
                 .ProjectTo<AuthorItem>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
 

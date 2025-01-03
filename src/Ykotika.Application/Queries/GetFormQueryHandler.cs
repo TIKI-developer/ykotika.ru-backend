@@ -26,6 +26,8 @@ namespace Ykotika.Application.Queries
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(Form), request.Id);
 
+            form.Inputs = [.. form.Inputs.OrderBy(i => i.OrderIndex)];
+
             return _mapper.Map<FormDetails>(form);
         }
     }

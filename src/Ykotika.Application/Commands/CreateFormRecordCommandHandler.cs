@@ -14,7 +14,8 @@ namespace Ykotika.Application.Commands
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
 
-        public async Task<Guid> Handle(CreateFormRecordCommand request, CancellationToken cancellationToken)
+        public async Task<Guid>
+            Handle(CreateFormRecordCommand request, CancellationToken cancellationToken)
         {
             var form = await
                 _dbContext
@@ -29,34 +30,28 @@ namespace Ykotika.Application.Commands
                 .FirstOrDefaultAsync(e => e.Id == request.UserId, cancellationToken)
                 ?? throw new NotFoundException(nameof(User), request.UserId);
 
+            var inputRecords = new List<FormRecord.InputRecord>();
+
+            foreach (var inputRecordRequest in request.InputRecords)
+            {
+                var inputRecord = new FormRecord.InputRecord
+                {
+                    Id = inputRecordRequest.Id,
+                    Value = inputRecordRequest.Value,
+                };
+                inputRecords.Add(inputRecord);
+            }
+
             var formRecord = new FormRecord
             {
                 Id = Guid.NewGuid(),
                 Form = form,
                 Author = user,
+                InputRecords = inputRecords,
                 Timestamps = new Timestamps()
             };
-            foreach (var inputRecordRequest in request.InputRecords)
-            {
-                var formInput = await
-                    _dbContext
-                    .FormInputs
-                    .FirstOrDefaultAsync(e => e.Id == inputRecordRequest.FormInputId, cancellationToken)
-                    ?? throw new NotFoundException(nameof(Input), inputRecordRequest.FormInputId);
 
-                var inputRecord = new InputRecord
-                {
-                    Id = Guid.NewGuid(),
-                    FormInput = formInput,
-                    SubmittedFormData = formRecord,
-                    Value = inputRecordRequest.Value
-                };
-
-                formRecord.InputRecords.Add(inputRecord);
-
-                await _dbContext.FormInputRecords.AddAsync(inputRecord, cancellationToken);
-            }
-
+            await _dbContext.FormRecords.AddAsync(formRecord, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return formRecord.Id;
