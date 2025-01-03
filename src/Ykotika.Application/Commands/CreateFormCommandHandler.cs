@@ -24,10 +24,13 @@ namespace Ykotika.Application.Commands
                 {
                     Id = Nanoid.Generate(size: 6),
                     OrderIndex = index,
-                    Label = dto.Label,
-                    Placeholder = dto.Placeholder,
                     Type = dto.Type,
-                    IsRequired = dto.IsRequired
+                    ExtraAttributes = new Form.InputExtraAttributes
+                    {
+                        Label = dto.ExtraAttributes.Label,
+                        Placeholder = dto.ExtraAttributes.Placeholder,
+                        IsRequired = dto.ExtraAttributes.IsRequired
+                    }
                 };
                 inputs.Add(input);
             }
@@ -38,7 +41,7 @@ namespace Ykotika.Application.Commands
                 Name = request.Name,
                 Inputs = inputs,
                 Timestamps = new Timestamps(),
-                IsPublished = false
+                IsPublished = request.IsPublished
             };
 
             await _dbContext.Forms.AddAsync(form, cancellationToken);

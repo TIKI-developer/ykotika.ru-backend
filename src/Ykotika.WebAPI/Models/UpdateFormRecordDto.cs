@@ -14,7 +14,7 @@ namespace Ykotika.WebAPI.Models
         }
         public class CreateFormRecordInputDto : IMapWith<UpdateFormRecordCommand.InputRecordDto>
         {
-            public required int Id { get; set; }
+            public required string Id { get; set; }
             public required string Value { get; set; }
         }
     }

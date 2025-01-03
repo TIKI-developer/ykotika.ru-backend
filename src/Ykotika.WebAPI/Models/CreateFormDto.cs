@@ -8,6 +8,7 @@ namespace Ykotika.WebAPI.Models
     public class CreateFormDto : IMapWith<CreateFormCommand>
     {
         public required string Name { get; set; }
+        public required bool IsPublished { get; set; }
         public required List<CreateFormInputDto> Inputs { get; set; }
 
         public void Mapping(Profile profile)
@@ -16,14 +17,14 @@ namespace Ykotika.WebAPI.Models
         }
         public class CreateFormInputDto : IMapWith<CreateFormCommand.InputDto>
         {
-            public required string Label { get; set; }
-            public required string Placeholder { get; set; }
-            public required Form.InputType Type { get; set; }
-            public required bool IsRequired { get; set; }
+            public required string Type { get; set; }
+            public required Form.InputExtraAttributes ExtraAttributes { get; set; }
 
             public void Mapping(Profile profile)
             {
-                profile.CreateMap<CreateFormInputDto, CreateFormCommand.InputDto>();
+                profile.CreateMap<CreateFormInputDto, CreateFormCommand.InputDto>()
+                    .ForMember(to => to.Type,
+                    opt => opt.MapFrom(from => Enum.Parse(typeof(Form.InputType), from.Type)));
             }
         }
     }

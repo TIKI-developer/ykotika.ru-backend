@@ -7,6 +7,7 @@ namespace Ykotika.Application.ViewModels
     public class FormDetails : IMapWith<Form>
     {
         public required string Name { get; set; }
+        public required bool IsPublished { get; set; }
         public required List<FormInputDetails> Inputs { get; set; }
 
         public void Mapping(Profile profile)

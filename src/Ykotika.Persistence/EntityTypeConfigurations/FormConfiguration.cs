@@ -16,10 +16,13 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
                 .OwnsMany(e => e.Inputs, i =>
                 {
                     i.WithOwner();
-                    i.Property(e => e.Label)
-                     .HasMaxLength(255);
-                    i.Property(e => e.IsRequired)
-                     .HasDefaultValue(false);
+
+                    i.OwnsOne(e => e.ExtraAttributes, ea =>
+                    {
+                        ea.WithOwner();
+                        ea.Property(e => e.IsRequired)
+                         .HasDefaultValue(false);
+                    });
                 });
             builder
                 .HasMany(e => e.FormRecords)

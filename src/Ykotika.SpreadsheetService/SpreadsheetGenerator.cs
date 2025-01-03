@@ -33,7 +33,7 @@ namespace Ykotika.SpreadsheetService
 
                     for (int col = 2; col <= inputs.Length + 1; col++)
                     {
-                        headerRow.Cell(col).Value = inputs[col - 2].Label;
+                        headerRow.Cell(col).Value = inputs[col - 2].ExtraAttributes.Label;
                     }
 
                     // Заполняем данные

@@ -23,6 +23,7 @@ namespace Ykotika.Application.Queries
                 _dbContext
                 .Forms
                 .Include(f => f.Inputs)
+                .ThenInclude(e => e.ExtraAttributes)
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(Form), request.Id);
 
