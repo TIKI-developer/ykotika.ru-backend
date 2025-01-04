@@ -29,7 +29,8 @@ namespace Ykotika.Application.Commands
                     {
                         Label = dto.ExtraAttributes.Label,
                         Placeholder = dto.ExtraAttributes.Placeholder,
-                        IsRequired = dto.ExtraAttributes.IsRequired
+                        IsRequired = dto.ExtraAttributes.IsRequired,
+                        Options = dto.ExtraAttributes.Options
                     }
                 };
                 inputs.Add(input);
