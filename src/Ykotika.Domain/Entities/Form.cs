@@ -18,6 +18,7 @@
             public required string Label { get; set; }
             public required string Placeholder { get; set; }
             public required bool IsRequired { get; set; }
+            public string[]? Options { get; set; }
         }
         public enum InputType
         {
