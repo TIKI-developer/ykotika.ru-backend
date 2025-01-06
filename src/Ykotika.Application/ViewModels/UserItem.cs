@@ -10,6 +10,7 @@ namespace Ykotika.Application.ViewModels
         public string? PhoneNumber { get; set; }
         public required string Email { get; set; }
         public required string Initials { get; set; }
+        public List<UserPermission> Permissions { get; set; } = [UserPermission.Unverified];
 
         public void Mapping(Profile profile)
         {
