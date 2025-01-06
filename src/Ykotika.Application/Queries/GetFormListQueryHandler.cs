@@ -20,6 +20,7 @@ namespace Ykotika.Application.Queries
             var query =
                 _dbContext
                 .Forms
+                .Include(e => e.Inputs)
                 .AsQueryable();
 
             if (request.IsPublished.HasValue)
@@ -29,6 +30,7 @@ namespace Ykotika.Application.Queries
 
             var forms = await query
                 .ProjectTo<FormItem>(_mapper.ConfigurationProvider)
+                .AsNoTracking()
                 .ToListAsync(cancellationToken);
 
             return new FormList { Forms = forms };
