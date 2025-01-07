@@ -9,6 +9,7 @@ namespace Ykotika.Application.ViewModels
         public required Guid Id { get; set; }
         public required bool IsPublished { get; set; }
         public required string Name { get; set; }
+        public required List<FormInputDetails> Inputs { get; set; }
 
         public void Mapping(Profile profile)
         {
