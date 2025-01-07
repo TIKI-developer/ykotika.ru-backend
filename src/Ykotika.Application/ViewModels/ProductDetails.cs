@@ -6,6 +6,7 @@ namespace Ykotika.Application.ViewModels
 {
     public class ProductDetails : IMapWith<Product>
     {
+        public required Guid Id { get; set; }
         public required string Name { get; set; }
         public required string Description { get; set; }
         public List<OutsourceShopDetails>? OutsourceShops { get; set; }

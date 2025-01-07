@@ -7,6 +7,7 @@ namespace Ykotika.Application.ViewModels
 {
     public class OfferDetails : IMapWith<Offer>
     {
+        public required Guid Id { get; set; }
         public required string Content { get; set; }
         public required Timestamps Timestamps { get; set; }
 

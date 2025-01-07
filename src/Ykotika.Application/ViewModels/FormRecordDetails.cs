@@ -7,6 +7,7 @@ namespace Ykotika.Application.ViewModels
 {
     public class FormRecordDetails : IMapWith<FormRecord>
     {
+        public required Guid Id { get; set; }
         public required string FormName { get; set; }
         public required User Author { get; set; }
         public List<FormInputRecordDetails> InputRecords { get; set; } = [];

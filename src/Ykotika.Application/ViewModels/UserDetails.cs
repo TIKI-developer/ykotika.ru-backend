@@ -12,11 +12,15 @@ namespace Ykotika.Application.ViewModels
         public string? PhoneNumber { get; set; }
         public required string Email { get; set; }
         public Domain.Entities.File? Picture { get; set; }
-        public List<UserPermission>? Permissions { get; set; }
+        public required List<string> Permissions { get; set; }
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<User, UserDetails>();
+            profile.CreateMap<User, UserDetails>()
+                .ForMember(to => to.Permissions,
+                opt => opt.MapFrom(from => from.Permissions
+                    .Select(permission => permission.ToString())
+                    .ToList()));
         }
     }
 }
