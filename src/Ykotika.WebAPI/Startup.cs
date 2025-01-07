@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.FileProviders;
-using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
 using Ykotika.Application;
 using Ykotika.Application.Common.Mappings;

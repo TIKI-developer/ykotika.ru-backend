@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Ykotika.Application.Commands;
 using Ykotika.Application.Interfaces;
@@ -16,7 +14,7 @@ namespace Ykotika.WebAPI.Controllers
     public class AuthController
         (IMapper mapper,
         IEmailVerifier emailVerifier,
-        IJwtProvider jwtProvider) 
+        IJwtProvider jwtProvider)
         : BaseController
     {
         private readonly IMapper _mapper = mapper;
@@ -39,7 +37,7 @@ namespace Ykotika.WebAPI.Controllers
         [Route("login")]
         [HttpPost]
         public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginDto signupDto)
-        { 
+        {
             var command = _mapper.Map<LoginCommand>(signupDto);
 
             var vm = await Mediator.Send(command);

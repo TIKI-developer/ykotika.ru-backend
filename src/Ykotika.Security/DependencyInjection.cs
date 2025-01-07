@@ -16,7 +16,7 @@ namespace Ykotika.Security
             services.Configure<AccessTokenOptions>(options =>
             configuration.GetSection(nameof(AccessTokenOptions)).Bind(options));
 
-            services.Configure<RefreshTokenOptions>(options => 
+            services.Configure<RefreshTokenOptions>(options =>
             configuration.GetSection(nameof(RefreshTokenOptions)).Bind(options));
 
             return services;
