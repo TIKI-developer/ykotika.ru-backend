@@ -5,13 +5,13 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.WebAPI.Models
 {
-    public class ChangeAuthorStatusDto : IMapWith<ChangeAuthorStatusCommand>
+    public class UpdateAuthorStatusDto : IMapWith<UpdateAuthorStatusCommand>
     {
         public required string NewStatus { get; set; }
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<ChangeAuthorStatusDto, ChangeAuthorStatusCommand>()
+            profile.CreateMap<UpdateAuthorStatusDto, UpdateAuthorStatusCommand>()
                 .ForMember(to => to.NewStatus,
                 opt => opt.MapFrom(from => Enum.Parse(typeof(AuthorStatus), from.NewStatus)));
         }

@@ -60,9 +60,9 @@ namespace Ykotika.WebAPI.Controllers
         [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         [HttpPatch("{id}")]
         public async Task<IActionResult>
-            ChangeAuthorStatus(Guid id, [FromBody] ChangeAuthorStatusDto dto)
+            ChangeAuthorStatus(Guid id, [FromBody] UpdateAuthorStatusDto dto)
         {
-            var command = _mapper.Map<ChangeAuthorStatusCommand>(dto);
+            var command = _mapper.Map<UpdateAuthorStatusCommand>(dto);
             command.Id = id;
             await Mediator.Send(command);
 

@@ -136,9 +136,9 @@ namespace Ykotika.WebAPI.Controllers
         [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         [HttpPatch("outsource-shops")]
         public async Task<IActionResult>
-            ChangeOutsourceShops([FromBody] ChangeProductOutsourceShopDto dto)
+            ChangeOutsourceShops([FromBody] UpdateProductOutsourceShopDto dto)
         {
-            var command = _mapper.Map<ChangeProductOutsourceShopCommand>(dto);
+            var command = _mapper.Map<UpdateProductOutsourceShopCommand>(dto);
             await Mediator.Send(command);
 
             return Ok();

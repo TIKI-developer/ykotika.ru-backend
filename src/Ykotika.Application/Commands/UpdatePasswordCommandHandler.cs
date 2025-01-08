@@ -6,15 +6,15 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Commands
 {
-    public class ChangePasswordCommandHandler
+    public class UpdatePasswordCommandHandler
         (IYkotikaDbContext dbContext,
         IPasswordHasher passwordHasher)
-        : IRequestHandler<ChangePasswordCommand>
+        : IRequestHandler<UpdatePasswordCommand>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
         private readonly IPasswordHasher _passwordHasher = passwordHasher;
 
-        public async Task Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
+        public async Task Handle(UpdatePasswordCommand request, CancellationToken cancellationToken)
         {
             var user = await
                 _dbContext

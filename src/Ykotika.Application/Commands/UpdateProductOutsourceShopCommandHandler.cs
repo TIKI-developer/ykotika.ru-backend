@@ -6,13 +6,13 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Commands
 {
-    public class ChangeProductOutsourceShopCommandHandler
+    public class UpdateProductOutsourceShopCommandHandler
         (IYkotikaDbContext dbContext)
-        : IRequestHandler<ChangeProductOutsourceShopCommand>
+        : IRequestHandler<UpdateProductOutsourceShopCommand>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
 
-        public async Task Handle(ChangeProductOutsourceShopCommand request, CancellationToken cancellationToken)
+        public async Task Handle(UpdateProductOutsourceShopCommand request, CancellationToken cancellationToken)
         {
             var outsourceShops = await
                 _dbContext

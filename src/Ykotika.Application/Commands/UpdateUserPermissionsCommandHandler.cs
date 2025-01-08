@@ -6,14 +6,14 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Commands
 {
-    public class ChangeUserPermissionsCommandHandler
+    public class UpdateUserPermissionsCommandHandler
         (IYkotikaDbContext dbContext)
-        : IRequestHandler<ChangeUserPermissionsCommand>
+        : IRequestHandler<UpdateUserPermissionsCommand>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
 
         public async Task
-            Handle(ChangeUserPermissionsCommand request, CancellationToken cancellationToken)
+            Handle(UpdateUserPermissionsCommand request, CancellationToken cancellationToken)
         {
             var user = await
                 _dbContext
