@@ -12,6 +12,7 @@ namespace Ykotika.WebAPI.Controllers
     [Route("files")]
     public class FileController : BaseController
     {
+        [Authorize(Roles = $"{Roles.AUTHOR_ROLE}, {Roles.MODERATOR_ROLE}, {Roles.DIRECTOR_ROLE}, {Roles.ADMIN_ROLE}")]
         [HttpPost("upload")]
         public async Task<ActionResult<FileDetails>> Upload([FromForm] UploadFileDto dto)
         {
@@ -20,7 +21,7 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok(vm);
         }
-
+        [Authorize(Roles = $"{Roles.ADMIN_ROLE}")]
         [HttpDelete("{id}/delete")]
         public async Task<ActionResult> Delete(Guid id)
         {
@@ -29,7 +30,7 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok();
         }
-
+        [Authorize(Roles = $"{Roles.MODERATOR_ROLE}, {Roles.DIRECTOR_ROLE}, {Roles.ADMIN_ROLE}")]
         [HttpGet("{id}/download")]
         public async Task<ActionResult> Download(Guid id)
         {

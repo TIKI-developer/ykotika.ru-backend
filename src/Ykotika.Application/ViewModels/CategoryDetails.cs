@@ -9,6 +9,7 @@ namespace Ykotika.Application.ViewModels
         public required Guid Id { get; set; }
         public required string Name { get; set; }
         public required string Description { get; set; }
+        public required bool IsPublished { get; set; }
         public required Domain.Entities.File? Image { get; set; }
 
         public void Mapping(Profile profile)

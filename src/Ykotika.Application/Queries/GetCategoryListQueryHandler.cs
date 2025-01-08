@@ -18,10 +18,20 @@ namespace Ykotika.Application.Queries
         public async Task<CategoryList>
             Handle(GetCategoryListQuery request, CancellationToken cancellationToken)
         {
-            var categories = await
+            var query = 
                 _dbContext
                 .Categories
                 .Include(e => e.Image)
+                .AsQueryable();
+
+
+            if (request.IsPublished.HasValue)
+            {
+                query = query.Where(e => e.IsPublished == request.IsPublished);
+            }
+
+            var categories = await
+                query
                 .ProjectTo<CategoryItem>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
 
