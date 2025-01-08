@@ -10,7 +10,6 @@ using Ykotika.WebAPI.Models;
 namespace Ykotika.WebAPI.Controllers
 {
     [Route("forms")]
-    [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
     public class FormController(IMapper mapper) : BaseController
     {
         private readonly IMapper _mapper = mapper;
@@ -48,6 +47,13 @@ namespace Ykotika.WebAPI.Controllers
         {
             var query = new GetFormQuery { Id = id };
             var vm = await Mediator.Send(query);
+
+            if (vm.IsPublished == false && 
+                (!User.IsInRole(Roles.ADMIN_ROLE) ||
+                !User.IsInRole(Roles.DIRECTOR_ROLE)))
+            {
+                return Forbid();
+            }
 
             return Ok(vm);
         }

@@ -7,6 +7,7 @@ namespace Ykotika.Application.ViewModels
 {
     public class AuthorDetails : IMapWith<Author>
     {
+        public required Guid Id { get; set; }
         public required string Name { get; set; }
         public string? Surname { get; set; }
         public string? PhoneNumber { get; set; }

@@ -1,9 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Ykotika.Application.Common.Exceptions;
 using Ykotika.Application.Interfaces;
 using Ykotika.Application.ViewModels;
-using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Commands
 {

@@ -6,6 +6,7 @@ namespace Ykotika.Application.ViewModels
 {
     public class AgreementDetails : IMapWith<Agreement>
     {
+        public required Guid Id { get; set; }
         public required Guid OfferId { get; set; }
         public required Guid AuthorId { get; set; }
 

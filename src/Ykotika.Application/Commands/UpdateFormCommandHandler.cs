@@ -64,7 +64,7 @@ namespace Ykotika.Application.Commands
                     inputsToSaveIds.Add(id);
                 }
                 form.Inputs.RemoveAll(input => !inputsToSaveIds.Contains(input.Id));
-            } 
+            }
             else
             {
                 throw new Exception("Form must have at least one input!");

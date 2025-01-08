@@ -172,7 +172,7 @@ namespace Ykotika.Security
                 ValidateIssuer = false,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.JwtOptions.SecretKey)),
-                ValidateLifetime = false 
+                ValidateLifetime = false
             };
             var tokenHandler = new JwtSecurityTokenHandler();
             SecurityToken securityToken;

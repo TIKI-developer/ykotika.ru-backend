@@ -10,13 +10,18 @@ namespace Ykotika.Application.ViewModels
         public string? PhoneNumber { get; set; }
         public required string Email { get; set; }
         public required string Initials { get; set; }
-        public List<UserPermission> Permissions { get; set; } = [UserPermission.Unverified];
+        public required List<string> Permissions { get; set; }
 
         public void Mapping(Profile profile)
         {
             profile.CreateMap<User, UserItem>()
                 .ForMember(to => to.Initials,
-                opt => opt.MapFrom(from => $"{from.Surname} {from.Name}"));
+                opt => opt.MapFrom(from => $"{from.Surname} {from.Name}"))
+
+                .ForMember(to => to.Permissions,
+                opt => opt.MapFrom(from => from.Permissions
+                    .Select(permission => permission.ToString())
+                    .ToList()));
         }
     }
 }

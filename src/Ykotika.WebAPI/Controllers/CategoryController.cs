@@ -25,11 +25,25 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok(vm);
         }
+        [HttpGet("published")]
+        public async Task<ActionResult<CategoryList>> GetPublished()
+        {
+            var query = new GetCategoryListQuery { IsPublished = true };
+            var vm = await Mediator.Send(query);
+
+            return Ok(vm);
+        }
         [HttpGet("{id}")]
         public async Task<ActionResult<CategoryDetails>> GetById(Guid id)
         {
             var query = new GetCategoryByIdQuery { Id = id };
             var vm = await Mediator.Send(query);
+
+            if (vm.IsPublished == false &&
+                !User.IsInRole(Roles.DIRECTOR_ROLE))
+            {
+                return Forbid();
+            }
 
             return Ok(vm);
         }
