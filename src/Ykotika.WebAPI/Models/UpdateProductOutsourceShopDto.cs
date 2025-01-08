@@ -4,13 +4,13 @@ using Ykotika.Application.Common.Mappings;
 
 namespace Ykotika.WebAPI.Models
 {
-    public class ChangeProductOutsourceShopDto : IMapWith<ChangeProductOutsourceShopCommand>
+    public class UpdateProductOutsourceShopDto : IMapWith<UpdateProductOutsourceShopCommand>
     {
         public required List<Guid> OutsourceShops { get; set; }
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<ChangeProductOutsourceShopDto, ChangeProductOutsourceShopCommand>();
+            profile.CreateMap<UpdateProductOutsourceShopDto, UpdateProductOutsourceShopCommand>();
         }
     }
 }

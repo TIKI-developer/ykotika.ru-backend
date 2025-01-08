@@ -2,7 +2,7 @@
 
 namespace Ykotika.Application.Commands
 {
-    public class ChangePasswordCommand : IRequest
+    public class UpdatePasswordCommand : IRequest
     {
         public required Guid UserId { get; set; }
         public required string CurrentPassword { get; set; }

@@ -62,9 +62,9 @@ namespace Ykotika.WebAPI.Controllers
         [Authorize(Roles = $"{Roles.ADMIN_ROLE}")]
         [HttpPatch("{id}")]
         public async Task<IActionResult>
-            ChangePermissions(Guid id, [FromBody] ChangeUserPermissionsDto dto)
+            ChangePermissions(Guid id, [FromBody] UpdateUserPermissionsDto dto)
         {
-            var command = _mapper.Map<ChangeUserPermissionsCommand>(dto);
+            var command = _mapper.Map<UpdateUserPermissionsCommand>(dto);
             command.Id = id;
             await Mediator.Send(command);
 

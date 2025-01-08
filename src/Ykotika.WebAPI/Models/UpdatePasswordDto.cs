@@ -4,14 +4,14 @@ using Ykotika.Application.Common.Mappings;
 
 namespace Ykotika.WebAPI.Models
 {
-    public class ChangePasswordDto : IMapWith<ChangePasswordCommand>
+    public class UpdatePasswordDto : IMapWith<UpdatePasswordCommand>
     {
         public required string CurrentPassword { get; set; }
         public required string NewPassword { get; set; }
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<ChangePasswordDto, ChangePasswordCommand>();
+            profile.CreateMap<UpdatePasswordDto, UpdatePasswordCommand>();
         }
     }
 }

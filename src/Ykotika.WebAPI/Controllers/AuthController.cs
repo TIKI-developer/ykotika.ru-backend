@@ -122,9 +122,9 @@ namespace Ykotika.WebAPI.Controllers
 
         [Authorize(Roles = $"{Roles.CUSTOMER_ROLE}")]
         [HttpPatch("password")]
-        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
+        public async Task<IActionResult> ChangePassword([FromBody] UpdatePasswordDto dto)
         {
-            var command = _mapper.Map<ChangePasswordCommand>(dto);
+            var command = _mapper.Map<UpdatePasswordCommand>(dto);
             command.UserId = UserId;
             await Mediator.Send(command);
 

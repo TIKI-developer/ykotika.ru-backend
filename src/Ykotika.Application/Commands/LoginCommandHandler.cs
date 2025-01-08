@@ -22,7 +22,7 @@ namespace Ykotika.Application.Commands
             var user = await
                 _dbContext
                 .Users
-                .FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
+                .FirstOrDefaultAsync(e => e.Email == request.Email, cancellationToken);
 
             if (user == null || !_passwordHasher.Verify(request.Password, user.PasswordHash))
             {
