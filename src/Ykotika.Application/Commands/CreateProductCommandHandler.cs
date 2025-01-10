@@ -116,7 +116,7 @@ namespace Ykotika.Application.Commands
                 Source = source,
                 Tags = request.Tags,
                 Status = ProductStatus.New,
-                Article = _articleGenerator.Generate(productType.ArticlePattern, formRecord),
+                Article = request.Name,
                 Name = request.Name,
                 Description = request.Description,
                 Author = author,
@@ -128,6 +128,8 @@ namespace Ykotika.Application.Commands
                 OutsourceShops = outsourceShopsInfo,
                 ProductType = productType,
             };
+
+            product.Article = _articleGenerator.Generate(productType.ArticlePattern, product);
 
             await _dbContext.Products.AddAsync(product, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);

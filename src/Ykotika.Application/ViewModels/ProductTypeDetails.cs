@@ -8,7 +8,7 @@ namespace Ykotika.Application.ViewModels
     {
         public required Guid Id { get; set; }
         public required string Name { get; set; }
-        public required string ArticlePattern { get; set; }
+        public required List<string> ArticlePattern { get; set; }
         public required FormDetails Form { get; set; }
         public required bool IsPublished { get; set; }
 

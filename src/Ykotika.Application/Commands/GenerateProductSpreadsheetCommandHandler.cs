@@ -28,6 +28,7 @@ namespace Ykotika.Application.Commands
                 .ThenInclude(e => e.Inputs)
                 .Include(e => e.FormRecord)
                 .ThenInclude(e => e.InputRecords)
+                .Include(e => e.Source)
                 .ToListAsync(cancellationToken);
 
             if (products != null && products.Count > 0)

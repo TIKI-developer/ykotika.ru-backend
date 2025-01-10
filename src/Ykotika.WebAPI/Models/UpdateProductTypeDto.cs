@@ -7,7 +7,7 @@ namespace Ykotika.WebAPI.Models
     public class UpdateProductTypeDto : IMapWith<UpdateProductTypeCommand>
     {
         public string? Name { get; set; }
-        public string? ArticlePattern { get; set; }
+        public List<string>? ArticlePattern { get; set; }
         public bool? IsPublished { get; set; }
 
         public void Mapping(Profile profile)
