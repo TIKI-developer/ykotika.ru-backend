@@ -15,7 +15,8 @@ namespace Ykotika.WebAPI.Controllers
         private readonly IMapper _mapper = mapper;
 
         [HttpGet]
-        public async Task<ActionResult<OfferList>> Get()
+        public async Task<ActionResult<OfferList>>
+            Get()
         {
             var query = new GetOfferListQuery();
             var vm = await Mediator.Send(query);
@@ -24,7 +25,8 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<OfferDetails>> GetById(Guid id)
+        public async Task<ActionResult<OfferDetails>> 
+            GetById(Guid id)
         {
             var query = new GetOfferByIdQuery { Id = id };
             var vm = await Mediator.Send(query);
@@ -33,13 +35,22 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpGet("current")]
-        public async Task<ActionResult<OfferDetails>> GetCurrent()
+        public async Task<ActionResult<CurrentOfferDetails>>
+            GetCurrent([FromQuery]
+                       bool acceptMe = false)
         {
-            return Ok();
+            var query = new GetCurrentOfferQuery 
+            { 
+                UserId = acceptMe ? UserId : null,
+            };
+            var vm = await Mediator.Send(query);
+
+            return Ok(vm);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateOfferDto dto)
+        public async Task<IActionResult> 
+            Create([FromBody] CreateOfferDto dto)
         {
             var command = _mapper.Map<CreateOfferCommand>(dto);
             var id = await Mediator.Send(command);
@@ -48,17 +59,19 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateOfferDto dto)
+        public async Task<ActionResult<Guid>> 
+            Update(Guid id, [FromBody] UpdateOfferDto dto)
         {
             var command = _mapper.Map<UpdateOfferCommand>(dto);
             command.Id = id;
-            await Mediator.Send(command);
+            var updatedId = await Mediator.Send(command);
 
-            return Ok();
+            return Ok(updatedId);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> 
+            Delete(Guid id)
         {
             var command = new DeleteOfferCommand { Id = id };
             await Mediator.Send(command);

@@ -5,16 +5,17 @@ using Ykotika.Domain.ValueObjects;
 
 namespace Ykotika.Application.ViewModels
 {
-    public class OfferDetails : IMapWith<Offer>
+    public class CurrentOfferDetails : IMapWith<Offer>
     {
         public required Guid Id { get; set; }
         public required string Content { get; set; }
         public required bool IsPublished { get; set; }
         public required Timestamps Timestamps { get; set; }
+        public bool? IsAccepted { get; set; }
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Offer, OfferDetails>();
+            profile.CreateMap<Offer, CurrentOfferDetails>();
         }
     }
 }

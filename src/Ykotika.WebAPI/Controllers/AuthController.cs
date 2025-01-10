@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Ykotika.Application.Commands;
@@ -23,10 +22,10 @@ namespace Ykotika.WebAPI.Controllers
 
         [Route("signup")]
         [HttpPost]
-        public async Task<ActionResult<SignupResponse>> Signup([FromBody] SignupDto signupDto)
+        public async Task<ActionResult<SignupResponse>>
+            Signup([FromBody] SignupDto signupDto)
         {
             var command = _mapper.Map<SignupCommand>(signupDto);
-
             var vm = await Mediator.Send(command);
 
             HttpContext.Response.Cookies.Append(Cookies.ACCESS_TOKEN_NAME, vm.AccessToken);
@@ -36,10 +35,10 @@ namespace Ykotika.WebAPI.Controllers
 
         [Route("login")]
         [HttpPost]
+
         public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginDto signupDto)
         {
             var command = _mapper.Map<LoginCommand>(signupDto);
-
             var vm = await Mediator.Send(command);
 
             HttpContext.Response.Cookies.Append(Cookies.ACCESS_TOKEN_NAME, vm.AccessToken);
@@ -49,7 +48,8 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpPost("logout")]
-        public async Task<IActionResult> Logout()
+        public async Task<IActionResult>
+            Logout()
         {
             await Task.Run(() =>
             {
@@ -61,7 +61,8 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpPost("refresh-token")]
-        public async Task<ActionResult<LoginResponse>> NewRefreshToken()
+        public async Task<ActionResult<LoginResponse>>
+            NewRefreshToken()
         {
             if (Request.Cookies.TryGetValue(Cookies.REFRESH_TOKEN_NAME, out var refreshToken) &&
                 Request.Cookies.TryGetValue(Cookies.ACCESS_TOKEN_NAME, out var accessToken))
@@ -86,9 +87,9 @@ namespace Ykotika.WebAPI.Controllers
             }
         }
 
-        [Authorize(Roles = $"{Roles.GUEST_ROLE}")]
         [HttpPost("verifications/email")]
-        public async Task<IActionResult> SendVerifyEmailMessage()
+        public async Task<IActionResult>
+            SendVerifyEmailMessage()
         {
             var token = _jwtProvider.GenerateEmailVerificationToken(UserId, UserEmail);
             var encodeToken = Uri.EscapeDataString(token);
@@ -99,9 +100,9 @@ namespace Ykotika.WebAPI.Controllers
             return Ok();
         }
 
-        [Authorize(Roles = $"{Roles.GUEST_ROLE}")]
         [HttpGet("verifications/email")]
-        public async Task<IActionResult> VerifyEmail([FromQuery] string token)
+        public async Task<IActionResult>
+            VerifyEmail([FromQuery] string token)
         {
             var decodedToken = Uri.UnescapeDataString(token);
             if (!_jwtProvider.VerifyEmailToken(decodedToken, UserId, UserEmail))
@@ -120,9 +121,9 @@ namespace Ykotika.WebAPI.Controllers
             return Ok();
         }
 
-        [Authorize(Roles = $"{Roles.CUSTOMER_ROLE}")]
         [HttpPatch("password")]
-        public async Task<IActionResult> ChangePassword([FromBody] UpdatePasswordDto dto)
+        public async Task<IActionResult>
+            ChangePassword([FromBody] UpdatePasswordDto dto)
         {
             var command = _mapper.Map<UpdatePasswordCommand>(dto);
             command.UserId = UserId;

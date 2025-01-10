@@ -13,11 +13,10 @@ namespace Ykotika.Application.Commands
 
         public async Task Handle(CreateAgreementCommand request, CancellationToken cancellationToken)
         {
-            var user = await
+            var author = await
                 _dbContext
                 .Authors
-                .Include(e => e.User)
-                .FirstOrDefaultAsync(e => e.User.Id == request.UserId, cancellationToken)
+                .FirstOrDefaultAsync(e => e.UserId == request.UserId, cancellationToken)
                 ?? throw new NotFoundException(nameof(Domain.Entities.Author), request.UserId);
 
             var offer = await
@@ -30,7 +29,7 @@ namespace Ykotika.Application.Commands
             {
                 Id = Guid.NewGuid(),
                 Offer = offer,
-                Author = user,
+                Author = author,
                 Timestamps = new Domain.ValueObjects.Timestamps()
             };
 

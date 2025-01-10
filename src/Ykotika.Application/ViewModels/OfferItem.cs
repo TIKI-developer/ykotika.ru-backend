@@ -8,6 +8,7 @@ namespace Ykotika.Application.ViewModels
     public class OfferItem : IMapWith<Offer>
     {
         public required Guid Id { get; set; }
+        public required bool IsPublished { get; set; }
         public required Timestamps Timestamps { get; set; }
 
         public void Mapping(Profile profile)

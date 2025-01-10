@@ -5,22 +5,22 @@ using Ykotika.Domain.ValueObjects;
 
 namespace Ykotika.WebAPI.Models
 {
-    public class SendRequestToBeAuthorDto : IMapWith<SendRequestToBeCommand>
+    public class SendRequestToBeAuthorDto : IMapWith<SendRequestToBeAuthorCommand>
     {
-        public string? Name { get; set; }
+        public required string Name { get; set; }
         public required string Surname { get; set; }
         public required string PhoneNumber { get; set; }
         public required List<Social> Socials { get; set; }
         public required string TellAboutYourself { get; set; }
-        public required string WhichSocial { get; set; }
+        public required string ContactSocial { get; set; }
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<SendRequestToBeAuthorDto, SendRequestToBeCommand>()
+            profile.CreateMap<SendRequestToBeAuthorDto, SendRequestToBeAuthorCommand>()
 
-                .ForMember(to => to.WhichSocial,
+                .ForMember(to => to.ContactSocial,
                 opt => opt.MapFrom(from =>
-                (AuthorRequest.ContactSocial)Enum.Parse(typeof(AuthorRequest.ContactSocial), from.WhichSocial)));
+                (AuthorRequest.ContactSocial)Enum.Parse(typeof(AuthorRequest.ContactSocial), from.ContactSocial)));
         }
     }
 }

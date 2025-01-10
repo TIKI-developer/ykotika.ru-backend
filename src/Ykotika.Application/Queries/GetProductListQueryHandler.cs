@@ -18,10 +18,11 @@ namespace Ykotika.Application.Queries
         public async Task<ProductList> Handle(GetProductListQuery request, CancellationToken cancellationToken)
         {
             var query = _dbContext.Products
+                .Include(e => e.Author)
+                .ThenInclude(e => e.User)
                 .Include(e => e.Images)
-                .ThenInclude(e => e.File)
+                .ThenInclude(e => e.Image)
                 .Include(e => e.FormRecord)
-                .ThenInclude(e => e.Author)
                 .AsQueryable();
 
             if (request.IsPublished.HasValue)
@@ -29,18 +30,24 @@ namespace Ykotika.Application.Queries
                 query = query.Where(p => p.IsPublished == request.IsPublished.Value);
             }
 
-            if (request.UserId.HasValue)
+            if (request.AuthorId.HasValue)
             {
-                query = query.Where(p => p.FormRecord.Author.Id == request.UserId.Value);
+                query = query.Where(p => p.Author.UserId == request.AuthorId.Value);
             }
 
-            if (request.ProductType.HasValue)
+            if (request.UserId.HasValue)
             {
-                query = query.Where(p => p.ProductType.Id == request.ProductType.Value);
+                query = query.Where(p => p.Author.UserId == request.UserId.Value);
+            }
+
+            if (request.ProductTypeId.HasValue)
+            {
+                query = query.Where(p => p.ProductType.Id == request.ProductTypeId.Value);
             }
 
             var products = await query
                 .ProjectTo<ProductItem>(_mapper.ConfigurationProvider)
+                .AsNoTracking()
                 .ToListAsync(cancellationToken);
 
             return new ProductList { Products = products };

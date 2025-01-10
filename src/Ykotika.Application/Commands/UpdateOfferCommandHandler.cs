@@ -33,7 +33,7 @@ namespace Ykotika.Application.Commands
                 {
                     if (request.Content.Equals(offer.Content))
                     {
-                        return Guid.Empty;
+                        return offer.Id;
                     }
 
                     var newOffer = new Offer
@@ -45,6 +45,7 @@ namespace Ykotika.Application.Commands
                     };
 
                     await _dbContext.Offers.AddAsync(newOffer, cancellationToken);
+                    await _dbContext.SaveChangesAsync(cancellationToken);
 
                     return newOffer.Id;
                 }
@@ -52,7 +53,7 @@ namespace Ykotika.Application.Commands
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return Guid.Empty;
+            return offer.Id;
         }
     }
 }

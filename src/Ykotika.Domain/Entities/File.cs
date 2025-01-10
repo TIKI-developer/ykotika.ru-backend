@@ -1,8 +1,10 @@
-﻿namespace Ykotika.Domain.Entities
+﻿using Ykotika.Domain.ValueObjects;
+
+namespace Ykotika.Domain.Entities
 {
-    public class File : Entity
+    public class File
     {
-        public required string Name { get; set; }
-        public required string RelativePath { get; set; }
+        public required string Path { get; set; }
+        public required Timestamps Timestamps { get; set; }
     }
 }

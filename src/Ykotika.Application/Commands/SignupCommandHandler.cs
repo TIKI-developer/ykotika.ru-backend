@@ -29,6 +29,11 @@ namespace Ykotika.Application.Commands
             bool userExist = existUser != null;
             string accessToken;
 
+            if (!request.ConfirmedPersonalDataProcessingPolicy)
+            {
+                throw new Exception("You need confirm personal data processing policy!");
+            }
+
             if (!userExist)
             {
                 var user = new User
@@ -38,7 +43,7 @@ namespace Ykotika.Application.Commands
                     Email = request.Email,
                     Timestamps = new Timestamps(),
                     PasswordHash = _passwordHasher.Generate(request.Password),
-                    ConfirmedPolicy = true
+                    ConfirmedPersonalDataProcessingPolicy = request.ConfirmedPersonalDataProcessingPolicy
                 };
 
                 await _dbContext.Users.AddAsync(user, cancellationToken);

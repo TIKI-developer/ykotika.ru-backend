@@ -2,12 +2,14 @@
 
 namespace Ykotika.Domain.Entities
 {
-    public class Author : Entity
+    public class Author
     {
+        public required Guid UserId { get; set; }
+        public required User User { get; set; }
+        public required Timestamps Timestamps { get; set; }
         public required List<Social> Socials { get; set; }
         public required AuthorRequest Request { get; set; }
         public required AuthorStatus Status { get; set; }
-        public required User User { get; set; }
         public List<Agreement>? Agreements { get; set; }
 
         public void CreateRequest(string tellAboutYourself, AuthorRequest.ContactSocial whichSocial)

@@ -9,7 +9,7 @@ namespace Ykotika.Application.ViewModels
     {
         public required Guid Id { get; set; }
         public required string FormName { get; set; }
-        public required User Author { get; set; }
+        public required UserDetails Author { get; set; }
         public List<FormInputRecordDetails> InputRecords { get; set; } = [];
         public required Timestamps Timestamps { get; set; }
 

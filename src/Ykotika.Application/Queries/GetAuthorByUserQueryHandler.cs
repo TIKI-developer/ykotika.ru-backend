@@ -23,7 +23,7 @@ namespace Ykotika.Application.Queries
                 _dbContext
                 .Authors
                 .Include(e => e.User)
-                .FirstOrDefaultAsync(e => e.User.Id == request.Id, cancellationToken)
+                .FirstOrDefaultAsync(e => e.UserId == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(User), request.Id);
 
             return _mapper.Map<AuthorDetails>(author);

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Ykotika.Application.Common.Exceptions;
 using Ykotika.Application.Interfaces;
 using Ykotika.Domain.Entities;
+using Ykotika.Domain.ValueObjects;
 
 namespace Ykotika.Application.Commands
 {
@@ -14,19 +15,31 @@ namespace Ykotika.Application.Commands
 
         public async Task Handle(UpdateProductOutsourceShopCommand request, CancellationToken cancellationToken)
         {
-            var outsourceShops = await
-                _dbContext
-                .OutsourceShops
-                .Where(e => request.OutsourceShops.Contains(e.Id))
-                .ToListAsync(cancellationToken);
-
             var product = await
                 _dbContext
                 .Products
                 .FirstOrDefaultAsync(e => e.Id == request.Id)
                 ?? throw new NotFoundException(nameof(Product), request.Id);
 
-            product.OutsourceShops = outsourceShops;
+            foreach (var shop in request.OutsourceShopInfo)
+            {
+                var outsourceShop = await
+                    _dbContext
+                    .OutsourceShops
+                    .FirstOrDefaultAsync(e => e.Id == shop.OutsourceShopId, cancellationToken);
+
+                if (outsourceShop == null)
+                {
+                    continue;
+                }
+
+                product.OutsourceShops.Add(new OutsourceShopProductInfo
+                {
+                    OutsourceShop = outsourceShop, 
+                    Link = shop.Link,
+                });
+            }
+
 
             await _dbContext.SaveChangesAsync(cancellationToken);
         }

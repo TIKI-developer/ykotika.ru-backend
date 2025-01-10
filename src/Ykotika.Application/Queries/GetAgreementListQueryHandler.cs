@@ -17,11 +17,32 @@ namespace Ykotika.Application.Queries
 
         public async Task<AgreementList> Handle(GetAgreementListQuery request, CancellationToken cancellationToken)
         {
-            var agreements = await
+            var query =
                 _dbContext
                 .Agreements
                 .Include(e => e.Timestamps)
                 .Include(e => e.Offer)
+                .Include(e => e.Author)
+                .AsQueryable();
+
+            if (request.AuthorId.HasValue)
+            {
+                query = query.Where(e => e.Author.UserId == request.AuthorId);
+            }
+            if (request.OfferId.HasValue)
+            {
+                query = query.Where(e => e.Offer.Id == request.OfferId);
+            }
+
+            if (!string.IsNullOrEmpty(request.SortBy))
+            {
+                query = request.IsDescending
+                    ? query.OrderByDescending(c => EF.Property<object>(c, request.SortBy))
+                    : query.OrderBy(c => EF.Property<object>(c, request.SortBy));
+            }
+
+            var agreements = await
+                query
                 .ProjectTo<AgreementItem>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
 

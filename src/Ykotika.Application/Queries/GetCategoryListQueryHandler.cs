@@ -18,7 +18,7 @@ namespace Ykotika.Application.Queries
         public async Task<CategoryList>
             Handle(GetCategoryListQuery request, CancellationToken cancellationToken)
         {
-            var query = 
+            var query =
                 _dbContext
                 .Categories
                 .Include(e => e.Image)
@@ -28,6 +28,13 @@ namespace Ykotika.Application.Queries
             if (request.IsPublished.HasValue)
             {
                 query = query.Where(e => e.IsPublished == request.IsPublished);
+            }
+
+            if (!string.IsNullOrEmpty(request.SortBy))
+            {
+                query = request.IsDescending
+                    ? query.OrderByDescending(c => EF.Property<object>(c, request.SortBy))
+                    : query.OrderBy(c => EF.Property<object>(c, request.SortBy));
             }
 
             var categories = await

@@ -16,7 +16,7 @@ namespace Ykotika.Application.ViewModels
                 .ForMember(to => to.OfferId,
                 opt => opt.MapFrom(from => from.Offer.Id))
                 .ForMember(to => to.AuthorId,
-                opt => opt.MapFrom(from => from.Author.Id));
+                opt => opt.MapFrom(from => from.Author.UserId));
         }
     }
 }

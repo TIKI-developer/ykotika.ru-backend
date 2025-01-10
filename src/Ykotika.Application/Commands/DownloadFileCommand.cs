@@ -5,6 +5,6 @@ namespace Ykotika.Application.Commands
 {
     public class DownloadFileCommand : IRequest<FileData>
     {
-        public required Guid Id { get; set; }
+        public required string Path { get; set; }
     }
 }

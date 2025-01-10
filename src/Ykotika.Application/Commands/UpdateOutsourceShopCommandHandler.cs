@@ -25,14 +25,14 @@ namespace Ykotika.Application.Commands
             outsourceShop.Name = request.Name ?? outsourceShop.Name;
             outsourceShop.Link = request.Link ?? outsourceShop.Link;
 
-            if (request.LogoFileId != null)
+            if (request.ImagePath != null)
             {
                 var logo = await
                     _dbContext
                     .Files
-                    .FirstOrDefaultAsync(e => e.Id == request.LogoFileId, cancellationToken)
-                    ?? throw new NotFoundException(nameof(Domain.Entities.File), request.LogoFileId);
-                outsourceShop.Logo = logo ?? outsourceShop.Logo;
+                    .FirstOrDefaultAsync(e => e.Path == request.ImagePath, cancellationToken)
+                    ?? throw new NotFoundException(nameof(Domain.Entities.File), request.ImagePath);
+                outsourceShop.Image = logo ?? outsourceShop.Image;
             }
             outsourceShop.Timestamps.MarkUpdated();
 

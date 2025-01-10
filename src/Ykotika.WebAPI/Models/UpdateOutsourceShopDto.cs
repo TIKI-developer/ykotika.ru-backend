@@ -8,7 +8,7 @@ namespace Ykotika.WebAPI.Models
     {
         public string? Name { get; set; }
         public string? Link { get; set; }
-        public Guid? LogoFileId { get; set; }
+        public string? ImagePath { get; set; }
         public void Mapping(Profile profile)
         {
             profile.CreateMap<UpdateOutsourceShopDto, UpdateOutsourceShopCommand>();

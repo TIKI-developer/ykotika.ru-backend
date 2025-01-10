@@ -22,7 +22,12 @@ namespace Ykotika.Application.Queries
                 _dbContext
                 .Products
                 .Include(e => e.Images)
-                .ThenInclude(e => e.File)
+                .ThenInclude(e => e.Image)
+                .Include(e => e.OutsourceShops)
+                .Include(e => e.Tags)
+                .Include(e => e.Categories)
+                .Include(e => e.ProductType)
+                .Include(e => e.FormRecord)
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(Product), request.Id);
 

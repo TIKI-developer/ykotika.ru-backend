@@ -20,7 +20,7 @@ namespace Ykotika.Application.Queries
             var users = await
                 _dbContext
                 .Users
-                .Include(e => e.Picture)
+                .Include(e => e.Image)
                 .ProjectTo<UserItem>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
 

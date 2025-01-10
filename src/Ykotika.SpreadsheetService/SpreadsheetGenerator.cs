@@ -60,7 +60,7 @@ namespace Ykotika.SpreadsheetService
 
                 return new FileData
                 {
-                    Name = $"Table {DateTime.UtcNow.Ticks}.xlsx",
+                    Path = $"Table {DateTime.UtcNow.Ticks}.xlsx",
                     Content = fileContent,
                 };
             }
@@ -104,7 +104,7 @@ namespace Ykotika.SpreadsheetService
 
                 return new FileData
                 {
-                    Name = $"Table {DateTime.UtcNow.Ticks}.xlsx",
+                    Path = $"Table {DateTime.UtcNow.Ticks}.xlsx",
                     Content = fileContent,
                 };
             }

@@ -21,8 +21,8 @@ namespace Ykotika.Application.Commands
             var image = await
                 _dbContext
                 .Files
-                .FirstOrDefaultAsync(e => e.Id == request.ImageFileId, cancellationToken)
-                ?? throw new NotFoundException(nameof(Domain.Entities.File), request.ImageFileId);
+                .FirstOrDefaultAsync(e => e.Path == request.ImagePath, cancellationToken)
+                ?? throw new NotFoundException(nameof(Domain.Entities.File), request.ImagePath);
 
             var category = new Category
             {
@@ -31,7 +31,7 @@ namespace Ykotika.Application.Commands
                 Description = request.Description,
                 Image = image,
                 Timestamps = new Timestamps(),
-                IsPublished = false
+                IsPublished = request.IsPublished
             };
 
             await _dbContext.Categories.AddAsync(category);

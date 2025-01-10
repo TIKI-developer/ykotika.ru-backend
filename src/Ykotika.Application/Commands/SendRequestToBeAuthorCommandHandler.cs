@@ -6,14 +6,14 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Commands
 {
-    public class SendRequestToBeCommandHandler
+    public class SendRequestToBeAuthorCommandHandler
         (IYkotikaDbContext dbContext)
         :
-        IRequestHandler<SendRequestToBeCommand, Guid>
+        IRequestHandler<SendRequestToBeAuthorCommand, Guid>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
 
-        public async Task<Guid> Handle(SendRequestToBeCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(SendRequestToBeAuthorCommand request, CancellationToken cancellationToken)
         {
             var user = await
                 _dbContext
@@ -34,13 +34,13 @@ namespace Ykotika.Application.Commands
 
             var author = new Author
             {
-                Id = Guid.NewGuid(),
+                UserId = user.Id,
                 Socials = request.Socials,
                 User = user,
                 Request = new Domain.ValueObjects.AuthorRequest
                 {
                     TellAboutYourself = request.TellAboutYourself,
-                    WhichSocial = request.WhichSocial,
+                    WhichSocial = request.ContactSocial,
                     Timestamps = new Domain.ValueObjects.Timestamps()
                 },
                 Status = AuthorStatus.New,
@@ -50,7 +50,7 @@ namespace Ykotika.Application.Commands
             await _dbContext.Authors.AddAsync(author, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return author.Id;
+            return author.UserId;
         }
     }
 }

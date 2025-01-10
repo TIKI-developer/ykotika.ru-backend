@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ykotika.Application.Commands;
 using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
-using Ykotika.WebAPI.Constants;
 using Ykotika.WebAPI.Models;
 
 namespace Ykotika.WebAPI.Controllers
@@ -16,19 +14,29 @@ namespace Ykotika.WebAPI.Controllers
     {
         private readonly IMapper _mapper = mapper;
 
-        [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         [HttpGet]
-        public async Task<ActionResult<AgreementList>> GetAll()
+        public async Task<ActionResult<AgreementList>>
+            Get([FromQuery]
+                Guid? authorId,
+                Guid? offerId,
+                string? sortBy,
+                bool? desc)
         {
-            var query = new GetAgreementListQuery();
+            var query = new GetAgreementListQuery
+            {
+                AuthorId = authorId,
+                OfferId = offerId,
+                SortBy = sortBy,
+                IsDescending = desc ?? false
+            };
             var vm = await Mediator.Send(query);
 
             return Ok(vm);
         }
 
-        [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         [HttpGet("{id}")]
-        public async Task<ActionResult<AgreementDetails>> GetById(Guid id)
+        public async Task<ActionResult<AgreementDetails>>
+            GetById(Guid id)
         {
             var query = new GetAgreementByIdQuery { Id = id };
             var vm = await Mediator.Send(query);
@@ -36,9 +44,9 @@ namespace Ykotika.WebAPI.Controllers
             return Ok(vm);
         }
 
-        [Authorize(Roles = $"{Roles.AUTHOR_ROLE}")]
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateAgreementDto dto)
+        public async Task<IActionResult>
+            Create([FromBody] CreateAgreementDto dto)
         {
             var command = _mapper.Map<CreateAgreementCommand>(dto);
             command.UserId = UserId;

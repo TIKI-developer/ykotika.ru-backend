@@ -8,7 +8,8 @@ namespace Ykotika.WebAPI.Models
     {
         public string? Name { get; set; }
         public string? Description { get; set; }
-        public Guid? ImageFileId { get; set; }
+        public bool? IsPublished { get; set; }
+        public string? ImagePath { get; set; }
 
         public void Mapping(Profile profile)
         {

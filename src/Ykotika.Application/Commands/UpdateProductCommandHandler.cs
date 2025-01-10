@@ -30,17 +30,29 @@ namespace Ykotika.Application.Commands
                 throw new Exception("Сейчас товар изменить нельзя!");
             }
 
+            List<Category>? categories = null;
+
+            if (request.CategoryIds != null)
+            {
+                categories = await
+                    _dbContext
+                    .Categories
+                    .Where(e => request.CategoryIds.Contains(e.Id))
+                    .ToListAsync(cancellationToken) ?? null;
+            }
+
             product.Name = request.Name ?? product.Name;
             product.Description = request.Description ?? product.Description;
             product.Tags = request.Tags ?? product.Tags;
+            product.Categories = categories;
 
-            if (request.SourceId != null)
+            if (request.SourcePath != null)
             {
                 var source = await
                     _dbContext
                     .Files
-                    .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
-                    ?? throw new NotFoundException(nameof(Domain.Entities.File), request.SourceId);
+                    .FirstOrDefaultAsync(e => e.Path == request.SourcePath, cancellationToken)
+                    ?? throw new NotFoundException(nameof(Domain.Entities.File), request.SourcePath);
 
                 product.Source = source;
             }
@@ -50,30 +62,19 @@ namespace Ykotika.Application.Commands
                 var images = await
                     _dbContext
                     .Files
-                    .Where(e => request.Images.Select(i => i.FileId).Contains(e.Id))
+                    .Where(e => request.Images.Select(i => i.ImagePath).Contains(e.Path))
                     .ToListAsync(cancellationToken);
                 var productImages = request.Images
                     .Select(dto => new ImageListItem
                     {
                         OrderIndex = dto.OrderIndex,
-                        File = images.FirstOrDefault(e => e.Id == dto.FileId)
+                        Image = images.FirstOrDefault(e => e.Path == dto.ImagePath)
                     })
                     .OrderBy(image => image.OrderIndex)
                     .ToList();
 
                 product.Images = productImages ?? product.Images;
             }
-
-            //if (request.OutsourceShops != null)
-            //{
-            //    var outsourceShops = await
-            //        _dbContext
-            //        .OutsourceShops
-            //        .Where(e => request.OutsourceShops.Contains(e.Id))
-            //        .ToListAsync(cancellationToken);
-
-            //    product.OutsourceShops = outsourceShops ?? product.OutsourceShops;
-            //}
 
             await _dbContext.SaveChangesAsync(cancellationToken);
         }

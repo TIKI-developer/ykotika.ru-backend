@@ -20,15 +20,15 @@ namespace Ykotika.Application.Commands
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(User), request.Id);
 
-            if (request.UserPictureFileId != null)
+            if (request.ImagePath != null)
             {
                 var userPicture = await
                     _dbContext
                     .Files
-                    .FirstOrDefaultAsync(e => e.Id == request.UserPictureFileId, cancellationToken)
-                    ?? throw new NotFoundException(nameof(Domain.Entities.File), request.UserPictureFileId);
+                    .FirstOrDefaultAsync(e => e.Path == request.ImagePath, cancellationToken)
+                    ?? throw new NotFoundException(nameof(Domain.Entities.File), request.ImagePath);
 
-                user.Picture = userPicture ?? user.Picture;
+                user.Image = userPicture ?? user.Image;
             }
 
             user.Name = request.Name ?? user.Name;

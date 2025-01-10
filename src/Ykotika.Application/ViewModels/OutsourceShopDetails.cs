@@ -9,11 +9,13 @@ namespace Ykotika.Application.ViewModels
         public required Guid Id { get; set; }
         public required string Name { get; set; }
         public required string Link { get; set; }
-        public required Domain.Entities.File Logo { get; set; }
+        public required string ImagePath { get; set; }
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<OutsourceShop, OutsourceShopDetails>();
+            profile.CreateMap<OutsourceShop, OutsourceShopDetails>()
+                .ForMember(to => to.ImagePath,
+                opt => opt.MapFrom(from => from.Image.Path));
         }
     }
 }
