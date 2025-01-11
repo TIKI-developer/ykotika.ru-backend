@@ -7,12 +7,12 @@ namespace Ykotika.Application.ViewModels
 {
     public class AuthorItem : IMapWith<Author>
     {
-        public required Guid Id { get; set; }
+        public required Guid UserId { get; set; }
         public required string Name { get; set; }
         public string? Surname { get; set; }
         public string? PhoneNumber { get; set; }
         public required string Email { get; set; }
-        public Domain.Entities.File? Picture { get; set; }
+        public string? ImagePath { get; set; }
         public required AuthorStatus Status { get; set; }
         public required AuthorRequest.ContactSocial WhichSocial { get; set; }
         public required Timestamps Timestamps { get; set; }
@@ -28,8 +28,8 @@ namespace Ykotika.Application.ViewModels
                 opt => opt.MapFrom(from => from.User.PhoneNumber))
                 .ForMember(to => to.Email,
                 opt => opt.MapFrom(from => from.User.Email))
-                .ForMember(to => to.Picture,
-                opt => opt.MapFrom(from => from.User.Picture))
+                .ForMember(to => to.ImagePath,
+                opt => opt.MapFrom(from => from.User.Image))
                 .ForMember(to => to.WhichSocial,
                 opt => opt.MapFrom(from => from.Request.WhichSocial))
                 .ForMember(to => to.Timestamps,

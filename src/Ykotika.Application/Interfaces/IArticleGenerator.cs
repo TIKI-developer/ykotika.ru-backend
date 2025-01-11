@@ -4,6 +4,6 @@ namespace Ykotika.Application.Interfaces
 {
     public interface IArticleGenerator
     {
-        string Generate(string pattern, FormRecord record);
+        string Generate(List<string> pattern, Product product);
     }
 }

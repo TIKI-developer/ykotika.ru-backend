@@ -8,6 +8,6 @@ namespace Ykotika.Application.Commands
         public string? Name { get; set; }
         public string? Surname { get; set; }
         public string? PhoneNumber { get; set; }
-        public Guid? UserPictureFileId { get; set; }
+        public string? ImagePath { get; set; }
     }
 }

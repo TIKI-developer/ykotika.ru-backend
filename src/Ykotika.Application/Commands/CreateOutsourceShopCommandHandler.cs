@@ -18,8 +18,8 @@ namespace Ykotika.Application.Commands
             var logoFile = await
                 _dbContext
                 .Files
-                .FirstOrDefaultAsync(e => e.Id == request.LogoFileId, cancellationToken)
-                ?? throw new NotFoundException(nameof(Domain.Entities.File), request.LogoFileId);
+                .FirstOrDefaultAsync(e => e.Path == request.ImagePath, cancellationToken)
+                ?? throw new NotFoundException(nameof(Domain.Entities.File), request.ImagePath);
 
             var outsourceShop = new OutsourceShop
             {
@@ -27,7 +27,7 @@ namespace Ykotika.Application.Commands
                 Timestamps = new Timestamps(),
                 Name = request.Name,
                 Link = request.Link,
-                Logo = logoFile,
+                Image = logoFile,
             };
 
             await _dbContext.OutsourceShops.AddAsync(outsourceShop, cancellationToken);

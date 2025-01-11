@@ -7,6 +7,6 @@ namespace Ykotika.Application.Commands
         public required Guid Id { get; set; }
         public string? Name { get; set; }
         public string? Link { get; set; }
-        public Guid? LogoFileId { get; set; }
+        public string? ImagePath { get; set; }
     }
 }

@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ykotika.Application.Commands;
 using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
-using Ykotika.WebAPI.Constants;
+using Ykotika.Domain.Entities;
+using Ykotika.Domain.ValueObjects;
 using Ykotika.WebAPI.Models;
 
 namespace Ykotika.WebAPI.Controllers
@@ -15,21 +15,19 @@ namespace Ykotika.WebAPI.Controllers
     {
         private readonly IMapper _mapper = mapper;
 
-        [Authorize(Roles = $"{Roles.CUSTOMER_ROLE}")]
         [HttpPost]
         public async Task<ActionResult<Guid>>
-            SendRequestToBeAuthor([FromBody] SendRequestToBeAuthorDto dto)
+            SendRequest([FromBody] SendRequestToBeAuthorDto dto)
         {
-            var command = _mapper.Map<SendRequestToBeCommand>(dto);
+            var command = _mapper.Map<SendRequestToBeAuthorCommand>(dto);
             command.UserId = UserId;
             var id = await Mediator.Send(command);
 
             return Ok(id);
         }
-        [Authorize(Roles = $"{Roles.AUTHOR_ROLE}")]
         [HttpGet("me")]
         public async Task<ActionResult<AuthorDetails>>
-            GetMyRequest()
+            GetMe()
         {
             var query = new GetAuthorByUserQuery { Id = UserId };
             var vm = await Mediator.Send(query);
@@ -37,17 +35,44 @@ namespace Ykotika.WebAPI.Controllers
             return Ok(vm);
         }
 
-        [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         [HttpGet]
         public async Task<ActionResult<AuthorList>>
-            GetAll()
+            Get([FromQuery]
+                string? status,
+                string? name,
+                string? surname,
+                string? phoneNumber,
+                string? email,
+                string? contactSocial,
+                string? sortBy,
+                bool? desc)
         {
-            var query = new GetAuthorListQuery();
-            var vm = await Mediator.Send(query);
+            var statusEnum = string.IsNullOrEmpty(status) ?
+                             (AuthorStatus?)null :
+                             Enum.TryParse<AuthorStatus>(status, true, out var parsedStatus) ?
+                             parsedStatus : null;
 
+            var contactSocialEnum = string.IsNullOrEmpty(contactSocial) ?
+                             (AuthorRequest.ContactSocial?)null :
+                             Enum.TryParse<AuthorRequest.ContactSocial>(status, true, out var parsedContactSocial) ?
+                             parsedContactSocial : null;
+
+            var query = new GetAuthorListQuery
+            {
+                Name = name,
+                Surname = surname,
+                PhoneNumber = phoneNumber,
+                Email = email,
+                ContactSocial = contactSocialEnum,
+                Status = statusEnum,
+                SortBy = sortBy,
+                IsDescending = desc ?? false
+            };
+
+            var vm = await Mediator.Send(query);
             return Ok(vm);
         }
-        [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
+
         [HttpGet("{id}")]
         public async Task<IActionResult>
             GetById(Guid id)
@@ -57,26 +82,15 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok(vm);
         }
-        [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         [HttpPatch("{id}")]
         public async Task<IActionResult>
-            ChangeAuthorStatus(Guid id, [FromBody] UpdateAuthorStatusDto dto)
+            ChangeStatus(Guid id, [FromBody] UpdateAuthorStatusDto dto)
         {
             var command = _mapper.Map<UpdateAuthorStatusCommand>(dto);
             command.Id = id;
             await Mediator.Send(command);
 
             return Ok();
-        }
-
-        [HttpGet("{id}/agreements")]
-        public async Task<ActionResult<AgreementList>>
-            GetAgreements(Guid id)
-        {
-            var query = new GetAgreementListByAuthorQuery { Id = id };
-            var vm = await Mediator.Send(query);
-
-            return Ok(vm);
         }
     }
 }

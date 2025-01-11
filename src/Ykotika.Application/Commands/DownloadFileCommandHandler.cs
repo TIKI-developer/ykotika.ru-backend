@@ -20,8 +20,8 @@ namespace Ykotika.Application.Commands
             var file = await
                 _dbContext
                 .Files
-                .FirstOrDefaultAsync(f => f.Id == request.Id, cancellationToken)
-                ?? throw new NotFoundException(nameof(Domain.Entities.File), request.Id); ;
+                .FirstOrDefaultAsync(f => f.Path == request.Path, cancellationToken)
+                ?? throw new NotFoundException(nameof(Domain.Entities.File), request.Path); ;
 
             var data = await _fileService.Download(file);
 

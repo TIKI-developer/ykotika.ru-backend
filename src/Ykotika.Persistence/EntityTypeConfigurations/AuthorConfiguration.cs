@@ -9,6 +9,9 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
         public void Configure(EntityTypeBuilder<Author> builder)
         {
             builder
+                .HasKey(e => e.UserId);
+
+            builder
                 .OwnsOne(e => e.Request, ar =>
                 {
                     ar.WithOwner();
@@ -26,7 +29,15 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
                 .WithOne(e => e.Author);
 
             builder
-                .HasOne(e => e.User);
+                .HasOne(e => e.User)
+                .WithOne()
+                .HasForeignKey<Author>(e => e.UserId);
+
+            builder
+                .OwnsOne(e => e.Timestamps, t =>
+                {
+                    t.WithOwner();
+                });
         }
     }
 }

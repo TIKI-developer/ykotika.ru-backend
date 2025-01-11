@@ -22,11 +22,12 @@ namespace Ykotika.Application.Commands
 
             category.Name = request.Name ?? category.Name;
             category.Description = request.Description ?? category.Description;
+            category.IsPublished = request.IsPublished ?? category.IsPublished;
 
             var image = await
                 _dbContext
                 .Files
-                .FirstOrDefaultAsync(e => e.Id == request.ImageFileId, cancellationToken);
+                .FirstOrDefaultAsync(e => e.Path == request.Path, cancellationToken);
 
             category.Image = image ?? category.Image;
 

@@ -25,11 +25,11 @@ namespace Ykotika.FileStorage
             string uniqueName;
             if (needUniqueName)
             {
-                uniqueName = id + Path.GetExtension(data.Name);
+                uniqueName = id + Path.GetExtension(data.Path);
             }
             else
             {
-                uniqueName = data.Name;
+                uniqueName = data.Path;
             }
 
             string fullPath = Path.Combine(_baseFolder, relativePath, uniqueName);
@@ -47,15 +47,13 @@ namespace Ykotika.FileStorage
 
             return new Domain.Entities.File
             {
-                Id = id,
-                Name = uniqueName,
-                Timestamps = new Timestamps(),
-                RelativePath = relativePath
+                Path = Path.Combine(relativePath, uniqueName).Replace("\\", "/"),
+                Timestamps = new Timestamps()
             };
         }
         public async Task<FileData> Download(Domain.Entities.File file)
         {
-            string filePath = Path.Combine(_baseFolder, file.RelativePath, file.Name);
+            string filePath = Path.Combine(_baseFolder, file.Path);
 
             if (!System.IO.File.Exists(filePath))
             {
@@ -66,22 +64,22 @@ namespace Ykotika.FileStorage
 
             return new FileData
             {
-                Name = file.Name,
+                Path = file.Path.Replace("\\", "/"),
                 Content = fileContent
             };
         }
         public bool Delete(Domain.Entities.File file)
         {
-            var filePath = Path.Combine(_baseFolder, file.RelativePath, file.Name);
+            var filePath = Path.Combine(_baseFolder, file.Path);
 
-            if (!System.IO.File.Exists(filePath))
+            if (!File.Exists(filePath))
             {
                 throw new Exception("Файл не найден");
             }
 
             try
             {
-                System.IO.File.Delete(filePath);
+                File.Delete(filePath);
                 return true;
             }
             catch (IOException ex)

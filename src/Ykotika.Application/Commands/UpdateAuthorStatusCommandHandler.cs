@@ -17,7 +17,8 @@ namespace Ykotika.Application.Commands
             var author = await
                 _dbContext
                 .Authors
-                .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
+                .Include(e => e.User)
+                .FirstOrDefaultAsync(e => e.UserId == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(Author), request.Id);
 
             author.Status = request.NewStatus;

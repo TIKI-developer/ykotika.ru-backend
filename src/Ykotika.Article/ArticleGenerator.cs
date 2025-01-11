@@ -6,26 +6,23 @@ namespace Ykotika.Article
 {
     public class ArticleGenerator : IArticleGenerator
     {
-        public string Generate(string pattern, FormRecord record)
+        public string Generate(List<string> pattern, Product product)
         {
             string article = "";
-
-            List<string> patternItems = [.. pattern.Split('-')];
-
+            FormRecord record = product.FormRecord;
             if (record.InputRecords != null)
             {
-                foreach (var patternItem in patternItems)
+                foreach (var patternItem in pattern)
                 {
-                    string articleItem =
-                        record
-                        .InputRecords
-                        .FirstOrDefault(e =>
-                        e.Id == record
-                                .Form
-                                .Inputs
-                                .FirstOrDefault(e => e.ExtraAttributes.Label == patternItem).Id)!.Value
-                        ?? "";
-
+                    string articleItem = patternItem switch
+                    {
+                        "name" => product.Name,
+                        _ => record
+                            .InputRecords
+                            .FirstOrDefault(e =>
+                            e.Id == patternItem)!.Value
+                            ?? "",
+                    };
                     articleItem = Transliteration.CyrillicToLatin(articleItem);
 
                     article += $"-{articleItem}";

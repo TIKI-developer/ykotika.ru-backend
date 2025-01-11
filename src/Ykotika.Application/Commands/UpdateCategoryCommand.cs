@@ -7,6 +7,7 @@ namespace Ykotika.Application.Commands
         public required Guid Id { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
-        public Guid? ImageFileId { get; set; }
+        public bool? IsPublished { get; set; }
+        public string? Path { get; set; }
     }
 }

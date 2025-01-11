@@ -17,6 +17,11 @@ namespace Ykotika.Application.Queries
 
         public async Task<OfferList> Handle(GetOfferListQuery request, CancellationToken cancellationToken)
         {
+            var query =
+                _dbContext
+                .Offers
+                .AsQueryable();
+
             var offers = await
                 _dbContext
                 .Offers

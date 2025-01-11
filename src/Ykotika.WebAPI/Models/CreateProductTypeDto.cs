@@ -8,7 +8,7 @@ namespace Ykotika.WebAPI.Models
     {
         public required string Name { get; set; }
         public required Guid FormId { get; set; }
-        public required string ArticlePattern { get; set; }
+        public required List<string> ArticlePattern { get; set; }
 
         public void Mapping(Profile profile)
         {

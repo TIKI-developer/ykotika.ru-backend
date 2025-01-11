@@ -4,12 +4,13 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Persistence.EntityTypeConfigurations
 {
-    public class OutsourceShopConfiguration : IEntityTypeConfiguration<OutsourceShop>
+    public class CategoryConfiguration : IEntityTypeConfiguration<Category>
     {
-        public void Configure(EntityTypeBuilder<OutsourceShop> builder)
+        public void Configure(EntityTypeBuilder<Category> builder)
         {
             builder
-                .HasOne(e => e.Image);
+                .HasMany(e => e.Products)
+                .WithMany(e => e.Categories);
         }
     }
 }

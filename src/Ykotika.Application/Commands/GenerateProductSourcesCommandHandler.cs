@@ -19,7 +19,7 @@ namespace Ykotika.Application.Commands
                 .Products
                 .Include(e => e.Source)
                 .Include(e => e.Images)
-                .ThenInclude(e => e.File)
+                .ThenInclude(e => e.Image)
                 .Where(e => request.Products.Contains(e.Id))
                 .ToListAsync(cancellationToken)
                 ?? throw new Exception("Product list empty!");
@@ -28,15 +28,15 @@ namespace Ykotika.Application.Commands
             {
                 var sourceFile = await _fileService.Download(product.Source);
 
-                sourceFile.Name = product.Article + Path.GetExtension(sourceFile.Name);
+                sourceFile.Path = product.Article + Path.GetExtension(sourceFile.Path);
 
                 await _fileService.Upload(sourceFile, $"Каталог/{product.Article}", false);
 
                 foreach (var image in product.Images)
                 {
-                    var imageFile = await _fileService.Download(image.File);
+                    var imageFile = await _fileService.Download(image.Image);
 
-                    imageFile.Name = (image.OrderIndex + 1) + Path.GetExtension(imageFile.Name);
+                    imageFile.Path = (image.OrderIndex + 1) + Path.GetExtension(imageFile.Path);
 
                     await _fileService.Upload(imageFile, $"Каталог/{product.Article}/Фото", false);
                 }

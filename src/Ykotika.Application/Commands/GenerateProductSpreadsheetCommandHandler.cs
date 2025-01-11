@@ -10,14 +10,14 @@ namespace Ykotika.Application.Commands
         ISpreadsheetService spreadsheetService,
         IMapper mapper,
         IFileService fileService)
-        : IRequestHandler<GenerateProductSpreadsheetCommand, Guid>
+        : IRequestHandler<GenerateProductSpreadsheetCommand, string>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
         private readonly ISpreadsheetService _spreadsheetService = spreadsheetService;
         private readonly IMapper _mapper = mapper;
         private readonly IFileService _fileService = fileService;
 
-        public async Task<Guid> Handle(GenerateProductSpreadsheetCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(GenerateProductSpreadsheetCommand request, CancellationToken cancellationToken)
         {
             var products = await
                 _dbContext
@@ -28,6 +28,7 @@ namespace Ykotika.Application.Commands
                 .ThenInclude(e => e.Inputs)
                 .Include(e => e.FormRecord)
                 .ThenInclude(e => e.InputRecords)
+                .Include(e => e.Source)
                 .ToListAsync(cancellationToken);
 
             if (products != null && products.Count > 0)
@@ -37,9 +38,9 @@ namespace Ykotika.Application.Commands
                 await _dbContext.Files.AddAsync(file, cancellationToken);
                 await _dbContext.SaveChangesAsync(cancellationToken);
 
-                return file.Id;
+                return file.Path;
             }
-            return Guid.Empty;
+            return string.Empty;
         }
     }
 }

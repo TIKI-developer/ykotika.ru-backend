@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ykotika.Application.Commands;
 using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
-using Ykotika.WebAPI.Constants;
 using Ykotika.WebAPI.Models;
 
 namespace Ykotika.WebAPI.Controllers
@@ -17,7 +15,8 @@ namespace Ykotika.WebAPI.Controllers
         private readonly IMapper _mapper = mapper;
 
         [HttpPost]
-        public async Task<ActionResult<Guid>> Create([FromBody] CreateFormRecordDto dto)
+        public async Task<ActionResult<Guid>>
+            Create([FromBody] CreateFormRecordDto dto)
         {
             var command = _mapper.Map<CreateFormRecordCommand>(dto);
             command.UserId = UserId;
@@ -27,7 +26,8 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateFormRecordDto dto)
+        public async Task<IActionResult>
+            Update(Guid id, [FromBody] UpdateFormRecordDto dto)
         {
             var command = _mapper.Map<UpdateFormRecordCommand>(dto);
             command.Id = id;
@@ -36,7 +36,8 @@ namespace Ykotika.WebAPI.Controllers
             return Ok();
         }
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult>
+            Delete(Guid id)
         {
             var command = new DeleteFormRecordCommand { Id = id };
             await Mediator.Send(command);
@@ -44,7 +45,8 @@ namespace Ykotika.WebAPI.Controllers
             return Ok();
         }
         [HttpGet("{id}")]
-        public async Task<ActionResult<FormRecordDetails>> Get(Guid id)
+        public async Task<ActionResult<FormRecordDetails>>
+            Get(Guid id)
         {
             var query = new GetFormRecordQuery { Id = id };
             var vm = await Mediator.Send(query);
@@ -52,7 +54,8 @@ namespace Ykotika.WebAPI.Controllers
             return Ok(vm);
         }
         [HttpGet]
-        public async Task<ActionResult<FormRecordList>> Get()
+        public async Task<ActionResult<FormRecordList>>
+            Get()
         {
             var query = new GetFormRecordListQuery();
             var vm = await Mediator.Send(query);

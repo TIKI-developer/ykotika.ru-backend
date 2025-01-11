@@ -9,7 +9,12 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
         public void Configure(EntityTypeBuilder<Product> builder)
         {
             builder
-                .HasMany(e => e.OutsourceShops)
+                .OwnsMany(e => e.OutsourceShops, os =>
+                {
+                    os.WithOwner();
+                });
+            builder
+                .HasMany(e => e.Categories)
                 .WithMany(e => e.Products);
             builder
                 .HasOne(e => e.FormRecord);

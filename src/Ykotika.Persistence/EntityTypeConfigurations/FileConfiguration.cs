@@ -8,23 +8,21 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
         public void Configure(EntityTypeBuilder<Domain.Entities.File> builder)
         {
             builder
-                .Property(e => e.Id)
-                .IsRequired()
-                .ValueGeneratedNever();
+                .HasKey(e => e.Path);
 
             builder
-                .Property(e => e.Name)
-                .IsRequired()
-                .HasMaxLength(255);
+                .Property(e => e.Path)
+                .IsRequired();
 
             builder
-                .Property(e => e.RelativePath)
-                .IsRequired()
-                .HasMaxLength(500);
-
-            builder
-                .HasIndex(e => new { e.Name, e.RelativePath })
+                .HasIndex(e => e.Path)
                 .IsUnique();
+
+            builder
+                .OwnsOne(e => e.Timestamps, t =>
+                {
+                    t.WithOwner();
+                });
         }
     }
 }

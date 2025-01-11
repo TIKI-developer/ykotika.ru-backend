@@ -1,20 +1,21 @@
 ﻿using AutoMapper;
 using Ykotika.Application.Common.Mappings;
 using Ykotika.Domain.Entities;
+using Ykotika.Domain.ValueObjects;
 
 namespace Ykotika.Application.ViewModels
 {
-    public class ProductTypeDetails : IMapWith<ProductType>
+    public class CurrentOfferDetails : IMapWith<Offer>
     {
         public required Guid Id { get; set; }
-        public required string Name { get; set; }
-        public required List<string> ArticlePattern { get; set; }
-        public required FormDetails Form { get; set; }
+        public required string Content { get; set; }
         public required bool IsPublished { get; set; }
+        public required Timestamps Timestamps { get; set; }
+        public bool? IsAccepted { get; set; }
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<ProductType, ProductTypeDetails>();
+            profile.CreateMap<Offer, CurrentOfferDetails>();
         }
     }
 }

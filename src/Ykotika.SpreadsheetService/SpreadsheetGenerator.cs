@@ -29,11 +29,16 @@ namespace Ykotika.SpreadsheetService
                     Form.Input[] inputs = productType.Form.Inputs.ToArray();
 
                     // Заполняем заголовки: первый столбец - Article, затем динамические поля
-                    headerRow.Cell(1).Value = "Article";
+                    headerRow.Cell(1).Value = "Артикул";
+                    headerRow.Cell(2).Value = "Название";
+                    headerRow.Cell(3).Value = "Описание";
+                    headerRow.Cell(4).Value = "Теги";
+                    headerRow.Cell(5).Value = "Исходник";
+                    headerRow.Cell(6).Value = "Изображения";
 
-                    for (int col = 2; col <= inputs.Length + 1; col++)
+                    for (int col = 7; col <= inputs.Length + 1; col++)
                     {
-                        headerRow.Cell(col).Value = inputs[col - 2].ExtraAttributes.Label;
+                        headerRow.Cell(col).Value = inputs[col - 7].ExtraAttributes.Label;
                     }
 
                     // Заполняем данные
@@ -43,10 +48,16 @@ namespace Ykotika.SpreadsheetService
 
                         // Первый столбец - Article
                         worksheet.Cell(row, 1).Value = product.Article;
+                        worksheet.Cell(row, 2).Value = product.Name;
+                        worksheet.Cell(row, 3).Value = product.Description;
+                        worksheet.Cell(row, 4).Value = string.Join(", ", product.Tags.Select(e => e.Value));
+                        worksheet.Cell(row, 5).Value = product.Source.Path;
+                        worksheet.Cell(row, 6).Value = string.Join(", ", product.Images.Select(e => e.Image.Path));
+
 
                         // Динамические поля из InputRecords
                         var productInputRecords = product.FormRecord.InputRecords.ToArray();
-                        for (int col = 2; col <= inputs.Length + 1; col++)
+                        for (int col = 7; col <= inputs.Length + 1; col++)
                         {
                             var propertyValue = productInputRecords[col - 2].Value;
                             worksheet.Cell(row, col).Value = propertyValue?.ToString();
@@ -60,7 +71,7 @@ namespace Ykotika.SpreadsheetService
 
                 return new FileData
                 {
-                    Name = $"Table {DateTime.UtcNow.Ticks}.xlsx",
+                    Path = $"Table {DateTime.UtcNow.Ticks}.xlsx",
                     Content = fileContent,
                 };
             }
@@ -104,7 +115,7 @@ namespace Ykotika.SpreadsheetService
 
                 return new FileData
                 {
-                    Name = $"Table {DateTime.UtcNow.Ticks}.xlsx",
+                    Path = $"Table {DateTime.UtcNow.Ticks}.xlsx",
                     Content = fileContent,
                 };
             }
