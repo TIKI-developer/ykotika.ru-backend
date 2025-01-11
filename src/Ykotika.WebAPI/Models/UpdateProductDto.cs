@@ -9,12 +9,13 @@ namespace Ykotika.WebAPI.Models
 {
     public class UpdateProductDto : IMapWith<UpdateProductCommand>
     {
-        public required string Name { get; set; }
-        public required string Description { get; set; }
-        public required List<Tag> Tags { get; set; }
+        public string? Name { get; set; }
+        public string? Description { get; set; }
+        public List<Tag>? Tags { get; set; }
+        public UpdateFormRecordDto? FormRecord { get; set; }
         public List<ImageListItemDto>? Images { get; set; }
         public List<Guid>? CategoryIds { get; set; }
-        public required string SourcePath { get; set; }
+        public string? SourcePath { get; set; }
 
         public void Mapping(Profile profile)
         {

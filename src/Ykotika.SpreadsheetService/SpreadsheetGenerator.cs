@@ -26,7 +26,7 @@ namespace Ykotika.SpreadsheetService
                     var worksheet = workbook.Worksheets.Add(productType.Name);
 
                     var headerRow = worksheet.Row(1);
-                    Form.Input[] inputs = productType.Form.Inputs.ToArray();
+                    Form.Input[] inputs = [.. productType.Form.Inputs];
 
                     // Заполняем заголовки: первый столбец - Article, затем динамические поля
                     headerRow.Cell(1).Value = "Артикул";
@@ -59,7 +59,7 @@ namespace Ykotika.SpreadsheetService
                         var productInputRecords = product.FormRecord.InputRecords.ToArray();
                         for (int col = 7; col <= inputs.Length + 1; col++)
                         {
-                            var propertyValue = productInputRecords[col - 2].Value;
+                            var propertyValue = productInputRecords[col - 7].Value;
                             worksheet.Cell(row, col).Value = propertyValue?.ToString();
                         }
                     }

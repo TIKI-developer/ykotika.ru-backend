@@ -6,13 +6,13 @@ namespace Ykotika.WebAPI.Models
 {
     public class UpdateFormRecordDto : IMapWith<UpdateFormRecordCommand>
     {
-        public List<CreateFormRecordInputDto>? InputRecords { get; set; }
+        public List<UpdateFormRecordInputDto>? InputRecords { get; set; }
 
         public void Mapping(Profile profile)
         {
             profile.CreateMap<UpdateFormRecordDto, UpdateFormRecordCommand>();
         }
-        public class CreateFormRecordInputDto : IMapWith<UpdateFormRecordCommand.InputRecordDto>
+        public class UpdateFormRecordInputDto : IMapWith<UpdateFormRecordCommand.InputRecordDto>
         {
             public required string Id { get; set; }
             public required string Value { get; set; }

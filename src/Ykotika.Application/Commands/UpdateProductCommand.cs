@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Ykotika.Application.Common.Mappings;
 using Ykotika.Application.Models;
 using Ykotika.Domain.ValueObjects;
 

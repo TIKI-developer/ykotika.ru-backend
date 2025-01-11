@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Ykotika.Application.Common.Exceptions;
 using Ykotika.Application.Interfaces;
-using Ykotika.Application.Models;
 using Ykotika.Domain.Entities;
 using Ykotika.Domain.ValueObjects;
 
@@ -18,6 +17,12 @@ namespace Ykotika.Application.Commands
 
         public async Task<Guid> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
+            var user = await
+                _dbContext
+                .Users
+                .FirstOrDefaultAsync(e => e.Id == request.UserId, cancellationToken)
+                ?? throw new NotFoundException(nameof(Author), request.UserId);
+
             var author = await
                 _dbContext
                 .Authors
@@ -81,13 +86,35 @@ namespace Ykotika.Application.Commands
                     .ToListAsync(cancellationToken);
             }
 
-            var formRecord = await
+            var form = await
                 _dbContext
-                .FormRecords
-                .Include(e => e.InputRecords)
-                .Include(e => e.Form)
-                .FirstOrDefaultAsync(e => e.Id == request.FormRecordId, cancellationToken)
-                ?? throw new NotFoundException(nameof(FormRecord), request.FormRecordId);
+                .Forms
+                .Include(e => e.Inputs)
+                .FirstOrDefaultAsync(e => e.Id == request.FormRecord.FormId, cancellationToken)
+                ?? throw new NotFoundException(nameof(Form), request.FormRecord.FormId);
+
+            var inputRecords = new List<FormRecord.InputRecord>();
+
+            foreach (var inputRecordRequest in request.FormRecord.InputRecords)
+            {
+                var inputRecord = new FormRecord.InputRecord
+                {
+                    Id = inputRecordRequest.Id,
+                    Value = inputRecordRequest.Value,
+                };
+                inputRecords.Add(inputRecord);
+            }
+
+            var formRecord = new FormRecord
+            {
+                Id = Guid.NewGuid(),
+                Form = form,
+                Author = user,
+                InputRecords = inputRecords,
+                Timestamps = new Timestamps()
+            };
+
+            await _dbContext.FormRecords.AddAsync(formRecord, cancellationToken);
 
             var fileOrderMapping = request.Images.ToDictionary(
                 item => item.ImagePath,
@@ -119,7 +146,7 @@ namespace Ykotika.Application.Commands
                 Article = request.Name,
                 Name = request.Name,
                 Description = request.Description,
-                Author = author,
+                Author = user,
                 Images = imageListItems,
                 Timestamps = new Timestamps(),
                 FormRecord = formRecord,

@@ -29,7 +29,7 @@ namespace Ykotika.Application.Commands
             {
                 Id = Guid.NewGuid(),
                 ArticlePattern = request.ArticlePattern,
-                Name = form.Name,
+                Name = request.Name,
                 Form = form,
                 Timestamps = new Timestamps(),
                 IsPublished = false,
