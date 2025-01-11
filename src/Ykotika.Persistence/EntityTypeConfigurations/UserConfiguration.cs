@@ -16,6 +16,10 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
                 .HasMaxLength(256);
             builder
                 .HasOne(e => e.Image);
+
+            builder
+                .HasMany(e => e.Agreements)
+                .WithOne(e => e.Author);
         }
     }
 }

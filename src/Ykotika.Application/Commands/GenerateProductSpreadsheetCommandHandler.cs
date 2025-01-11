@@ -26,6 +26,7 @@ namespace Ykotika.Application.Commands
                 .Include(e => e.ProductType)
                 .ThenInclude(e => e.Form)
                 .ThenInclude(e => e.Inputs)
+                .ThenInclude(e => e.ExtraAttributes)
                 .Include(e => e.FormRecord)
                 .ThenInclude(e => e.InputRecords)
                 .Include(e => e.Source)

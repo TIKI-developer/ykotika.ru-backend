@@ -1,9 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Ykotika.Security;
+using Ykotika.WebAPI.Authorization;
 using Ykotika.WebAPI.Constants;
+using Ykotika.WebAPI.Authorization.Requirements;
+using Ykotika.Domain.Entities;
+using System.Text.Json;
 
 namespace Ykotika.WebApi.Extensions
 {
@@ -18,7 +23,6 @@ namespace Ykotika.WebApi.Extensions
             {
                 throw new InvalidOperationException("SecretKey для JWT не найден.");
             }
-
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -43,19 +47,52 @@ namespace Ykotika.WebApi.Extensions
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("RequireGuestRole", policy => policy.RequireRole(Roles.GUEST_ROLE));
-                options.AddPolicy("RequireCustomerRole", policy => policy.RequireRole(Roles.CUSTOMER_ROLE));
-                options.AddPolicy("RequireAuthorRole", policy => policy.RequireRole(Roles.AUTHOR_ROLE));
-                options.AddPolicy("RequireModeratorRole", policy => policy.RequireRole(Roles.MODERATOR_ROLE));
-                options.AddPolicy("RequireDirectorRole", policy => policy.RequireRole(Roles.DIRECTOR_ROLE));
-                options.AddPolicy("RequireAdminRole", policy => policy.RequireRole(Roles.ADMIN_ROLE));
-                options.AddPolicy("AuthorConfirmed", policy =>
-                policy.RequireAssertion(context =>
+                options.AddPolicy(Policies.CONTENT_POLICY, policy => 
                 {
-                    //return context.User.HasClaim("Status") && context.User.
-                    return true;
-                }));
+                    policy
+                    .AddRequirements
+                    (new ContentRequirement
+                    ([UserRole.Admin, 
+                      UserRole.Director]));
+                });
+                options.AddPolicy(Policies.CATEGORY_LIST_POLICY, policy => 
+                {
+                    policy
+                    .AddRequirements
+                    (new ContentListRequirement
+                    ([UserRole.Admin, 
+                      UserRole.Director]));
+                });
+                options.AddPolicy(Policies.FORM_LIST_POLICY, policy => 
+                {
+                    policy
+                    .AddRequirements
+                    (new ContentListRequirement
+                    ([UserRole.Admin, 
+                      UserRole.Director]));
+                });
+                options.AddPolicy(Policies.PRODUCT_TYPE_LIST_POLICY, policy =>
+                {
+                    policy
+                    .AddRequirements
+                    (new ContentListRequirement
+                    ([UserRole.Admin, 
+                      UserRole.Director]));
+                });
+                options.AddPolicy(Policies.PRODUCT_LIST_POLICY, policy =>
+                {
+                    policy
+                    .AddRequirements
+                    (new ContentListRequirement
+                    ([UserRole.Moderator,
+                      UserRole.Admin, 
+                      UserRole.Director]));
+                });
             });
+            services.AddSingleton<IAuthorizationHandler, AuthorHandler>();
+            services.AddSingleton<IAuthorizationHandler, PublishedHandler>();
+            services.AddSingleton<IAuthorizationHandler, RoleHandler>();
+            services.AddSingleton<IAuthorizationHandler, ContentListHandler>();
         }
     }
 }

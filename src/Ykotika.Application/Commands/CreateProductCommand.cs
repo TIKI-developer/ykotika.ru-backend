@@ -7,7 +7,7 @@ namespace Ykotika.Application.Commands
     public class CreateProductCommand : IRequest<Guid>
     {
         public required Guid ProductTypeId { get; set; }
-        public required Guid FormRecordId { get; set; }
+        public required CreateFormRecordCommand FormRecord { get; set; }
         public required Guid UserId { get; set; }
         public required string Name { get; set; }
         public required string Description { get; set; }

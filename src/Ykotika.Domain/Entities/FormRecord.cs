@@ -1,10 +1,13 @@
-﻿namespace Ykotika.Domain.Entities
+﻿using Ykotika.Domain.Interfaces;
+
+namespace Ykotika.Domain.Entities
 {
-    public class FormRecord : Entity
+    public class FormRecord : Entity, IContent
     {
         public required Form Form { get; set; }
         public required User Author { get; set; }
         public required List<InputRecord> InputRecords { get; set; } = [];
+        public bool IsPublished { get; set; }
 
         public class InputRecord
         {

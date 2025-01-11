@@ -10,14 +10,15 @@
         public required string PasswordHash { get; set; }
         public required bool ConfirmedPersonalDataProcessingPolicy { get; set; }
         public string? RefreshTokenHash { get; set; }
-        public List<UserPermission> Permissions { get; set; } = [UserPermission.Unverified];
-        public bool IsEmailVerified => !Permissions.Contains(UserPermission.Unverified);
+        public List<UserRole> Roles { get; set; } = [UserRole.Unverified];
+        public bool IsEmailVerified => !Roles.Contains(UserRole.Unverified);
+        public List<Agreement>? Agreements { get; set; }
     }
 
-    public enum UserPermission
+    public enum UserRole
     {
         Unverified,
-        Customer,
+        Verified,
         Author,
         Moderator,
         Director,

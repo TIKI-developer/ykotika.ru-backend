@@ -1,8 +1,9 @@
-﻿using Ykotika.Domain.ValueObjects;
+﻿using Ykotika.Domain.Interfaces;
+using Ykotika.Domain.ValueObjects;
 
 namespace Ykotika.Domain.Entities
 {
-    public class Product : Entity
+    public class Product : Entity, IHasAuthor, IPublishable
     {
         public required string Article { get; set; }
         public required string Name { get; set; }
@@ -17,7 +18,7 @@ namespace Ykotika.Domain.Entities
         public required FormRecord FormRecord { get; init; }
         public List<Category>? Categories { get; set; }
         public required ProductType ProductType { get; init; }
-        public required Author Author { get; set; }
+        public required User Author { get; set; }
     }
 
     public enum ProductStatus

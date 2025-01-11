@@ -6,14 +6,14 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Commands
 {
-    public class UpdateUserPermissionsCommandHandler
+    public class UpdateUserRolesCommandHandler
         (IYkotikaDbContext dbContext)
-        : IRequestHandler<UpdateUserPermissionsCommand>
+        : IRequestHandler<UpdateUserRolesCommand>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
 
         public async Task
-            Handle(UpdateUserPermissionsCommand request, CancellationToken cancellationToken)
+            Handle(UpdateUserRolesCommand request, CancellationToken cancellationToken)
         {
             var user = await
                 _dbContext
@@ -21,7 +21,7 @@ namespace Ykotika.Application.Commands
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(User), request.Id);
 
-            user.Permissions = request.Permissions ?? user.Permissions;
+            user.Roles = request.Roles ?? user.Roles;
 
             await _dbContext.SaveChangesAsync(cancellationToken);
         }

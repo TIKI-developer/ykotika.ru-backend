@@ -18,6 +18,12 @@ namespace Ykotika.Application.Commands
 
         public async Task<Guid> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
         {
+            var author = await
+                _dbContext
+                .Users
+                .FirstOrDefaultAsync(e => e.Id == request.AuthorId, cancellationToken)
+                ?? throw new NotFoundException(nameof(User), request.AuthorId);
+
             var image = await
                 _dbContext
                 .Files
@@ -31,7 +37,8 @@ namespace Ykotika.Application.Commands
                 Description = request.Description,
                 Image = image,
                 Timestamps = new Timestamps(),
-                IsPublished = request.IsPublished
+                IsPublished = request.IsPublished,
+                Author = author
             };
 
             await _dbContext.Categories.AddAsync(category);

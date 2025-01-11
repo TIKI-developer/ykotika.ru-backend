@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ykotika.Application.Commands;
 using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
+using Ykotika.WebAPI.Constants;
 using Ykotika.WebAPI.Models;
 
 namespace Ykotika.WebAPI.Controllers
@@ -15,6 +17,7 @@ namespace Ykotika.WebAPI.Controllers
         private readonly IMapper _mapper = mapper;
 
         [HttpGet]
+        [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         public async Task<ActionResult<OfferList>>
             Get()
         {
@@ -33,7 +36,6 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok(vm);
         }
-
         [HttpGet("current")]
         public async Task<ActionResult<CurrentOfferDetails>>
             GetCurrent([FromQuery]
@@ -49,16 +51,19 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         public async Task<IActionResult> 
             Create([FromBody] CreateOfferDto dto)
         {
             var command = _mapper.Map<CreateOfferCommand>(dto);
+            command.AuthorId = UserId;
             var id = await Mediator.Send(command);
 
             return Ok(id);
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         public async Task<ActionResult<Guid>> 
             Update(Guid id, [FromBody] UpdateOfferDto dto)
         {
@@ -70,6 +75,7 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         public async Task<IActionResult> 
             Delete(Guid id)
         {

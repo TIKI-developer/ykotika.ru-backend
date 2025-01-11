@@ -21,6 +21,7 @@ namespace Ykotika.Application.Queries
             var category = await
                 _dbContext
                 .Categories
+                .Include(e => e.Author)
                 .Include(e => e.Image)
                 .FirstOrDefaultAsync(e => e.Id == request.Id)
                 ?? throw new NotFoundException(nameof(Category), request.Id);

@@ -1,5 +1,7 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using NanoidDotNet;
+using Ykotika.Application.Common.Exceptions;
 using Ykotika.Application.Interfaces;
 using Ykotika.Domain.Entities;
 using Ykotika.Domain.ValueObjects;
@@ -16,6 +18,12 @@ namespace Ykotika.Application.Commands
         public async Task<Guid>
             Handle(CreateFormCommand request, CancellationToken cancellationToken)
         {
+            var author = await
+                _dbContext
+                .Users
+                .FirstOrDefaultAsync(e => e.Id == request.AuthorId, cancellationToken)
+                ?? throw new NotFoundException(nameof(User), request.AuthorId);
+
             var inputs = new List<Form.Input>();
 
             foreach (var (dto, index) in request.Inputs.Select((dto, index) => (dto, index)))
@@ -42,7 +50,8 @@ namespace Ykotika.Application.Commands
                 Name = request.Name,
                 Inputs = inputs,
                 Timestamps = new Timestamps(),
-                IsPublished = request.IsPublished
+                IsPublished = request.IsPublished,
+                Author = author
             };
 
             await _dbContext.Forms.AddAsync(form, cancellationToken);

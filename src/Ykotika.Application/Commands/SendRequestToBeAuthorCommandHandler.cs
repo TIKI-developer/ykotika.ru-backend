@@ -21,12 +21,12 @@ namespace Ykotika.Application.Commands
                 .FirstOrDefaultAsync(u => u.Id == request.UserId, cancellationToken)
                 ?? throw new NotFoundException(nameof(User), request.UserId);
 
-            if (user.Permissions.Contains(UserPermission.Author))
+            if (user.Roles.Contains(UserRole.Author))
             {
                 throw new Exception("User is author already or send request");
             }
 
-            user.Permissions.Add(UserPermission.Author);
+            user.Roles.Add(UserRole.Author);
             user.Name = request.Name;
             user.Surname = request.Surname;
             user.PhoneNumber = request.PhoneNumber;

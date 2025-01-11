@@ -19,10 +19,10 @@ namespace Ykotika.Application.Queries
         {
             var query = _dbContext.Products
                 .Include(e => e.Author)
-                .ThenInclude(e => e.User)
                 .Include(e => e.Images)
                 .ThenInclude(e => e.Image)
                 .Include(e => e.FormRecord)
+                .Include(e => e.OutsourceShops)
                 .AsQueryable();
 
             if (request.IsPublished.HasValue)
@@ -32,12 +32,12 @@ namespace Ykotika.Application.Queries
 
             if (request.AuthorId.HasValue)
             {
-                query = query.Where(p => p.Author.UserId == request.AuthorId.Value);
+                query = query.Where(p => p.Author.Id == request.AuthorId.Value);
             }
 
             if (request.UserId.HasValue)
             {
-                query = query.Where(p => p.Author.UserId == request.UserId.Value);
+                query = query.Where(p => p.Author.Id == request.UserId.Value);
             }
 
             if (request.ProductTypeId.HasValue)

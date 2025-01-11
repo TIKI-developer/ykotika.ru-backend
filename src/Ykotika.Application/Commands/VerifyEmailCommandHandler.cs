@@ -26,7 +26,7 @@ namespace Ykotika.Application.Commands
                 .FirstOrDefaultAsync(u => u.Id == request.UserId, cancellationToken)
                 ?? throw new NotFoundException(nameof(User), request.UserId);
 
-            if (!user.Permissions.Contains(UserPermission.Unverified))
+            if (!user.Roles.Contains(UserRole.Unverified))
             {
                 throw new Exception(Messages.ALREADY_VERIFIED);
             }
@@ -38,8 +38,8 @@ namespace Ykotika.Application.Commands
                 Timestamps = new Domain.ValueObjects.Timestamps()
             };
 
-            user.Permissions.Remove(UserPermission.Unverified);
-            user.Permissions.Add(UserPermission.Customer);
+            user.Roles.Remove(UserRole.Unverified);
+            user.Roles.Add(UserRole.Verified);
             user.Timestamps.MarkUpdated();
 
             _dbContext.Customers.Add(customer);

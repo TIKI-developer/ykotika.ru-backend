@@ -10,7 +10,6 @@ namespace Ykotika.Domain.Entities
         public required List<Social> Socials { get; set; }
         public required AuthorRequest Request { get; set; }
         public required AuthorStatus Status { get; set; }
-        public List<Agreement>? Agreements { get; set; }
 
         public void CreateRequest(string tellAboutYourself, AuthorRequest.ContactSocial whichSocial)
         {

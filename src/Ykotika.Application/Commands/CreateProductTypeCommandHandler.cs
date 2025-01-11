@@ -13,6 +13,12 @@ namespace Ykotika.Application.Commands
 
         public async Task<Guid> Handle(CreateProductTypeCommand request, CancellationToken cancellationToken)
         {
+            var author = await
+                _dbContext
+                .Users
+                .FirstOrDefaultAsync(e => e.Id == request.AuthorId, cancellationToken)
+                ?? throw new NotFoundException(nameof(User), request.AuthorId);
+
             var form = await
                 _dbContext
                 .Forms
@@ -23,10 +29,11 @@ namespace Ykotika.Application.Commands
             {
                 Id = Guid.NewGuid(),
                 ArticlePattern = request.ArticlePattern,
-                Name = form.Name,
+                Name = request.Name,
                 Form = form,
                 Timestamps = new Timestamps(),
-                IsPublished = false
+                IsPublished = false,
+                Author = author
             };
 
             await _dbContext.ProductTypes.AddAsync(productType, cancellationToken);

@@ -23,7 +23,7 @@ namespace Ykotika.Security
                 new(ClaimTypes.Email, user.Email.ToString()),
             };
 
-            foreach (var role in user.Permissions)
+            foreach (var role in user.Roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role.ToString()));
             }
@@ -93,8 +93,8 @@ namespace Ykotika.Security
 
             var tokenValidationParameters = new TokenValidationParameters
             {
-                ValidateIssuer = false,
-                ValidateAudience = false,
+                ValidateIssuer = true,
+                ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.JwtOptions.SecretKey))

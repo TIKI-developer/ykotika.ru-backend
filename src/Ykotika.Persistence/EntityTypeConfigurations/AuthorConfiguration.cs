@@ -25,10 +25,6 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
                 });
 
             builder
-                .HasMany(e => e.Agreements)
-                .WithOne(e => e.Author);
-
-            builder
                 .HasOne(e => e.User)
                 .WithOne()
                 .HasForeignKey<Author>(e => e.UserId);
