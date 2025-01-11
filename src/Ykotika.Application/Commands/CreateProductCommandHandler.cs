@@ -39,7 +39,7 @@ namespace Ykotika.Application.Commands
             var agreement = await
                 _dbContext
                 .Agreements
-                .FirstOrDefaultAsync(e => e.Offer.Id == currentOffer.Id && e.Author.UserId == request.UserId)
+                .FirstOrDefaultAsync(e => e.Offer.Id == currentOffer.Id && e.Author.Id == request.UserId, cancellationToken)
                 ?? throw new Exception("You need accept current offer!");
 
             var productType = await

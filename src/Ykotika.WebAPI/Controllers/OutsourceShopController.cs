@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ykotika.Application.Commands;
 using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
+using Ykotika.WebAPI.Constants;
 using Ykotika.WebAPI.Models;
 
 namespace Ykotika.WebAPI.Controllers
@@ -31,6 +33,7 @@ namespace Ykotika.WebAPI.Controllers
             return Ok(vm);
         }
         [HttpPost]
+        [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         public async Task<ActionResult<Guid>> Create([FromBody] CreateOutsourceShopDto dto)
         {
             var command = _mapper.Map<CreateOutsourceShopCommand>(dto);
@@ -38,6 +41,7 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok(id);
         }
+        [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] UpdateOutsourceShopDto dto)
         {
@@ -47,6 +51,7 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok();
         }
+        [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {

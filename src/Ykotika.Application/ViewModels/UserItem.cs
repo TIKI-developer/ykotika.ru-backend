@@ -10,7 +10,7 @@ namespace Ykotika.Application.ViewModels
         public string? PhoneNumber { get; set; }
         public required string Email { get; set; }
         public required string Initials { get; set; }
-        public required List<string> Permissions { get; set; }
+        public required List<string> Roles { get; set; }
 
         public void Mapping(Profile profile)
         {
@@ -18,8 +18,8 @@ namespace Ykotika.Application.ViewModels
                 .ForMember(to => to.Initials,
                 opt => opt.MapFrom(from => $"{from.Surname} {from.Name}"))
 
-                .ForMember(to => to.Permissions,
-                opt => opt.MapFrom(from => from.Permissions
+                .ForMember(to => to.Roles,
+                opt => opt.MapFrom(from => from.Roles
                     .Select(permission => permission.ToString())
                     .ToList()));
         }

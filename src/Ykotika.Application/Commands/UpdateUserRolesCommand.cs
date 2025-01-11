@@ -3,9 +3,9 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Commands
 {
-    public class UpdateUserPermissionsCommand : IRequest
+    public class UpdateUserRolesCommand : IRequest
     {
         public required Guid Id { get; set; }
-        public List<UserPermission>? Permissions { get; set; }
+        public List<UserRole>? Roles { get; set; }
     }
 }

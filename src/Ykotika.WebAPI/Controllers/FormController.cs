@@ -1,26 +1,35 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ykotika.Application.Commands;
 using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
+using Ykotika.WebAPI.Constants;
 using Ykotika.WebAPI.Models;
 
 namespace Ykotika.WebAPI.Controllers
 {
     [Route("forms")]
-    public class FormController(IMapper mapper) : BaseController
+    public class FormController
+        (IMapper mapper,
+        IAuthorizationService authorizationService) 
+        : BaseController
     {
         private readonly IMapper _mapper = mapper;
+        private readonly IAuthorizationService _authorizationService = authorizationService;
 
+        [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         [HttpPost]
         public async Task<ActionResult<Guid>>
             Create([FromBody] CreateFormDto dto)
         {
             var command = _mapper.Map<CreateFormCommand>(dto);
+            command.AuthorId = UserId;
             var id = await Mediator.Send(command);
 
             return Ok(id);
         }
+        [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         [HttpPut("{id}")]
         public async Task<IActionResult>
             Update(Guid id, [FromBody] UpdateFormDto dto)
@@ -31,6 +40,7 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok();
         }
+        [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         [HttpDelete("{id}")]
         public async Task<IActionResult>
             Delete(Guid id)
@@ -47,13 +57,29 @@ namespace Ykotika.WebAPI.Controllers
             var query = new GetFormQuery { Id = id };
             var vm = await Mediator.Send(query);
 
-            return Ok(vm);
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, vm, Policies.CONTENT_POLICY);
+
+            if (authorizationResult.Succeeded)
+            {
+                return Ok(vm);
+            }
+
+            return Forbid();
         }
         [HttpGet]
         public async Task<ActionResult<FormList>>
             Get([FromQuery]
                 bool? isPublished)
         {
+            var authorizationResult = await 
+                _authorizationService
+                .AuthorizeAsync(User, new ContentResourceDto { IsPublished = isPublished}, Policies.FORM_LIST_POLICY);
+
+            if (!authorizationResult.Succeeded)
+            {
+                return Forbid();
+            }
+
             var query = new GetFormListQuery
             {
                 IsPublished = isPublished

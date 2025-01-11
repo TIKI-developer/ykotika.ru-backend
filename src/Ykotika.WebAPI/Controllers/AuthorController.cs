@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ykotika.Application.Commands;
 using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
 using Ykotika.Domain.Entities;
 using Ykotika.Domain.ValueObjects;
+using Ykotika.WebAPI.Constants;
 using Ykotika.WebAPI.Models;
 
 namespace Ykotika.WebAPI.Controllers
@@ -16,6 +18,7 @@ namespace Ykotika.WebAPI.Controllers
         private readonly IMapper _mapper = mapper;
 
         [HttpPost]
+        [Authorize(Roles = $"{Roles.VERIFIED_ROLE}")]
         public async Task<ActionResult<Guid>>
             SendRequest([FromBody] SendRequestToBeAuthorDto dto)
         {
@@ -26,6 +29,7 @@ namespace Ykotika.WebAPI.Controllers
             return Ok(id);
         }
         [HttpGet("me")]
+        [Authorize(Roles = $"{Roles.AUTHOR_ROLE}")]
         public async Task<ActionResult<AuthorDetails>>
             GetMe()
         {
@@ -36,6 +40,7 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         public async Task<ActionResult<AuthorList>>
             Get([FromQuery]
                 string? status,
@@ -74,7 +79,7 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult>
+        public async Task<ActionResult<AuthorDetails>>
             GetById(Guid id)
         {
             var query = new GetAuthorByUserQuery { Id = id };
@@ -83,6 +88,7 @@ namespace Ykotika.WebAPI.Controllers
             return Ok(vm);
         }
         [HttpPatch("{id}")]
+        [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         public async Task<IActionResult>
             ChangeStatus(Guid id, [FromBody] UpdateAuthorStatusDto dto)
         {

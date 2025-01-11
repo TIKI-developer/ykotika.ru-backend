@@ -25,9 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ykotika.WebAPI", "Ykotika.W
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ykotika.FileStorage", "Ykotika.FileStorage\Ykotika.FileStorage.csproj", "{9298DEE2-9B7E-4E62-890B-4DB1C875DA5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ykotika.SpreadsheetService", "Ykotika.SpreadsheetService\Ykotika.SpreadsheetService.csproj", "{67A575FA-5056-407A-9D5E-05CAA2CC22B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ykotika.SpreadsheetService", "Ykotika.SpreadsheetService\Ykotika.SpreadsheetService.csproj", "{67A575FA-5056-407A-9D5E-05CAA2CC22B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ykotika.Article", "Ykotika.Article\Ykotika.Article.csproj", "{FA07A730-4805-4E99-BB28-7263B6D754C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ykotika.Article", "Ykotika.Article\Ykotika.Article.csproj", "{FA07A730-4805-4E99-BB28-7263B6D754C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

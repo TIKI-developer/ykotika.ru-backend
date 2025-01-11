@@ -27,7 +27,7 @@ namespace Ykotika.Application.Queries
 
             if (request.AuthorId.HasValue)
             {
-                query = query.Where(e => e.Author.UserId == request.AuthorId);
+                query = query.Where(e => e.Author.Id == request.AuthorId);
             }
             if (request.OfferId.HasValue)
             {

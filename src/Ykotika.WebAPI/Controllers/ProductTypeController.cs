@@ -1,23 +1,38 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ykotika.Application.Commands;
 using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
+using Ykotika.WebAPI.Constants;
 using Ykotika.WebAPI.Models;
 
 namespace Ykotika.WebAPI.Controllers
 {
     [Route("products/types")]
     public class ProductTypeController
-        (IMapper mapper)
+        (IMapper mapper,
+        IAuthorizationService authorizationService)
         : BaseController
     {
         private readonly IMapper _mapper = mapper;
+        private readonly IAuthorizationService _authorizationService = authorizationService;
 
         [HttpGet]
         public async Task<ActionResult<ProductTypeList>>
             Get([FromQuery] bool? isPublished)
         {
+            var authorizationResult = await
+                _authorizationService
+                .AuthorizeAsync
+                (User, new ContentResourceDto { IsPublished = isPublished },
+                Policies.PRODUCT_TYPE_LIST_POLICY);
+
+            if (!authorizationResult.Succeeded)
+            {
+                return Forbid();
+            }
+
             var query = new GetProductTypeListQuery()
             {
                 IsPublished = isPublished
@@ -28,25 +43,36 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = $"{Roles.AUTHOR_ROLE}, {Roles.DIRECTOR_ROLE}, {Roles.ADMIN_ROLE}")]
         public async Task<ActionResult<ProductTypeDetails>>
             GetById(Guid id)
         {
             var query = new GetProductTypeByIdQuery { Id = id };
             var vm = await Mediator.Send(query);
 
-            return Ok(vm);
-        }
+            var authorizationResult = await 
+                _authorizationService
+                .AuthorizeAsync(User, vm, Policies.CONTENT_POLICY);
 
+            if (authorizationResult.Succeeded)
+            {
+                return Ok(vm);
+            }
+
+            return Forbid();
+        }
+        [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         [HttpPost]
         public async Task<ActionResult<Guid>>
             Create([FromBody] CreateProductTypeDto dto)
         {
             var command = _mapper.Map<CreateProductTypeCommand>(dto);
+            command.AuthorId = UserId;
             var id = await Mediator.Send(command);
 
             return Ok(id);
         }
-
+        [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         [HttpPut("{id}")]
         public async Task<IActionResult>
             Update(Guid id, [FromBody] UpdateProductTypeDto dto)
@@ -57,7 +83,7 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok();
         }
-
+        [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         [HttpDelete("{id}")]
         public async Task<IActionResult>
             Delete(Guid id)

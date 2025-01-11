@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Ykotika.Application.Commands;
@@ -59,7 +60,6 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok();
         }
-
         [HttpPost("refresh-token")]
         public async Task<ActionResult<LoginResponse>>
             NewRefreshToken()
@@ -88,6 +88,7 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpPost("verifications/email")]
+        [Authorize(Roles = $"{Roles.UNVERIFIED_ROLE }")]
         public async Task<IActionResult>
             SendVerifyEmailMessage()
         {
@@ -101,6 +102,7 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpGet("verifications/email")]
+        [Authorize(Roles = $"{Roles.UNVERIFIED_ROLE }")]
         public async Task<IActionResult>
             VerifyEmail([FromQuery] string token)
         {
@@ -122,6 +124,7 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpPatch("password")]
+        [Authorize(Roles = $"{Roles.VERIFIED_ROLE}")]
         public async Task<IActionResult>
             ChangePassword([FromBody] UpdatePasswordDto dto)
         {

@@ -15,6 +15,12 @@ namespace Ykotika.Application.Commands
 
         public async Task<Guid> Handle(UpdateOfferCommand request, CancellationToken cancellationToken)
         {
+            var author = await
+                _dbContext
+                .Users
+                .FirstOrDefaultAsync(e => e.Id == request.AuthorId, cancellationToken)
+                ?? throw new NotFoundException(nameof(User), request.AuthorId);
+
             var offer = await
                 _dbContext
                 .Offers
@@ -41,7 +47,8 @@ namespace Ykotika.Application.Commands
                         Id = Guid.NewGuid(),
                         Content = request.Content ?? offer.Content,
                         Timestamps = new Timestamps(),
-                        IsPublished = true
+                        IsPublished = true,
+                        Author = author
                     };
 
                     await _dbContext.Offers.AddAsync(newOffer, cancellationToken);

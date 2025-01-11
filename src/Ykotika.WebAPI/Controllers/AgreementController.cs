@@ -1,20 +1,26 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ykotika.Application.Commands;
 using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
+using Ykotika.Domain.Interfaces;
+using Ykotika.WebAPI.Constants;
 using Ykotika.WebAPI.Models;
 
 namespace Ykotika.WebAPI.Controllers
 {
     [Route("agreements")]
     public class AgreementController
-        (IMapper mapper)
+        (IMapper mapper,
+        IAuthorizationService authorizationService)
         : BaseController
     {
         private readonly IMapper _mapper = mapper;
+        private readonly IAuthorizationService _authorizationService = authorizationService;
 
         [HttpGet]
+        [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         public async Task<ActionResult<AgreementList>>
             Get([FromQuery]
                 Guid? authorId,
@@ -35,24 +41,35 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = $"{Roles.VERIFIED_ROLE}, {Roles.DIRECTOR_ROLE}")]
         public async Task<ActionResult<AgreementDetails>>
             GetById(Guid id)
         {
             var query = new GetAgreementByIdQuery { Id = id };
             var vm = await Mediator.Send(query);
 
-            return Ok(vm);
+            var authorizationResult = await 
+                _authorizationService
+                .AuthorizeAsync(User, vm, Policies.CONTENT_POLICY);
+
+            if (authorizationResult.Succeeded)
+            {
+                return Ok(vm);
+            }
+
+            return Forbid();
         }
 
         [HttpPost]
+        [Authorize(Roles = $"{Roles.VERIFIED_ROLE}")]
         public async Task<IActionResult>
             Create([FromBody] CreateAgreementDto dto)
         {
             var command = _mapper.Map<CreateAgreementCommand>(dto);
             command.UserId = UserId;
-            await Mediator.Send(command);
+            var id = await Mediator.Send(command);
 
-            return Ok();
+            return Ok(id);
         }
     }
 }

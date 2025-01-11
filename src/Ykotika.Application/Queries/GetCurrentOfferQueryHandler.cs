@@ -34,7 +34,7 @@ namespace Ykotika.Application.Queries
                     _dbContext
                     .Agreements
                     .FirstOrDefaultAsync(e => e.Offer.Id == offer.Id &&
-                                         e.Author.UserId == request.UserId);
+                                         e.Author.Id == request.UserId);
                 vm.IsAccepted = agreement != null;
             }
 

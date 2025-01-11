@@ -7,17 +7,17 @@ namespace Ykotika.Application.Commands
 {
     public class CreateAgreementCommandHandler
         (IYkotikaDbContext dbContext)
-        : IRequestHandler<CreateAgreementCommand>
+        : IRequestHandler<CreateAgreementCommand, Guid>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
 
-        public async Task Handle(CreateAgreementCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(CreateAgreementCommand request, CancellationToken cancellationToken)
         {
             var author = await
                 _dbContext
-                .Authors
-                .FirstOrDefaultAsync(e => e.UserId == request.UserId, cancellationToken)
-                ?? throw new NotFoundException(nameof(Domain.Entities.Author), request.UserId);
+                .Users
+                .FirstOrDefaultAsync(e => e.Id == request.UserId, cancellationToken)
+                ?? throw new NotFoundException(nameof(Domain.Entities.User), request.UserId);
 
             var offer = await
                 _dbContext
@@ -30,11 +30,14 @@ namespace Ykotika.Application.Commands
                 Id = Guid.NewGuid(),
                 Offer = offer,
                 Author = author,
-                Timestamps = new Domain.ValueObjects.Timestamps()
+                Timestamps = new Domain.ValueObjects.Timestamps(),
+                IsPublished = false
             };
 
             await _dbContext.Agreements.AddAsync(agreement, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return agreement.Id;
         }
     }
 }

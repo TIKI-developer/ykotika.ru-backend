@@ -1,26 +1,41 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ykotika.Application.Commands;
 using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
+using Ykotika.WebAPI.Constants;
 using Ykotika.WebAPI.Models;
 
 namespace Ykotika.WebAPI.Controllers
 {
     [Route("products")]
     public class ProductController
-        (IMapper mapper)
+        (IMapper mapper,
+        IAuthorizationService authorizationService)
         : BaseController
     {
         private readonly IMapper _mapper = mapper;
+        private readonly IAuthorizationService _authorizationService = authorizationService;
 
         [HttpGet]
         public async Task<ActionResult<ProductList>>
-            Get([FromQuery] 
+            Get([FromQuery]
                 Guid? authorId,
                 Guid? productTypeId,
                 bool? isPublished)
         {
+            var authorizationResult = await
+                _authorizationService
+                .AuthorizeAsync
+                (User, new ContentResourceDto { IsPublished = isPublished },
+                Policies.PRODUCT_LIST_POLICY);
+
+            if (!authorizationResult.Succeeded)
+            {
+                return Forbid();
+            }
+
             var query = new GetProductListQuery
             {
                 IsPublished = isPublished,
@@ -33,6 +48,7 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpGet("me")]
+        [Authorize(Roles = $"{Roles.AUTHOR_ROLE}")]
         public async Task<ActionResult<ProductList>>
             GetMy([FromQuery] Guid? productType,
                   [FromQuery] bool? isPublished)
@@ -55,10 +71,20 @@ namespace Ykotika.WebAPI.Controllers
             var query = new GetProductByIdQuery() { Id = id };
             var vm = await Mediator.Send(query);
 
-            return Ok(vm);
+            var authorizationResult = await
+                _authorizationService
+                .AuthorizeAsync(User, vm, Policies.CONTENT_POLICY);
+
+            if (authorizationResult.Succeeded)
+            {
+                return Ok(vm);
+            }
+
+            return Forbid();
         }
 
         [HttpPost]
+        [Authorize(Roles =$"{Roles.AUTHOR_ROLE}")]
         public async Task<ActionResult<Guid>>
             Create([FromBody] CreateProductDto dto)
         {
@@ -70,6 +96,7 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles =$"{Roles.MODERATOR_ROLE}, {Roles.AUTHOR_ROLE}")]
         public async Task<IActionResult>
             Update(Guid id, [FromBody] UpdateProductDto dto)
         {
@@ -81,6 +108,7 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles =$"{Roles.MODERATOR_ROLE}, {Roles.AUTHOR_ROLE}")]
         public async Task<IActionResult>
             Delete(Guid id)
         {
@@ -91,6 +119,7 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpPost("generate-spreadsheet")]
+        [Authorize(Roles =$"{Roles.MODERATOR_ROLE}")]
         public async Task<ActionResult<Guid>>
             GenerateSpreadSheet([FromBody] GenerateProductSpreadsheetDto dto)
         {
@@ -101,6 +130,7 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpPost("generate-catalog")]
+        [Authorize(Roles =$"{Roles.MODERATOR_ROLE}")]
         public async Task<IActionResult>
             GenerateCatalog([FromBody] GenerateProductSourcesDto dto)
         {
@@ -111,6 +141,7 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpPatch("outsource-shops")]
+        [Authorize(Roles =$"{Roles.MODERATOR_ROLE}, {Roles.ADMIN_ROLE}, {Roles.DIRECTOR_ROLE}")]
         public async Task<IActionResult>
             ChangeOutsourceShops([FromBody] UpdateProductOutsourceShopDto dto)
         {

@@ -4,7 +4,7 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.ViewModels
 {
-    public class ProductTypeDetails : IMapWith<ProductType>
+    public class ProductTypeDetails : IMapWith<ProductType>, IPublishable
     {
         public required Guid Id { get; set; }
         public required string Name { get; set; }

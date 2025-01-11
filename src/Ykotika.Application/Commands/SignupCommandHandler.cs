@@ -52,7 +52,7 @@ namespace Ykotika.Application.Commands
             }
             else
             {
-                bool userIsGuest = existUser!.Permissions.Contains(UserPermission.Unverified);
+                bool userIsGuest = existUser!.Roles.Contains(UserRole.Unverified);
 
                 if (userIsGuest)
                 {
