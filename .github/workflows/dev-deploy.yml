@@ -25,14 +25,20 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
-      - name: Deploy to server
-        env:  # Передача SERVER_IP в эту команду
-          SERVER_IP: ${{ vars.SERVER_IP }}
+      - name: Clean up Docker on server
         run: |
-          ssh -v -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa root@$SERVER_IP "
-            cd /var/www/ykotika/dev/ykotika.ru-backend/ && 
-            sudo git fetch --all && 
-            sudo git pull origin dev && 
-            cd .. && 
-            sudo docker-compose down api && 
-            sudo docker-compose up -d --build api"
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa root@$SERVER_IP << 'EOF'
+            # Очистка неиспользуемых образов, контейнеров и кэша сборки
+            sudo docker system prune -af
+            sudo docker volume prune -f
+          EOF
+
+      - name: Deploy to server
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa root@$SERVER_IP << 'EOF'
+            cd /var/www/ykotika/dev/ykotika.ru-backend/ || exit
+            sudo git fetch --all
+            sudo git pull origin dev
+            sudo docker-compose down api
+            sudo docker-compose up -d --build api
+          EOF
