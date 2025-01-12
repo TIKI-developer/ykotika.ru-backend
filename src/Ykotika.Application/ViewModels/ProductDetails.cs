@@ -17,7 +17,7 @@ namespace Ykotika.Application.ViewModels
         public List<string>? Comments { get; set; }
         public required string Source { get; set; }
         public required string Status { get; set; }
-        public required List<ImageListItem> Images { get; set; }
+        public required List<ImageListItemDto> Images { get; set; }
         public required bool IsPublished { get; set; }
         public List<CategoryItem>? Categories { get; set; }
         public required ProductTypeDetails ProductType { get; init; }
