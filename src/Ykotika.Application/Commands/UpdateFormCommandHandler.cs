@@ -17,7 +17,9 @@ namespace Ykotika.Application.Commands
         private readonly IMapper _mapper = mapper;
         private readonly IYkotikaDbContext _dbContext = dbContext;
 
-        public async Task Handle(UpdateFormCommand request, CancellationToken cancellationToken)
+        public async Task
+            Handle(UpdateFormCommand request,
+                   CancellationToken cancellationToken)
         {
             var form = await
                 _dbContext

@@ -9,44 +9,32 @@ namespace Ykotika.Application.Queries
 {
     public class GetAuthorListQueryHandler
         (IYkotikaDbContext dbContext,
-        IMapper mapper)
-        : IRequestHandler<GetAuthorListQuery, AuthorList>
+        IMapper mapper) 
+        : BaseGetListQueryHandler(dbContext, mapper),
+        IRequestHandler<GetAuthorListQuery, PagedList<AuthorItem>>
     {
-        private readonly IYkotikaDbContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
-
-        public async Task<AuthorList> Handle(GetAuthorListQuery request, CancellationToken cancellationToken)
+        public async Task<PagedList<AuthorItem>>
+            Handle(GetAuthorListQuery request,
+                   CancellationToken cancellationToken)
         {
             var query = _dbContext
                 .Authors
+                .Where(e => string.IsNullOrEmpty(request.Filter.Name) || e.User.Name == request.Filter.Name)
+                .Where(e => string.IsNullOrEmpty(request.Filter.Surname) || e.User.Surname == request.Filter.Surname)
+                //.Where(e => !request.Filter.ContactSocial.HasValue || e.Request.WhichSocial == request.Filter.ContactSocial)
+                //.Where(e => !request.Filter.Status.HasValue || e.Status == request.Filter.Status)
+                .AsQueryable();
+
+            query = Sort(query, request.Sorting.SortBy, request.Sorting.IsDescending);
+
+            var queryItems = query
                 .Include(e => e.User)
                 .Include(e => e.Socials)
                 .Include(e => e.Request)
-                .AsQueryable();
-
-            query = query
-                .Where(e => string.IsNullOrEmpty(request.Name) || e.User.Name == request.Name)
-                .Where(e => string.IsNullOrEmpty(request.Surname) || e.User.Surname == request.Surname)
-                .Where(e => string.IsNullOrEmpty(request.PhoneNumber) || e.User.PhoneNumber == request.PhoneNumber)
-                .Where(e => string.IsNullOrEmpty(request.Email) || e.User.Email == request.Email)
-                .Where(e => !request.ContactSocial.HasValue || e.Request.WhichSocial == request.ContactSocial)
-                .Where(e => !request.Status.HasValue || e.Status == request.Status)
-                .AsQueryable();
-
-            if (!string.IsNullOrEmpty(request.SortBy))
-            {
-                query = request.IsDescending
-                    ? query.OrderByDescending(c => EF.Property<object>(c, request.SortBy))
-                    : query.OrderBy(c => EF.Property<object>(c, request.SortBy));
-            }
-
-            var authors = await
-                query
-                .ProjectTo<AuthorItem>(_mapper.ConfigurationProvider)
                 .AsNoTracking()
-                .ToListAsync(cancellationToken);
+                .ProjectTo<AuthorItem>(_mapper.ConfigurationProvider);
 
-            return new AuthorList { Authors = authors };
+            return await PagedList<AuthorItem>.CreateAsync(queryItems, request.Pagination.Page, request.Pagination.PageSize);
         }
     }
 }

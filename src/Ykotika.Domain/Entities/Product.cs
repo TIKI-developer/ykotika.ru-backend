@@ -18,7 +18,7 @@ namespace Ykotika.Domain.Entities
         public required FormRecord FormRecord { get; init; }
         public List<Category>? Categories { get; set; }
         public required ProductType ProductType { get; init; }
-        public required User Author { get; set; }
+        public required User User { get; set; }
     }
 
     public enum ProductStatus

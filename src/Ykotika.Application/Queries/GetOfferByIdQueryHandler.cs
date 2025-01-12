@@ -11,12 +11,12 @@ namespace Ykotika.Application.Queries
     public class GetOfferByIdQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
-        : IRequestHandler<GetOfferByIdQuery, OfferDetails>
+        : BaseGetQueryHandler(dbContext, mapper),
+        IRequestHandler<GetOfferByIdQuery, OfferDetails>
     {
-        private readonly IYkotikaDbContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
-
-        public async Task<OfferDetails> Handle(GetOfferByIdQuery request, CancellationToken cancellationToken)
+        public async Task<OfferDetails>
+            Handle(GetOfferByIdQuery request,
+                   CancellationToken cancellationToken)
         {
             var offer = await
                 _dbContext

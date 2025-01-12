@@ -13,7 +13,9 @@ namespace Ykotika.Application.Commands
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
 
-        public async Task Handle(DeleteFormRecordCommand request, CancellationToken cancellationToken)
+        public async Task
+            Handle(DeleteFormRecordCommand request,
+                   CancellationToken cancellationToken)
         {
             var formRecord = await
                 _dbContext

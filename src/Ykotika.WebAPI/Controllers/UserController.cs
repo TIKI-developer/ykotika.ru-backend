@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Ykotika.Application.Commands;
+using Ykotika.Application.Models;
 using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
 using Ykotika.WebAPI.Models;
@@ -14,19 +15,19 @@ namespace Ykotika.WebAPI.Controllers
     {
         private readonly IMapper _mapper = mapper;
 
-        [HttpGet("profile")]
+        [HttpGet("me")]
         public async Task<ActionResult<UserDetails>>
-            GetProfile()
+            GetMe()
         {
-            var query = new GetProfileQuery { Id = UserId };
+            var query = new GetUserByIdQuery { Id = UserId };
             var vm = await Mediator.Send(query);
 
             return Ok(vm);
         }
 
-        [HttpPut("profile")]
+        [HttpPut("me")]
         public async Task<IActionResult>
-            UpdateProfile([FromBody] UpdateProfileDto dto)
+            UpdateMe([FromBody] UpdateProfileDto dto)
         {
             var command = _mapper.Map<UpdateProfileCommand>(dto);
             command.Id = UserId;
@@ -36,17 +37,17 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<UserList>>
-            Get()
+        public async Task<ActionResult<PagedList<UserItem>>>
+            Get([FromQuery] UserListQueryParams queryParams)
         {
-            var query = new GetUserListQuery();
+            var query = _mapper.Map<GetUserListQuery>(queryParams);
             var vm = await Mediator.Send(query);
 
             return Ok(vm);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserList>>
+        public async Task<ActionResult<UserDetails>>
             Get(Guid id)
         {
             var query = new GetUserByIdQuery { Id = id };

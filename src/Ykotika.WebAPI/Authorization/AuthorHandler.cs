@@ -9,10 +9,16 @@ namespace Ykotika.WebAPI.Authorization
         : AuthorizationHandler<ContentRequirement, IHasAuthor>
     {
         protected override Task HandleRequirementAsync
-            (AuthorizationHandlerContext context, 
+            (AuthorizationHandlerContext context,
              ContentRequirement requirement,
              IHasAuthor resource)
         {
+            if (!requirement.CheckAuthor)
+            {
+                context.Succeed(requirement);
+                return Task.CompletedTask;
+            }
+
             var userIdClaim = context.User.FindFirst(ClaimTypes.NameIdentifier);
 
             if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
@@ -20,7 +26,7 @@ namespace Ykotika.WebAPI.Authorization
                 return Task.CompletedTask;
             }
 
-            if (resource.AuthorId == userId)
+            if (resource.UserId == userId)
             {
                 context.Succeed(requirement);
             }

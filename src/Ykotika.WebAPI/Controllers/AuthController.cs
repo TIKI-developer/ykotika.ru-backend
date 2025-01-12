@@ -88,7 +88,7 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpPost("verifications/email")]
-        [Authorize(Roles = $"{Roles.UNVERIFIED_ROLE }")]
+        [Authorize(Roles = $"{Roles.UNVERIFIED_ROLE}")]
         public async Task<IActionResult>
             SendVerifyEmailMessage()
         {
@@ -102,7 +102,7 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpGet("verifications/email")]
-        [Authorize(Roles = $"{Roles.UNVERIFIED_ROLE }")]
+        [Authorize(Roles = $"{Roles.UNVERIFIED_ROLE}")]
         public async Task<IActionResult>
             VerifyEmail([FromQuery] string token)
         {

@@ -11,12 +11,12 @@ namespace Ykotika.Application.Queries
     public class GetProductTypeByIdQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
-        : IRequestHandler<GetProductTypeByIdQuery, ProductTypeDetails>
+        : BaseGetQueryHandler(dbContext, mapper),
+        IRequestHandler<GetProductTypeByIdQuery, ProductTypeDetails>
     {
-        private readonly IYkotikaDbContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
-
-        public async Task<ProductTypeDetails> Handle(GetProductTypeByIdQuery request, CancellationToken cancellationToken)
+        public async Task<ProductTypeDetails>
+            Handle(GetProductTypeByIdQuery request,
+                   CancellationToken cancellationToken)
         {
             var productType = await
                 _dbContext

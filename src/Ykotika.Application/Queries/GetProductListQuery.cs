@@ -1,13 +1,13 @@
 ﻿using MediatR;
+using Ykotika.Application.Models;
 using Ykotika.Application.ViewModels;
 
 namespace Ykotika.Application.Queries
 {
-    public class GetProductListQuery : IRequest<ProductList>
+    public class GetProductListQuery : IRequest<PagedList<ProductItem>>
     {
-        public bool? IsPublished { get; set; }
-        public Guid? AuthorId { get; set; }
-        public Guid? UserId { get; set; }
-        public Guid? ProductTypeId { get; set; }
+        public required PaginationDto Pagination { get; set; }
+        public required SortingDto Sorting { get; set; }
+        public required ProductFilterDto Filter { get; set; }
     }
 }

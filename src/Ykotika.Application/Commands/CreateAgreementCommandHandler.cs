@@ -11,9 +11,11 @@ namespace Ykotika.Application.Commands
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
 
-        public async Task<Guid> Handle(CreateAgreementCommand request, CancellationToken cancellationToken)
+        public async Task<Guid>
+            Handle(CreateAgreementCommand request,
+            CancellationToken cancellationToken)
         {
-            var author = await
+            var user = await
                 _dbContext
                 .Users
                 .FirstOrDefaultAsync(e => e.Id == request.UserId, cancellationToken)
@@ -29,7 +31,7 @@ namespace Ykotika.Application.Commands
             {
                 Id = Guid.NewGuid(),
                 Offer = offer,
-                Author = author,
+                User = user,
                 Timestamps = new Domain.ValueObjects.Timestamps(),
                 IsPublished = false
             };

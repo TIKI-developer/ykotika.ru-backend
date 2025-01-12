@@ -12,7 +12,7 @@ namespace Ykotika.WebAPI.Controllers
     [Route("forms")]
     public class FormController
         (IMapper mapper,
-        IAuthorizationService authorizationService) 
+        IAuthorizationService authorizationService)
         : BaseController
     {
         private readonly IMapper _mapper = mapper;
@@ -54,10 +54,12 @@ namespace Ykotika.WebAPI.Controllers
         public async Task<ActionResult<FormDetails>>
             Get(Guid id)
         {
-            var query = new GetFormQuery { Id = id };
+            var query = new GetFormByIdQuery { Id = id };
             var vm = await Mediator.Send(query);
 
-            var authorizationResult = await _authorizationService.AuthorizeAsync(User, vm, Policies.CONTENT_POLICY);
+            var authorizationResult = await
+                _authorizationService
+                .AuthorizeAsync(User, vm, Policies.CONTENT_POLICY);
 
             if (authorizationResult.Succeeded)
             {
@@ -67,23 +69,22 @@ namespace Ykotika.WebAPI.Controllers
             return Forbid();
         }
         [HttpGet]
-        public async Task<ActionResult<FormList>>
-            Get([FromQuery]
-                bool? isPublished)
+        public async Task<ActionResult<PagedList<FormItem>>>
+            Get([FromQuery] FormListQueryParams queryParams)
         {
-            var authorizationResult = await 
+            var authorizationResult = await
                 _authorizationService
-                .AuthorizeAsync(User, new ContentResourceDto { IsPublished = isPublished}, Policies.FORM_LIST_POLICY);
+                .AuthorizeAsync
+                (User,
+                new ContentResourceDto { IsPublished = queryParams.Filter.IsPublished },
+                Policies.FORM_LIST_POLICY);
 
             if (!authorizationResult.Succeeded)
             {
                 return Forbid();
             }
 
-            var query = new GetFormListQuery
-            {
-                IsPublished = isPublished
-            };
+            var query = _mapper.Map<GetFormListQuery>(queryParams);
             var vm = await Mediator.Send(query);
 
             return Ok(vm);

@@ -6,6 +6,7 @@ using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
 using Ykotika.WebAPI.Constants;
 using Ykotika.WebAPI.Models;
+using Ykotika.WebAPI.Models.Binders;
 
 namespace Ykotika.WebAPI.Controllers
 {
@@ -19,45 +20,43 @@ namespace Ykotika.WebAPI.Controllers
         private readonly IAuthorizationService _authorizationService = authorizationService;
 
         [HttpGet]
-        public async Task<ActionResult<CategoryList>>
-            Get([FromQuery]
-                bool? isPublished,
-                string? sortBy,
-                bool? desc)
+        public async Task<ActionResult<PagedList<CategoryItem>>>
+            Get([FromQuery] CategoryListQueryParams queryParams)
         {
-            var authorizationResult = await 
+            var authorizationResult = await
                 _authorizationService
-                .AuthorizeAsync(User, new ContentResourceDto { IsPublished = isPublished }, Policies.CATEGORY_LIST_POLICY);
+                .AuthorizeAsync
+                (User, new ContentResourceDto { IsPublished = queryParams.Filter.IsPublished },
+                Policies.CATEGORY_LIST_POLICY);
 
             if (!authorizationResult.Succeeded)
             {
                 return Forbid();
             }
 
-            var query = new GetCategoryListQuery
-            {
-                IsPublished = isPublished,
-                SortBy = sortBy,
-                IsDescending = desc ?? false
-            };
+            var query = _mapper.Map<GetCategoryListQuery>(queryParams);
             var vm = await Mediator.Send(query);
 
             return Ok(vm);
         }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<CategoryDetails>>
             GetById(Guid id)
         {
             var query = new GetCategoryByIdQuery { Id = id };
             var vm = await Mediator.Send(query);
-            var authorizationResult = await _authorizationService.AuthorizeAsync(User, vm, Policies.CONTENT_POLICY);
-            
+            var authorizationResult = await
+                _authorizationService
+                .AuthorizeAsync(User, vm, Policies.CONTENT_POLICY);
+
             if (authorizationResult.Succeeded)
             {
                 return Ok(vm);
             }
             return Forbid();
         }
+
         [HttpPost]
         [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         public async Task<ActionResult<Guid>>
@@ -69,6 +68,7 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok(id);
         }
+
         [HttpPut("{id}")]
         [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         public async Task<IActionResult>
@@ -80,6 +80,7 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok();
         }
+
         [HttpDelete("{id}")]
         [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         public async Task<IActionResult>

@@ -9,6 +9,7 @@ using Ykotika.Security;
 using Ykotika.Verification;
 using Ykotika.WebApi.Extensions;
 using Ykotika.WebAPI.Middleware;
+using Ykotika.WebAPI.Models.Binders;
 
 namespace Ykotika.WebAPI
 {
@@ -34,7 +35,10 @@ namespace Ykotika.WebAPI
             services.AddSpreadsheet();
             services.AddApiAuthentication();
             services.AddApplication();
-            services.AddControllers();
+            services.AddControllers(options =>
+            {
+                options.ModelBinderProviders.Insert(0, new CustomQueryBinderProvider());
+            });
 
 
             //var corsOptionsSection = Configuration.GetSection($"{nameof(ClientsOptions)}:WebURLs");

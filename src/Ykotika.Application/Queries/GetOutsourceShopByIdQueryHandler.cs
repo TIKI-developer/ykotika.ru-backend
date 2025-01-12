@@ -8,16 +8,14 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Queries
 {
-    public class GetOutsourceShopQueryHandler
+    public class GetOutsourceShopByIdQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
-        : IRequestHandler<GetOutsourceShopQuery, OutsourceShopDetails>
+        : BaseGetQueryHandler(dbContext, mapper),
+        IRequestHandler<GetOutsourceShopByIdQuery, OutsourceShopDetails>
     {
-        private readonly IYkotikaDbContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
-
         public async Task<OutsourceShopDetails>
-            Handle(GetOutsourceShopQuery request, CancellationToken cancellationToken)
+            Handle(GetOutsourceShopByIdQuery request, CancellationToken cancellationToken)
         {
             var outsourceShop = await
                 _dbContext

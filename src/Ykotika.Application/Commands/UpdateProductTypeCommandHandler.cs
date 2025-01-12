@@ -12,7 +12,9 @@ namespace Ykotika.Application.Commands
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
 
-        public async Task Handle(UpdateProductTypeCommand request, CancellationToken cancellationToken)
+        public async Task
+            Handle(UpdateProductTypeCommand request,
+                   CancellationToken cancellationToken)
         {
             var productType = await
                 _dbContext

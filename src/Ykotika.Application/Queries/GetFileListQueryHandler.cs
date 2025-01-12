@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Ykotika.Application.Interfaces;
 using Ykotika.Application.ViewModels;
 
@@ -10,20 +9,19 @@ namespace Ykotika.Application.Queries
     public class GetFileListQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
-        : IRequestHandler<GetFileListQuery, FileList>
+        : IRequestHandler<GetFileListQuery, PagedList<FileItem>>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<FileList> Handle(GetFileListQuery request, CancellationToken cancellationToken)
+        public async Task<PagedList<FileItem>> Handle(GetFileListQuery request, CancellationToken cancellationToken)
         {
-            var files = await
+            var queryItems =
                 _dbContext
                 .Files
-                .ProjectTo<FileItem>(_mapper.ConfigurationProvider)
-                .ToListAsync(cancellationToken);
+                .ProjectTo<FileItem>(_mapper.ConfigurationProvider);
 
-            return new FileList { Files = files };
+            return await PagedList<FileItem>.CreateAsync(queryItems, request.Pagination.Page, request.Pagination.PageSize);
         }
     }
 }

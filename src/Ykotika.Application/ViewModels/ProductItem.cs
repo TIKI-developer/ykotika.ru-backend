@@ -6,7 +6,7 @@ using Ykotika.Domain.ValueObjects;
 
 namespace Ykotika.Application.ViewModels
 {
-    public class ProductItem : IMapWith<Product>
+    public class ProductItem : IMapWith<Product>, IPublishable
     {
         public required Guid Id { get; set; }
         public required string Name { get; set; }

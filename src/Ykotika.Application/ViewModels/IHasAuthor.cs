@@ -2,6 +2,6 @@
 {
     public interface IHasAuthor
     {
-        Guid AuthorId { get; set; }
+        Guid UserId { get; set; }
     }
 }

@@ -19,13 +19,13 @@ namespace Ykotika.WebAPI.Controllers
         private readonly IAuthorizationService _authorizationService = authorizationService;
 
         [HttpGet]
-        public async Task<ActionResult<ProductTypeList>>
-            Get([FromQuery] bool? isPublished)
+        public async Task<ActionResult<PagedList<ProductTypeItem>>>
+            Get([FromQuery] ProductTypeListQueryParams queryParams)
         {
             var authorizationResult = await
                 _authorizationService
                 .AuthorizeAsync
-                (User, new ContentResourceDto { IsPublished = isPublished },
+                (User, new ContentResourceDto { IsPublished = queryParams.Filter.IsPublished },
                 Policies.PRODUCT_TYPE_LIST_POLICY);
 
             if (!authorizationResult.Succeeded)
@@ -33,10 +33,7 @@ namespace Ykotika.WebAPI.Controllers
                 return Forbid();
             }
 
-            var query = new GetProductTypeListQuery()
-            {
-                IsPublished = isPublished
-            };
+            var query = _mapper.Map<GetProductTypeListQuery>(queryParams);
             var vm = await Mediator.Send(query);
 
             return Ok(vm);
@@ -50,7 +47,7 @@ namespace Ykotika.WebAPI.Controllers
             var query = new GetProductTypeByIdQuery { Id = id };
             var vm = await Mediator.Send(query);
 
-            var authorizationResult = await 
+            var authorizationResult = await
                 _authorizationService
                 .AuthorizeAsync(User, vm, Policies.CONTENT_POLICY);
 

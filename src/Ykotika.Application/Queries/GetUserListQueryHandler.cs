@@ -10,21 +10,25 @@ namespace Ykotika.Application.Queries
     public class GetUserListQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
-        : IRequestHandler<GetUserListQuery, UserList>
+        : BaseGetListQueryHandler(dbContext, mapper),
+        IRequestHandler<GetUserListQuery, PagedList<UserItem>>
     {
-        private readonly IYkotikaDbContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
-
-        public async Task<UserList> Handle(GetUserListQuery request, CancellationToken cancellationToken)
+        public async Task<PagedList<UserItem>>
+            Handle(GetUserListQuery request,
+                   CancellationToken cancellationToken)
         {
-            var users = await
+            var query =
                 _dbContext
                 .Users
-                .Include(e => e.Image)
-                .ProjectTo<UserItem>(_mapper.ConfigurationProvider)
-                .ToListAsync(cancellationToken);
+                .AsQueryable();
 
-            return new UserList { Users = users };
+            query = Sort(query, request.Sorting.SortBy, request.Sorting.IsDescending);
+
+            var queryItems = query
+                .Include(e => e.Image)
+                .ProjectTo<UserItem>(_mapper.ConfigurationProvider);
+
+            return await PagedList<UserItem>.CreateAsync(queryItems, request.Pagination.Page, request.Pagination.PageSize);
         }
     }
 }

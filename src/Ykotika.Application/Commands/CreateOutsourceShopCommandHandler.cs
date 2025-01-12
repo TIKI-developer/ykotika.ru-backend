@@ -13,7 +13,9 @@ namespace Ykotika.Application.Commands
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
 
-        public async Task<Guid> Handle(CreateOutsourceShopCommand request, CancellationToken cancellationToken)
+        public async Task<Guid>
+            Handle(CreateOutsourceShopCommand request,
+                   CancellationToken cancellationToken)
         {
             var logoFile = await
                 _dbContext

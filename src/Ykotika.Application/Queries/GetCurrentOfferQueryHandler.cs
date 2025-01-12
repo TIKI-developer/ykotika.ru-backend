@@ -8,15 +8,13 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Queries
 {
-    public class GetCurrentOfferQueryHandler 
+    public class GetCurrentOfferQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
-        : IRequestHandler<GetCurrentOfferQuery, CurrentOfferDetails>
+        : BaseGetQueryHandler(dbContext, mapper),
+        IRequestHandler<GetCurrentOfferQuery, CurrentOfferDetails>
     {
-        private readonly IYkotikaDbContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
-
-        public async Task<CurrentOfferDetails> 
+        public async Task<CurrentOfferDetails>
             Handle(GetCurrentOfferQuery request, CancellationToken cancellationToken)
         {
             var offer = await
@@ -34,7 +32,7 @@ namespace Ykotika.Application.Queries
                     _dbContext
                     .Agreements
                     .FirstOrDefaultAsync(e => e.Offer.Id == offer.Id &&
-                                         e.Author.Id == request.UserId);
+                                         e.User.Id == request.UserId, cancellationToken);
                 vm.IsAccepted = agreement != null;
             }
 

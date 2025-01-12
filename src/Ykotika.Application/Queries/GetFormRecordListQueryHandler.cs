@@ -10,23 +10,24 @@ namespace Ykotika.Application.Queries
     public class GetFormRecordListQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
-        :
-        IRequestHandler<GetFormRecordListQuery, FormRecordList>
+        : BaseGetListQueryHandler(dbContext, mapper),
+        IRequestHandler<GetFormRecordListQuery, BaseList<FormRecordItem>>
     {
-        private readonly IYkotikaDbContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
-
-        public async Task<FormRecordList> Handle(GetFormRecordListQuery request, CancellationToken cancellationToken)
+        public async Task<BaseList<FormRecordItem>>
+            Handle(GetFormRecordListQuery request,
+                   CancellationToken cancellationToken)
         {
-            var formRecords = await
+            var query =
                 _dbContext
                 .FormRecords
+                .AsQueryable();
+
+            var queryItems = 
+                query
                 .Include(e => e.Form)
-                .ProjectTo<FormRecordItem>(_mapper.ConfigurationProvider)
-                .ToListAsync(cancellationToken);
+                .ProjectTo<FormRecordItem>(_mapper.ConfigurationProvider);
 
-
-            return new FormRecordList { FormRecords = formRecords };
+            return await BaseList<FormRecordItem>.CreateAsync(queryItems);
         }
     }
 }

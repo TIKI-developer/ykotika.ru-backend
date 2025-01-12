@@ -2,7 +2,6 @@
 using Ykotika.Application.Commands;
 using Ykotika.Application.Common.Mappings;
 using Ykotika.Application.Models;
-using Ykotika.Application.ViewModels;
 using Ykotika.Domain.ValueObjects;
 
 namespace Ykotika.WebAPI.Models

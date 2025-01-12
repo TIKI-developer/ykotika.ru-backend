@@ -10,47 +10,32 @@ namespace Ykotika.Application.Queries
     public class GetProductListQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
-        : IRequestHandler<GetProductListQuery, ProductList>
+        : BaseGetListQueryHandler(dbContext, mapper),
+        IRequestHandler<GetProductListQuery, PagedList<ProductItem>>
     {
-        private readonly IYkotikaDbContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
-
-        public async Task<ProductList> Handle(GetProductListQuery request, CancellationToken cancellationToken)
+        public async Task<PagedList<ProductItem>>
+            Handle(GetProductListQuery request,
+                   CancellationToken cancellationToken)
         {
             var query = _dbContext.Products
-                .Include(e => e.Author)
+                .AsQueryable()
+                .Where(p =>
+                    (!request.Filter.IsPublished.HasValue || p.IsPublished == request.Filter.IsPublished.Value) &&
+                    (!request.Filter.UserId.HasValue || p.User.Id == request.Filter.UserId.Value) &&
+                    (!request.Filter.ProductTypeId.HasValue || p.ProductType.Id == request.Filter.ProductTypeId.Value));
+
+            query = Sort(query, request.Sorting.SortBy, request.Sorting.IsDescending);
+
+            var queryItems = query
+                .Include(e => e.User)
                 .Include(e => e.Images)
                 .ThenInclude(e => e.Image)
                 .Include(e => e.FormRecord)
                 .Include(e => e.OutsourceShops)
-                .AsQueryable();
-
-            if (request.IsPublished.HasValue)
-            {
-                query = query.Where(p => p.IsPublished == request.IsPublished.Value);
-            }
-
-            if (request.AuthorId.HasValue)
-            {
-                query = query.Where(p => p.Author.Id == request.AuthorId.Value);
-            }
-
-            if (request.UserId.HasValue)
-            {
-                query = query.Where(p => p.Author.Id == request.UserId.Value);
-            }
-
-            if (request.ProductTypeId.HasValue)
-            {
-                query = query.Where(p => p.ProductType.Id == request.ProductTypeId.Value);
-            }
-
-            var products = await query
                 .ProjectTo<ProductItem>(_mapper.ConfigurationProvider)
-                .AsNoTracking()
-                .ToListAsync(cancellationToken);
+                .AsNoTracking();
 
-            return new ProductList { Products = products };
+            return await PagedList<ProductItem>.CreateAsync(queryItems, request.Pagination.Page, request.Pagination.PageSize);
         }
 
     }

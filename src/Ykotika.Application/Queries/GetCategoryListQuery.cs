@@ -1,12 +1,13 @@
 ﻿using MediatR;
+using Ykotika.Application.Models;
 using Ykotika.Application.ViewModels;
 
 namespace Ykotika.Application.Queries
 {
-    public class GetCategoryListQuery : IRequest<CategoryList>
+    public class GetCategoryListQuery : IRequest<PagedList<CategoryItem>>
     {
-        public bool? IsPublished { get; set; }
-        public string? SortBy { get; set; }
-        public bool IsDescending { get; set; }
+        public required PaginationDto Pagination { get; set; }
+        public required SortingDto Sorting { get; set; }
+        public required CategoryFilterDto Filter { get; set; }
     }
 }

@@ -11,11 +11,9 @@ namespace Ykotika.Application.Queries
     public class GetAuthorByUserQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
-        : IRequestHandler<GetAuthorByUserQuery, AuthorDetails>
+        : BaseGetQueryHandler(dbContext, mapper),
+        IRequestHandler<GetAuthorByUserQuery, AuthorDetails>
     {
-        private readonly IMapper _mapper = mapper;
-        private readonly IYkotikaDbContext _dbContext = dbContext;
-
         public async Task<AuthorDetails>
             Handle(GetAuthorByUserQuery request, CancellationToken cancellationToken)
         {

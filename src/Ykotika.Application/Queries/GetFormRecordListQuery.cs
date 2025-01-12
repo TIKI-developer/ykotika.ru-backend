@@ -3,5 +3,5 @@ using Ykotika.Application.ViewModels;
 
 namespace Ykotika.Application.Queries
 {
-    public class GetFormRecordListQuery : IRequest<FormRecordList> { }
+    public class GetFormRecordListQuery : IRequest<BaseList<FormRecordItem>> { }
 }

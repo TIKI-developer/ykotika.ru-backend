@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Ykotika.Application.Commands;
 using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
-using Ykotika.Domain.Interfaces;
 using Ykotika.WebAPI.Constants;
 using Ykotika.WebAPI.Models;
 
@@ -21,20 +20,10 @@ namespace Ykotika.WebAPI.Controllers
 
         [HttpGet]
         [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
-        public async Task<ActionResult<AgreementList>>
-            Get([FromQuery]
-                Guid? authorId,
-                Guid? offerId,
-                string? sortBy,
-                bool? desc)
+        public async Task<ActionResult<PagedList<AgreementItem>>>
+            Get([FromQuery] AgreementListQueryParams queryParams)
         {
-            var query = new GetAgreementListQuery
-            {
-                AuthorId = authorId,
-                OfferId = offerId,
-                SortBy = sortBy,
-                IsDescending = desc ?? false
-            };
+            var query = _mapper.Map<GetAgreementListQuery>(queryParams);
             var vm = await Mediator.Send(query);
 
             return Ok(vm);
@@ -48,9 +37,9 @@ namespace Ykotika.WebAPI.Controllers
             var query = new GetAgreementByIdQuery { Id = id };
             var vm = await Mediator.Send(query);
 
-            var authorizationResult = await 
+            var authorizationResult = await
                 _authorizationService
-                .AuthorizeAsync(User, vm, Policies.CONTENT_POLICY);
+                .AuthorizeAsync(User, vm, Policies.READ_AGREEMENT_POLICY);
 
             if (authorizationResult.Succeeded)
             {

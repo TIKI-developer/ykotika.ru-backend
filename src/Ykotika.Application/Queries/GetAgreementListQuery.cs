@@ -1,13 +1,13 @@
 ﻿using MediatR;
+using Ykotika.Application.Models;
 using Ykotika.Application.ViewModels;
 
 namespace Ykotika.Application.Queries
 {
-    public class GetAgreementListQuery : IRequest<AgreementList>
+    public class GetAgreementListQuery : IRequest<PagedList<AgreementItem>>
     {
-        public Guid? AuthorId { get; set; }
-        public Guid? OfferId { get; set; }
-        public string? SortBy { get; set; }
-        public bool IsDescending { get; set; }
+        public required PaginationDto Pagination { get; set; }
+        public required SortingDto Sorting { get; set; }
+        public required AgreementFilterDto Filter { get; set; }
     }
 }

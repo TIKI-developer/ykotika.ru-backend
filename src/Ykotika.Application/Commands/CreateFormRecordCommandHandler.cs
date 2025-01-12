@@ -15,7 +15,8 @@ namespace Ykotika.Application.Commands
         private readonly IYkotikaDbContext _dbContext = dbContext;
 
         public async Task<Guid>
-            Handle(CreateFormRecordCommand request, CancellationToken cancellationToken)
+            Handle(CreateFormRecordCommand request,
+                   CancellationToken cancellationToken)
         {
             var form = await
                 _dbContext
@@ -46,7 +47,7 @@ namespace Ykotika.Application.Commands
             {
                 Id = Guid.NewGuid(),
                 Form = form,
-                Author = user,
+                User = user,
                 InputRecords = inputRecords,
                 Timestamps = new Timestamps()
             };

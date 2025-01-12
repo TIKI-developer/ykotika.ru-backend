@@ -24,7 +24,7 @@ namespace Ykotika.WebAPI.Authorization
                     .Where(c => c.Type == ClaimTypes.Role)
                     .Select(c => c.Value);
 
-                if (requirement.Roles.Any(role => userRoles.Contains(role.ToString())))
+                if (requirement.PermanentAccessRoles.Any(role => userRoles.Contains(role.ToString())))
                 {
                     context.Succeed(requirement);
                 }

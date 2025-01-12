@@ -7,12 +7,18 @@ namespace Ykotika.WebAPI.Authorization
     public class PublishedHandler
         : AuthorizationHandler<ContentRequirement, IPublishable>
     {
-        protected override Task 
+        protected override Task
             HandleRequirementAsync
-            (AuthorizationHandlerContext context, 
-            ContentRequirement requirement, 
+            (AuthorizationHandlerContext context,
+            ContentRequirement requirement,
             IPublishable resource)
         {
+            if (!requirement.CheckPublished)
+            {
+                context.Succeed(requirement);
+                return Task.CompletedTask;
+            }
+
             if (resource.IsPublished)
             {
                 context.Succeed(requirement);

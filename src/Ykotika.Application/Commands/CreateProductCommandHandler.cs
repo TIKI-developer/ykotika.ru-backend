@@ -15,7 +15,9 @@ namespace Ykotika.Application.Commands
         private readonly IYkotikaDbContext _dbContext = dbContext;
         private readonly IArticleGenerator _articleGenerator = articleGenerator;
 
-        public async Task<Guid> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+        public async Task<Guid>
+            Handle(CreateProductCommand request,
+                   CancellationToken cancellationToken)
         {
             var user = await
                 _dbContext
@@ -44,7 +46,7 @@ namespace Ykotika.Application.Commands
             var agreement = await
                 _dbContext
                 .Agreements
-                .FirstOrDefaultAsync(e => e.Offer.Id == currentOffer.Id && e.Author.Id == request.UserId, cancellationToken)
+                .FirstOrDefaultAsync(e => e.Offer.Id == currentOffer.Id && e.User.Id == request.UserId, cancellationToken)
                 ?? throw new Exception("You need accept current offer!");
 
             var productType = await
@@ -74,7 +76,7 @@ namespace Ykotika.Application.Commands
                 .Files
                 .FirstOrDefaultAsync(e => e.Path == request.SourcePath, cancellationToken)
                 ?? throw new NotFoundException(nameof(Domain.Entities.File), request.SourcePath);
-            
+
             List<Category> categories = [];
 
             if (request.CategoryIds != null)
@@ -109,7 +111,7 @@ namespace Ykotika.Application.Commands
             {
                 Id = Guid.NewGuid(),
                 Form = form,
-                Author = user,
+                User = user,
                 InputRecords = inputRecords,
                 Timestamps = new Timestamps()
             };
@@ -122,7 +124,7 @@ namespace Ykotika.Application.Commands
 
             var fileIds = fileOrderMapping.Keys.ToList();
 
-            var files = await 
+            var files = await
                 _dbContext
                 .Files
                 .Where(file => fileIds.Contains(file.Path))
@@ -146,7 +148,7 @@ namespace Ykotika.Application.Commands
                 Article = request.Name,
                 Name = request.Name,
                 Description = request.Description,
-                Author = user,
+                User = user,
                 Images = imageListItems,
                 Timestamps = new Timestamps(),
                 FormRecord = formRecord,

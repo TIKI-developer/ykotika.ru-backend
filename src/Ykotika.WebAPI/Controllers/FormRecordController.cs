@@ -48,13 +48,13 @@ namespace Ykotika.WebAPI.Controllers
         public async Task<ActionResult<FormRecordDetails>>
             Get(Guid id)
         {
-            var query = new GetFormRecordQuery { Id = id };
+            var query = new GetFormByIdRecordQuery { Id = id };
             var vm = await Mediator.Send(query);
 
             return Ok(vm);
         }
         [HttpGet]
-        public async Task<ActionResult<FormRecordList>>
+        public async Task<ActionResult<BaseList<FormRecordItem>>>
             Get()
         {
             var query = new GetFormRecordListQuery();

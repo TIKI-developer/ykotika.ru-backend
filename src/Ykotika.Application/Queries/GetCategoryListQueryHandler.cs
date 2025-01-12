@@ -10,39 +10,24 @@ namespace Ykotika.Application.Queries
     public class GetCategoryListQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
-        : IRequestHandler<GetCategoryListQuery, CategoryList>
+        : BaseGetListQueryHandler(dbContext, mapper),
+        IRequestHandler<GetCategoryListQuery, PagedList<CategoryItem>>
     {
-        private readonly IYkotikaDbContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
-
-        public async Task<CategoryList>
-            Handle(GetCategoryListQuery request, CancellationToken cancellationToken)
+        public async Task<PagedList<CategoryItem>>
+            Handle(GetCategoryListQuery request,
+                   CancellationToken cancellationToken)
         {
-            var query =
-                _dbContext
+            var query = _dbContext
                 .Categories
                 .Include(e => e.Image)
-                .AsQueryable();
+                .AsQueryable()
+                .Where(e => !request.Filter.IsPublished.HasValue || e.IsPublished == request.Filter.IsPublished);
 
+            query = Sort(query, request.Sorting.SortBy, request.Sorting.IsDescending);
 
-            if (request.IsPublished.HasValue)
-            {
-                query = query.Where(e => e.IsPublished == request.IsPublished);
-            }
+            var queryItems = query.ProjectTo<CategoryItem>(_mapper.ConfigurationProvider);
 
-            if (!string.IsNullOrEmpty(request.SortBy))
-            {
-                query = request.IsDescending
-                    ? query.OrderByDescending(c => EF.Property<object>(c, request.SortBy))
-                    : query.OrderBy(c => EF.Property<object>(c, request.SortBy));
-            }
-
-            var categories = await
-                query
-                .ProjectTo<CategoryItem>(_mapper.ConfigurationProvider)
-                .ToListAsync(cancellationToken);
-
-            return new CategoryList { Categories = categories };
+            return await PagedList<CategoryItem>.CreateAsync(queryItems, request.Pagination.Page, request.Pagination.PageSize);
         }
     }
 }

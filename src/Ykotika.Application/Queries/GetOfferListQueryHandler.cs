@@ -10,27 +10,28 @@ namespace Ykotika.Application.Queries
     public class GetOfferListQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
-        : IRequestHandler<GetOfferListQuery, OfferList>
+        : BaseGetListQueryHandler(dbContext, mapper),
+        IRequestHandler<GetOfferListQuery, BaseList<OfferItem>>
     {
-        private readonly IYkotikaDbContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
-
-        public async Task<OfferList> Handle(GetOfferListQuery request, CancellationToken cancellationToken)
+        public async Task<BaseList<OfferItem>>
+            Handle(GetOfferListQuery request,
+                   CancellationToken cancellationToken)
         {
             var query =
                 _dbContext
                 .Offers
+                .Where(e => !request.Filter.IsPublished.HasValue || e.IsPublished == request.Filter.IsPublished)
                 .AsQueryable();
 
-            var offers = await
-                _dbContext
-                .Offers
-                .Include(e => e.Timestamps)
-                .ProjectTo<OfferItem>(_mapper.ConfigurationProvider)
-                .AsNoTracking()
-                .ToListAsync(cancellationToken);
+            query = Sort(query, request.Sorting.SortBy, request.Sorting.IsDescending);
 
-            return new OfferList { Offers = offers };
+            var queryItems =
+                query
+                .AsNoTracking()
+                .Include(e => e.Timestamps)
+                .ProjectTo<OfferItem>(_mapper.ConfigurationProvider);
+
+            return await BaseList<OfferItem>.CreateAsync(queryItems);
         }
     }
 }

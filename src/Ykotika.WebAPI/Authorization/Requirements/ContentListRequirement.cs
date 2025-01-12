@@ -3,8 +3,8 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.WebAPI.Authorization.Requirements
 {
-    public class ContentListRequirement(UserRole[] roles) : IAuthorizationRequirement
+    public class ContentListRequirement(UserRole[] permanentAccessRoles) : IAuthorizationRequirement
     {
-        public UserRole[] Roles { get; init; } = roles;
+        public UserRole[] PermanentAccessRoles { get; init; } = permanentAccessRoles;
     }
 }

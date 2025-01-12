@@ -1,4 +1,4 @@
-﻿namespace Ykotika.WebAPI.Models
+﻿namespace Ykotika.Application.Models
 {
     public class FormFilterDto
     {

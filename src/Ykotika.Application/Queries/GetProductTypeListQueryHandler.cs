@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Ykotika.Application.Interfaces;
 using Ykotika.Application.ViewModels;
 
@@ -10,26 +9,21 @@ namespace Ykotika.Application.Queries
     public class GetProductTypeListQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
-        : IRequestHandler<GetProductTypeListQuery, ProductTypeList>
+        : BaseGetListQueryHandler(dbContext, mapper), 
+        IRequestHandler<GetProductTypeListQuery, PagedList<ProductTypeItem>>
     {
-        private readonly IYkotikaDbContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
-
-        public async Task<ProductTypeList>
+        public async Task<PagedList<ProductTypeItem>>
             Handle(GetProductTypeListQuery request, CancellationToken cancellationToken)
         {
-            var query = _dbContext.ProductTypes.AsQueryable();
+            var query = _dbContext.ProductTypes
+                .AsQueryable()
+                .Where(pt => !request.Filter.IsPublished.HasValue || pt.IsPublished == request.Filter.IsPublished.Value);
 
-            if (request.IsPublished.HasValue)
-            {
-                query = query.Where(pt => pt.IsPublished == request.IsPublished.Value);
-            }
+            query = Sort(query, request.Sorting.SortBy, request.Sorting.IsDescending);
 
-            var productTypes = await query
-                .ProjectTo<ProductTypeItem>(_mapper.ConfigurationProvider)
-                .ToListAsync(cancellationToken);
+            var queryItems = query.ProjectTo<ProductTypeItem>(_mapper.ConfigurationProvider);
 
-            return new ProductTypeList { ProductTypes = productTypes };
+            return await PagedList<ProductTypeItem>.CreateAsync(queryItems, request.Pagination.Page, request.Pagination.PageSize);
         }
     }
 }

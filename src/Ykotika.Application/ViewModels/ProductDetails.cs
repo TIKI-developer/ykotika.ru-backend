@@ -6,7 +6,7 @@ using Ykotika.Domain.ValueObjects;
 
 namespace Ykotika.Application.ViewModels
 {
-    public class ProductDetails : IMapWith<Product>
+    public class ProductDetails : IMapWith<Product>, IPublishable, IHasAuthor
     {
         public required Guid Id { get; set; }
         public required string Article { get; init; }
@@ -22,12 +22,15 @@ namespace Ykotika.Application.ViewModels
         public List<CategoryItem>? Categories { get; set; }
         public required ProductTypeDetails ProductType { get; init; }
         public required FormRecordDetails FormRecord { get; set; }
+        public required Guid UserId { get; set; }
 
         public void Mapping(Profile profile)
         {
             profile.CreateMap<Product, ProductDetails>()
                 .ForMember(to => to.Status,
                 opt => opt.MapFrom(from => from.Status.ToString()))
+                .ForMember(to => to.UserId,
+                opt => opt.MapFrom(from => from.User.Id))
                 .ForMember(to => to.Source,
                 opt => opt.MapFrom(from => from.Source.Path));
         }

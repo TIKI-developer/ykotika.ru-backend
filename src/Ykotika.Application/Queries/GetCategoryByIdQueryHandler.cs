@@ -11,19 +11,17 @@ namespace Ykotika.Application.Queries
     public class GetCategoryByIdQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
-        : IRequestHandler<GetCategoryByIdQuery, CategoryDetails>
+        : BaseGetQueryHandler(dbContext, mapper),
+        IRequestHandler<GetCategoryByIdQuery, CategoryDetails>
     {
-        private readonly IYkotikaDbContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
-
         public async Task<CategoryDetails> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
         {
             var category = await
                 _dbContext
                 .Categories
-                .Include(e => e.Author)
+                .Include(e => e.User)
                 .Include(e => e.Image)
-                .FirstOrDefaultAsync(e => e.Id == request.Id)
+                .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(Category), request.Id);
 
             return _mapper.Map<CategoryDetails>(category);

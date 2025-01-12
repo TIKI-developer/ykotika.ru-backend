@@ -19,7 +19,7 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
 
             builder
                 .HasMany(e => e.Agreements)
-                .WithOne(e => e.Author);
+                .WithOne(e => e.User);
         }
     }
 }

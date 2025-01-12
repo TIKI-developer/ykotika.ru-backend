@@ -12,7 +12,9 @@ namespace Ykotika.Application.Commands
         private readonly IYkotikaDbContext _dbContext = dbContext;
         private readonly IFileService _fileService = fileService;
 
-        public async Task Handle(GenerateProductSourcesCommand request, CancellationToken cancellationToken)
+        public async Task
+            Handle(GenerateProductSourcesCommand request,
+                   CancellationToken cancellationToken)
         {
             var products = await
                 _dbContext

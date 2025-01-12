@@ -19,16 +19,13 @@ namespace Ykotika.WebAPI.Controllers
         private readonly IAuthorizationService _authorizationService = authorizationService;
 
         [HttpGet]
-        public async Task<ActionResult<ProductList>>
-            Get([FromQuery]
-                Guid? authorId,
-                Guid? productTypeId,
-                bool? isPublished)
+        public async Task<ActionResult<PagedList<ProductItem>>>
+            Get([FromQuery] ProductListQueryParams queryParams)
         {
             var authorizationResult = await
                 _authorizationService
                 .AuthorizeAsync
-                (User, new ContentResourceDto { IsPublished = isPublished },
+                (User, new ContentResourceDto { IsPublished = queryParams.Filter.IsPublished },
                 Policies.PRODUCT_LIST_POLICY);
 
             if (!authorizationResult.Succeeded)
@@ -36,12 +33,7 @@ namespace Ykotika.WebAPI.Controllers
                 return Forbid();
             }
 
-            var query = new GetProductListQuery
-            {
-                IsPublished = isPublished,
-                AuthorId = authorId,
-                ProductTypeId = productTypeId
-            };
+            var query = _mapper.Map<GetProductListQuery>(queryParams);
 
             var vm = await Mediator.Send(query);
             return Ok(vm);
@@ -49,17 +41,11 @@ namespace Ykotika.WebAPI.Controllers
 
         [HttpGet("me")]
         [Authorize(Roles = $"{Roles.AUTHOR_ROLE}")]
-        public async Task<ActionResult<ProductList>>
-            GetMy([FromQuery] Guid? productType,
-                  [FromQuery] bool? isPublished)
+        public async Task<ActionResult<PagedList<ProductItem>>>
+            GetMy([FromQuery] ProductListQueryParams queryParams)
         {
-            var query = new GetProductListQuery
-            {
-                IsPublished = isPublished,
-                AuthorId = UserId,
-                ProductTypeId = productType
-            };
-
+            var query = _mapper.Map<GetProductListQuery>(queryParams);
+            query.Filter.UserId = UserId;
             var vm = await Mediator.Send(query);
             return Ok(vm);
         }
@@ -84,7 +70,7 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles =$"{Roles.AUTHOR_ROLE}")]
+        [Authorize(Roles = $"{Roles.AUTHOR_ROLE}")]
         public async Task<ActionResult<Guid>>
             Create([FromBody] CreateProductDto dto)
         {
@@ -96,7 +82,7 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles =$"{Roles.MODERATOR_ROLE}, {Roles.AUTHOR_ROLE}")]
+        [Authorize(Roles = $"{Roles.MODERATOR_ROLE}, {Roles.AUTHOR_ROLE}")]
         public async Task<IActionResult>
             Update(Guid id, [FromBody] UpdateProductDto dto)
         {
@@ -108,7 +94,7 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles =$"{Roles.MODERATOR_ROLE}, {Roles.AUTHOR_ROLE}")]
+        [Authorize(Roles = $"{Roles.MODERATOR_ROLE}, {Roles.AUTHOR_ROLE}")]
         public async Task<IActionResult>
             Delete(Guid id)
         {
@@ -119,7 +105,7 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpPost("generate-spreadsheet")]
-        [Authorize(Roles =$"{Roles.MODERATOR_ROLE}")]
+        [Authorize(Roles = $"{Roles.MODERATOR_ROLE}")]
         public async Task<ActionResult<Guid>>
             GenerateSpreadSheet([FromBody] GenerateProductSpreadsheetDto dto)
         {
@@ -130,7 +116,7 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpPost("generate-catalog")]
-        [Authorize(Roles =$"{Roles.MODERATOR_ROLE}")]
+        [Authorize(Roles = $"{Roles.MODERATOR_ROLE}")]
         public async Task<IActionResult>
             GenerateCatalog([FromBody] GenerateProductSourcesDto dto)
         {
@@ -141,7 +127,7 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpPatch("outsource-shops")]
-        [Authorize(Roles =$"{Roles.MODERATOR_ROLE}, {Roles.ADMIN_ROLE}, {Roles.DIRECTOR_ROLE}")]
+        [Authorize(Roles = $"{Roles.MODERATOR_ROLE}, {Roles.ADMIN_ROLE}, {Roles.DIRECTOR_ROLE}")]
         public async Task<IActionResult>
             ChangeOutsourceShops([FromBody] UpdateProductOutsourceShopDto dto)
         {
