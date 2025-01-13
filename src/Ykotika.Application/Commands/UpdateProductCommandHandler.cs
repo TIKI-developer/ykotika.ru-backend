@@ -41,12 +41,24 @@ namespace Ykotika.Application.Commands
                     .Categories
                     .Where(e => request.CategoryIds.Contains(e.Id))
                     .ToListAsync(cancellationToken) ?? null;
+
+                product.Categories = categories;
+            }
+
+            if (request.FormRecord != null)
+            {
+                foreach (var inputRecordRequest in request.FormRecord.InputRecords)
+                {
+                    product.FormRecord.InputRecords
+                        .FirstOrDefault
+                        (e => e.Id == inputRecordRequest.Id)!
+                        .Value = inputRecordRequest.Value;
+                }
             }
 
             product.Name = request.Name ?? product.Name;
             product.Description = request.Description ?? product.Description;
             product.Tags = request.Tags ?? product.Tags;
-            product.Categories = categories;
 
             if (request.SourcePath != null)
             {

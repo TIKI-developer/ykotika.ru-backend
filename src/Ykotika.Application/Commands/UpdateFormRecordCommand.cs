@@ -9,7 +9,7 @@ namespace Ykotika.Application.Commands
 
         public class InputRecordDto
         {
-            public required int Id { get; set; }
+            public required string Id { get; set; }
             public required string Value { get; set; }
         }
     }
