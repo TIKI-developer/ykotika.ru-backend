@@ -25,7 +25,7 @@ namespace Ykotika.Persistence
             {
                 options.UseNpgsql(connectionString);
             });
-
+            services.AddScoped<DbInitializer>();
             services.AddScoped<IYkotikaDbContext>(provider =>
                 provider.GetService<YkotikaDbContext>());
 

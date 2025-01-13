@@ -14,7 +14,8 @@ namespace Ykotika.WebAPI
                 try
                 {
                     var restaurantContext = serviceProvider.GetRequiredService<YkotikaDbContext>();
-                    DbInitializer.Initialize(restaurantContext);
+                    var dbInitializer = serviceProvider.GetRequiredService<DbInitializer>();
+                    dbInitializer.Initialize(restaurantContext);
                 }
                 catch (Exception exception)
                 {
