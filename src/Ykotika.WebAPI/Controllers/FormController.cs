@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ykotika.Application.Commands;
+using Ykotika.Application.Common.Mappings;
+using Ykotika.Application.Models;
 using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
 using Ykotika.WebAPI.Constants;
+using Ykotika.WebAPI.ModelBinders;
 using Ykotika.WebAPI.Models;
-using Ykotika.WebAPI.QueryParams;
 
 namespace Ykotika.WebAPI.Controllers
 {
@@ -30,6 +32,7 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok(id);
         }
+
         [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         [HttpPut("{id}")]
         public async Task<IActionResult>
@@ -41,6 +44,7 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok();
         }
+
         [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         [HttpDelete("{id}")]
         public async Task<IActionResult>
@@ -51,6 +55,7 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok();
         }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<FormDetails>>
             Get(Guid id)
@@ -69,15 +74,17 @@ namespace Ykotika.WebAPI.Controllers
 
             return Forbid();
         }
+
         [HttpGet]
         public async Task<ActionResult<PagedList<FormItem>>>
             Get([FromQuery] FormListQueryParams queryParams)
         {
+            var query = _mapper.Map<GetFormListQuery>(queryParams);
             var authorizationResult = await
                 _authorizationService
                 .AuthorizeAsync
                 (User,
-                new PublishableResourceDto { IsPublished = queryParams.Filter.IsPublished },
+                new PublishableResourceDto { IsPublished = query.Filter.IsPublished },
                 Policies.FORM_LIST_POLICY);
 
             if (!authorizationResult.Succeeded)
@@ -85,10 +92,36 @@ namespace Ykotika.WebAPI.Controllers
                 return Forbid();
             }
 
-            var query = _mapper.Map<GetFormListQuery>(queryParams);
             var vm = await Mediator.Send(query);
 
             return Ok(vm);
+        }
+    }
+    public class FormListQueryParams : IMapWith<GetFormListQuery>
+    {
+        [ModelBinder(BinderType = typeof(SortingBinder))]
+        public SortingQueryParams Sorting { get; set; } = new();
+
+        [ModelBinder(BinderType = typeof(PaginationBinder))]
+        public PaginationQueryParams Pagination { get; set; } = new();
+
+        [ModelBinder(BinderType = typeof(FormFilterBinder))]
+        public required FormFilterQueryParams Filter { get; set; } = new();
+
+        public void Mapping(Profile profile)
+        {
+            profile.CreateMap<FormListQueryParams, GetFormListQuery>();
+        }
+    }
+    public class FormFilterQueryParams : IMapWith<FormFilterDto>
+    {
+        public string? IsPublished { get; set; }
+
+        public void Mapping(Profile profile)
+        {
+            profile.CreateMap<FormFilterQueryParams, FormFilterDto>()
+                .ForMember(to => to.IsPublished,
+                opt => opt.MapFrom(from => from.IsPublished));
         }
     }
 }

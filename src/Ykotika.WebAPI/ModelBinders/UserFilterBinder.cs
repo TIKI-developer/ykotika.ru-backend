@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Ykotika.Application.Models;
+using Ykotika.WebAPI.Controllers;
 
 namespace Ykotika.WebAPI.ModelBinders
 {
@@ -11,9 +12,9 @@ namespace Ykotika.WebAPI.ModelBinders
 
             var query = bindingContext.HttpContext.Request.Query;
 
-            var model = new UserFilterDto
+            var model = new UserFilterQueryParams
             {
-                IsPublished = bool.TryParse(query["isPub"], out var desc) && desc
+                IsPublished = query["isPub"]
             };
 
             bindingContext.Result = ModelBindingResult.Success(model);

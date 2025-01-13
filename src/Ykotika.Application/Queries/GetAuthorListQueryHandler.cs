@@ -9,7 +9,7 @@ namespace Ykotika.Application.Queries
 {
     public class GetAuthorListQueryHandler
         (IYkotikaDbContext dbContext,
-        IMapper mapper) 
+        IMapper mapper)
         : BaseGetListQueryHandler(dbContext, mapper),
         IRequestHandler<GetAuthorListQuery, PagedList<AuthorItem>>
     {

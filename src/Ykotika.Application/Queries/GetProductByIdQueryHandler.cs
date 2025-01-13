@@ -11,7 +11,7 @@ namespace Ykotika.Application.Queries
     public class GetProductByIdQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
-        : BaseGetQueryHandler(dbContext, mapper), 
+        : BaseGetQueryHandler(dbContext, mapper),
         IRequestHandler<GetProductByIdQuery, ProductDetails>
     {
         public async Task<ProductDetails>

@@ -3,7 +3,7 @@ using Ykotika.WebAPI.Controllers;
 
 namespace Ykotika.WebAPI.ModelBinders
 {
-    public class AgreementFilterBinder : IModelBinder
+    public class AuthorFilterBinder : IModelBinder
     {
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
@@ -11,10 +11,12 @@ namespace Ykotika.WebAPI.ModelBinders
 
             var query = bindingContext.HttpContext.Request.Query;
 
-            var model = new AgreementFilterQueryParams
+            var model = new AuthorFilterQueryParams
             {
-                UserId = query["userId"],
-                OfferId = query["offerId"]
+                Status = query["status"],
+                Name = query["name"],
+                Surname = query["surname"],
+                ContactSocial = query["contact"]
             };
 
             bindingContext.Result = ModelBindingResult.Success(model);

@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Ykotika.Application.Models;
-using Ykotika.WebAPI.Models.Binders;
-using Ykotika.WebAPI.QueryParams;
+using Ykotika.WebAPI.Controllers;
 
 namespace Ykotika.WebAPI.ModelBinders
 {
@@ -9,20 +7,20 @@ namespace Ykotika.WebAPI.ModelBinders
     {
         public IModelBinder GetBinder(ModelBinderProviderContext context)
         {
-            if (context.Metadata.ModelType == typeof(SortingQueryParams))
+            return context.Metadata.ModelType switch
             {
-                return new SortingBinder();
-            }
-            if (context.Metadata.ModelType == typeof(PaginationQueryParams))
-            {
-                return new PaginationBinder();
-            }
-            if (context.Metadata.ModelType == typeof(CategoryFilterDto))
-            {
-                return new CategoryFilterBinder();
-            }
-
-            return null;
+                Type t when t == typeof(SortingQueryParams) => new SortingBinder(),
+                Type t when t == typeof(PaginationQueryParams) => new PaginationBinder(),
+                Type t when t == typeof(CategoryFilterQueryParams) => new CategoryFilterBinder(),
+                Type t when t == typeof(ProductFilterQueryParams) => new ProductFilterBinder(),
+                Type t when t == typeof(ProductTypeFilterQueryParams) => new ProductTypeFilterBinder(),
+                Type t when t == typeof(OfferFilterQueryParams) => new OfferFilterBinder(),
+                Type t when t == typeof(AgreementFilterQueryParams) => new AgreementFilterBinder(),
+                Type t when t == typeof(AuthorFilterQueryParams) => new AuthorFilterBinder(),
+                Type t when t == typeof(FormFilterQueryParams) => new FormFilterBinder(),
+                Type t when t == typeof(UserFilterQueryParams) => new UserFilterBinder(),
+                _ => null,
+            };
         }
     }
 }

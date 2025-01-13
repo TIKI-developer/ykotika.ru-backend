@@ -1,10 +1,13 @@
-﻿namespace Ykotika.Application.Models
+﻿using Ykotika.Domain.Entities;
+using Ykotika.Domain.ValueObjects;
+
+namespace Ykotika.Application.Models
 {
     public class AuthorFilterDto
     {
-        public string? Status { get; set; }
+        public AuthorStatus? Status { get; set; }
         public string? Name { get; set; }
         public string? Surname { get; set; }
-        public string? ContactSocial { get; set; }
+        public AuthorRequest.ContactSocial? ContactSocial { get; set; }
     }
 }

@@ -9,7 +9,7 @@ using Ykotika.Security;
 using Ykotika.Verification;
 using Ykotika.WebApi.Extensions;
 using Ykotika.WebAPI.Middleware;
-using Ykotika.WebAPI.Models.Binders;
+using Ykotika.WebAPI.ModelBinders;
 
 namespace Ykotika.WebAPI
 {

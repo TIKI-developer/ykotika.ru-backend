@@ -20,7 +20,7 @@ namespace Ykotika.Application.ViewModels
         {
             var totalCount = await query.CountAsync();
             var items = query.ToList();
-            
+
             if (page.HasValue && pageSize.HasValue)
             {
                 items = await query.Skip((page.Value - 1) * pageSize.Value).Take(pageSize.Value).ToListAsync();

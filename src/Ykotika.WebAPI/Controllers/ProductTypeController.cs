@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ykotika.Application.Commands;
+using Ykotika.Application.Common.Mappings;
+using Ykotika.Application.Models;
 using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
 using Ykotika.WebAPI.Constants;
+using Ykotika.WebAPI.ModelBinders;
 using Ykotika.WebAPI.Models;
-using Ykotika.WebAPI.QueryParams;
 
 namespace Ykotika.WebAPI.Controllers
 {
@@ -23,10 +25,11 @@ namespace Ykotika.WebAPI.Controllers
         public async Task<ActionResult<PagedList<ProductTypeItem>>>
             Get([FromQuery] ProductTypeListQueryParams queryParams)
         {
+            var query = _mapper.Map<GetProductTypeListQuery>(queryParams);
             var authorizationResult = await
                 _authorizationService
                 .AuthorizeAsync
-                (User, new PublishableResourceDto { IsPublished = queryParams.Filter.IsPublished },
+                (User, new PublishableResourceDto { IsPublished = query.Filter.IsPublished },
                 Policies.PRODUCT_TYPE_LIST_POLICY);
 
             if (!authorizationResult.Succeeded)
@@ -34,7 +37,6 @@ namespace Ykotika.WebAPI.Controllers
                 return Forbid();
             }
 
-            var query = _mapper.Map<GetProductTypeListQuery>(queryParams);
             var vm = await Mediator.Send(query);
 
             return Ok(vm);
@@ -90,6 +92,31 @@ namespace Ykotika.WebAPI.Controllers
             await Mediator.Send(command);
 
             return Ok();
+        }
+    }
+    public class ProductTypeListQueryParams : IMapWith<GetProductTypeListQuery>
+    {
+        [ModelBinder(BinderType = typeof(SortingBinder))]
+        public SortingQueryParams Sorting { get; set; } = new();
+
+        [ModelBinder(BinderType = typeof(PaginationBinder))]
+        public PaginationQueryParams Pagination { get; set; } = new();
+        public ProductTypeFilterQueryParams Filter { get; set; } = new();
+
+        public void Mapping(Profile profile)
+        {
+            profile.CreateMap<ProductTypeListQueryParams, GetProductTypeListQuery>();
+        }
+    }
+    public class ProductTypeFilterQueryParams : IMapWith<ProductTypeFilterDto>
+    {
+        public string? IsPublished { get; set; }
+
+        public void Mapping(Profile profile)
+        {
+            profile.CreateMap<ProductTypeFilterQueryParams, ProductTypeFilterDto>()
+                .ForMember(to => to.IsPublished,
+                opt => opt.MapFrom(from => from.IsPublished));
         }
     }
 }

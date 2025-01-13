@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Ykotika.Application.Models;
+using Ykotika.WebAPI.Controllers;
 
 namespace Ykotika.WebAPI.ModelBinders
 {
@@ -11,11 +11,11 @@ namespace Ykotika.WebAPI.ModelBinders
 
             var query = bindingContext.HttpContext.Request.Query;
 
-            var model = new ProductFilterDto
+            var model = new ProductFilterQueryParams
             {
-                UserId = Guid.TryParse(query["user"], out var userId) ? userId : null,
-                ProductTypeId = Guid.TryParse(query["type"], out var productTypeId) ? productTypeId : null,
-                IsPublished = bool.TryParse(query["isPub"], out var desc) && desc
+                IsPublished = query["isPub"],
+                UserId = query["user"],
+                ProductTypeId = query["productType"]
             };
 
             bindingContext.Result = ModelBindingResult.Success(model);

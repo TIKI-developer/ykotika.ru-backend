@@ -9,7 +9,7 @@ namespace Ykotika.Application.Queries
     public class GetProductTypeListQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
-        : BaseGetListQueryHandler(dbContext, mapper), 
+        : BaseGetListQueryHandler(dbContext, mapper),
         IRequestHandler<GetProductTypeListQuery, PagedList<ProductTypeItem>>
     {
         public async Task<PagedList<ProductTypeItem>>

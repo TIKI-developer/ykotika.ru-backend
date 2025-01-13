@@ -7,7 +7,7 @@ namespace Ykotika.WebAPI.Authorization.Requirements
         (UserRole[]? permanentAccessRoles,
         bool checkAuthor = true,
         bool checkPublished = true,
-        bool checkRole = true) 
+        bool checkRole = true)
         : IAuthorizationRequirement
     {
         public UserRole[] PermanentAccessRoles { get; set; } = permanentAccessRoles ?? [UserRole.Admin];

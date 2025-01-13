@@ -2,12 +2,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ykotika.Application.Commands;
+using Ykotika.Application.Common.Mappings;
 using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
 using Ykotika.Domain.ValueObjects;
 using Ykotika.WebAPI.Constants;
+using Ykotika.WebAPI.ModelBinders;
 using Ykotika.WebAPI.Models;
-using Ykotika.WebAPI.QueryParams;
 
 namespace Ykotika.WebAPI.Controllers
 {
@@ -63,7 +64,7 @@ namespace Ykotika.WebAPI.Controllers
 
         [Authorize(Roles = $"{Roles.ADMIN_ROLE}")]
         [HttpGet]
-        public async Task<ActionResult<PagedList<FileItem>>> 
+        public async Task<ActionResult<PagedList<FileItem>>>
             Get([FromQuery] FileListQueryParams queryParams)
         {
             var query = _mapper.Map<GetFileListQuery>(queryParams);
@@ -96,5 +97,10 @@ namespace Ykotika.WebAPI.Controllers
 
             return contentType;
         }
+    }
+    public class FileListQueryParams : IMapWith<GetFileListQuery>
+    {
+        [ModelBinder(BinderType = typeof(PaginationBinder))]
+        public PaginationQueryParams Pagination { get; set; } = new();
     }
 }

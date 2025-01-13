@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Ykotika.WebAPI.QueryParams;
+using Ykotika.WebAPI.Controllers;
 
 namespace Ykotika.WebAPI.ModelBinders
 {
-    public class PublishableBinder : IModelBinder
+    public class OfferFilterBinder : IModelBinder
     {
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
@@ -11,7 +11,7 @@ namespace Ykotika.WebAPI.ModelBinders
 
             var query = bindingContext.HttpContext.Request.Query;
 
-            var model = new PublishableQueryParams
+            var model = new OfferFilterQueryParams
             {
                 IsPublished = query["isPub"]
             };

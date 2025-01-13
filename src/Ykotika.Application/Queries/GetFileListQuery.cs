@@ -4,7 +4,7 @@ using Ykotika.Application.ViewModels;
 
 namespace Ykotika.Application.Queries
 {
-    public class GetFileListQuery : IRequest<PagedList<FileItem>> 
+    public class GetFileListQuery : IRequest<PagedList<FileItem>>
     {
         public required PaginationDto Pagination { get; set; }
     }

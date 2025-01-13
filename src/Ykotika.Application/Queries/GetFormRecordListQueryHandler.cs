@@ -22,7 +22,7 @@ namespace Ykotika.Application.Queries
                 .FormRecords
                 .AsQueryable();
 
-            var queryItems = 
+            var queryItems =
                 query
                 .Include(e => e.Form)
                 .ProjectTo<FormRecordItem>(_mapper.ConfigurationProvider);

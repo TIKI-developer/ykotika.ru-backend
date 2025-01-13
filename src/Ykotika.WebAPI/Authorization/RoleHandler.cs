@@ -6,9 +6,9 @@ namespace Ykotika.WebAPI.Authorization
 {
     public class RoleHandler : AuthorizationHandler<ContentRequirement>
     {
-        protected override Task 
+        protected override Task
             HandleRequirementAsync
-            (AuthorizationHandlerContext context, 
+            (AuthorizationHandlerContext context,
             ContentRequirement requirement)
         {
             if (!requirement.CheckRole)

@@ -1,19 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Ykotika.WebAPI.Controllers;
 
 namespace Ykotika.WebAPI.ModelBinders
 {
-    public class CustomQueryBinder<T> : IModelBinder where T : class, new()
+    public class ProductTypeFilterBinder : IModelBinder
     {
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
-            if (bindingContext == null)
-            {
-                throw new ArgumentNullException(nameof(bindingContext));
-            }
+            ArgumentNullException.ThrowIfNull(bindingContext);
 
             var query = bindingContext.HttpContext.Request.Query;
-            var model = new T();
 
+            var model = new ProductTypeFilterQueryParams
+            {
+                IsPublished = query["isPub"]
+            };
 
             bindingContext.Result = ModelBindingResult.Success(model);
             return Task.CompletedTask;

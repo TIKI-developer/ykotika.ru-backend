@@ -9,6 +9,5 @@ namespace Ykotika.Application.Queries
         public required PaginationDto Pagination { get; set; }
         public required SortingDto Sorting { get; set; }
         public required ProductFilterDto Filter { get; set; }
-        public required PublishableFilterDto PublishableFilter { get; set; }
     }
 }

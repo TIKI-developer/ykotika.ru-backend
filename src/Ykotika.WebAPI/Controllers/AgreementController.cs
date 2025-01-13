@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ykotika.Application.Commands;
+using Ykotika.Application.Common.Mappings;
+using Ykotika.Application.Models;
 using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
 using Ykotika.WebAPI.Constants;
+using Ykotika.WebAPI.ModelBinders;
 using Ykotika.WebAPI.Models;
-using Ykotika.WebAPI.QueryParams;
 
 namespace Ykotika.WebAPI.Controllers
 {
@@ -60,6 +62,36 @@ namespace Ykotika.WebAPI.Controllers
             var id = await Mediator.Send(command);
 
             return Ok(id);
+        }
+    }
+    public class AgreementListQueryParams : IMapWith<GetAgreementListQuery>
+    {
+        [ModelBinder(BinderType = typeof(SortingBinder))]
+        public SortingQueryParams Sorting { get; set; } = new();
+
+        [ModelBinder(BinderType = typeof(PaginationBinder))]
+        public PaginationQueryParams Pagination { get; set; } = new();
+
+        [ModelBinder(BinderType = typeof(AgreementFilterBinder))]
+        public AgreementFilterQueryParams Filter { get; set; } = new();
+
+        public void Mapping(Profile profile)
+        {
+            profile.CreateMap<AgreementListQueryParams, GetAgreementListQuery>();
+        }
+    }
+    public class AgreementFilterQueryParams : IMapWith<AgreementFilterDto>
+    {
+        public string? UserId { get; set; }
+        public string? OfferId { get; set; }
+
+        public void Mapping(Profile profile)
+        {
+            profile.CreateMap<AgreementFilterQueryParams, AgreementFilterDto>()
+                .ForMember(to => to.OfferId,
+                opt => opt.MapFrom(from => from.OfferId))
+                .ForMember(to => to.UserId,
+                opt => opt.MapFrom(from => from.UserId));
         }
     }
 }

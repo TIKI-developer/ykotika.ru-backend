@@ -2,13 +2,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ykotika.Application.Commands;
+using Ykotika.Application.Common.Mappings;
+using Ykotika.Application.Models;
 using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
-using Ykotika.Domain.Entities;
-using Ykotika.Domain.ValueObjects;
 using Ykotika.WebAPI.Constants;
+using Ykotika.WebAPI.ModelBinders;
 using Ykotika.WebAPI.Models;
-using Ykotika.WebAPI.QueryParams;
 
 namespace Ykotika.WebAPI.Controllers
 {
@@ -70,6 +70,42 @@ namespace Ykotika.WebAPI.Controllers
             await Mediator.Send(command);
 
             return Ok();
+        }
+    }
+    public class AuthorListQueryParams : IMapWith<GetAuthorListQuery>
+    {
+        [ModelBinder(BinderType = typeof(SortingBinder))]
+        public SortingQueryParams Sorting { get; set; } = new();
+
+        [ModelBinder(BinderType = typeof(PaginationBinder))]
+        public PaginationQueryParams Pagination { get; set; } = new();
+
+        [ModelBinder(BinderType = typeof(AuthorFilterBinder))]
+        public required AuthorFilterQueryParams Filter { get; set; } = new();
+
+        public void Mapping(Profile profile)
+        {
+            profile.CreateMap<AuthorListQueryParams, GetAuthorListQuery>();
+        }
+    }
+    public class AuthorFilterQueryParams : IMapWith<AuthorFilterDto>
+    {
+        public string? Status { get; set; }
+        public string? Name { get; set; }
+        public string? Surname { get; set; }
+        public string? ContactSocial { get; set; }
+
+        public void Mapping(Profile profile)
+        {
+            profile.CreateMap<AuthorFilterQueryParams, AuthorFilterDto>()
+                .ForMember(to => to.Status,
+                opt => opt.MapFrom(from => from.Status))
+                .ForMember(to => to.Name,
+                opt => opt.MapFrom(from => from.Name))
+                .ForMember(to => to.Surname,
+                opt => opt.MapFrom(from => from.Surname))
+                .ForMember(to => to.ContactSocial,
+                opt => opt.MapFrom(from => from.ContactSocial));
         }
     }
 }

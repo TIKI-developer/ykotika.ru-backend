@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ykotika.Application.Commands;
+using Ykotika.Application.Common.Mappings;
+using Ykotika.Application.Models;
 using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
 using Ykotika.WebAPI.Constants;
+using Ykotika.WebAPI.ModelBinders;
 using Ykotika.WebAPI.Models;
-using Ykotika.WebAPI.QueryParams;
 
 namespace Ykotika.WebAPI.Controllers
 {
@@ -84,6 +86,30 @@ namespace Ykotika.WebAPI.Controllers
             await Mediator.Send(command);
 
             return Ok();
+        }
+    }
+    public class OfferListQueryParams : IMapWith<GetOfferListQuery>
+    {
+        [ModelBinder(BinderType = typeof(SortingBinder))]
+        public SortingQueryParams Sorting { get; set; } = new();
+
+        [ModelBinder(BinderType = typeof(OfferFilterBinder))]
+        public OfferFilterQueryParams Filter { get; set; } = new();
+
+        public void Mapping(Profile profile)
+        {
+            profile.CreateMap<OfferListQueryParams, GetOfferListQuery>();
+        }
+    }
+    public class OfferFilterQueryParams : IMapWith<OfferFilterDto>
+    {
+        public string? IsPublished { get; set; }
+
+        public void Mapping(Profile profile)
+        {
+            profile.CreateMap<OfferFilterQueryParams, OfferFilterDto>()
+                .ForMember(to => to.IsPublished,
+                opt => opt.MapFrom(from => from.IsPublished));
         }
     }
 }
