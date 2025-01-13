@@ -8,6 +8,7 @@ using Ykotika.Domain.Entities;
 using Ykotika.Domain.ValueObjects;
 using Ykotika.WebAPI.Constants;
 using Ykotika.WebAPI.Models;
+using Ykotika.WebAPI.QueryParams;
 
 namespace Ykotika.WebAPI.Controllers
 {

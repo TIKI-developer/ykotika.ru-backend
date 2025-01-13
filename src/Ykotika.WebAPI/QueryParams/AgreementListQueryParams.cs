@@ -5,7 +5,7 @@ using Ykotika.Application.Models;
 using Ykotika.Application.Queries;
 using Ykotika.WebAPI.ModelBinders;
 
-namespace Ykotika.WebAPI.Models
+namespace Ykotika.WebAPI.QueryParams
 {
     public class AgreementListQueryParams : IMapWith<GetAgreementListQuery>
     {
@@ -15,7 +15,7 @@ namespace Ykotika.WebAPI.Models
         [ModelBinder(BinderType = typeof(PaginationBinder))]
         public PaginationQueryParams Pagination { get; set; } = new();
 
-        [ModelBinder(BinderType = typeof())]
+        [ModelBinder(BinderType = typeof(AgreementFilterBinder))]
         public required AgreementFilterQueryParams Filter { get; set; } = new();
 
         public void Mapping(Profile profile)

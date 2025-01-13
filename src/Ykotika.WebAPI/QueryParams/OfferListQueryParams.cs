@@ -5,7 +5,7 @@ using Ykotika.Application.Models;
 using Ykotika.Application.Queries;
 using Ykotika.WebAPI.ModelBinders;
 
-namespace Ykotika.WebAPI.Models
+namespace Ykotika.WebAPI.QueryParams
 {
     public class OfferListQueryParams : IMapWith<GetOfferListQuery>
     {

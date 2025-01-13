@@ -1,4 +1,4 @@
-﻿namespace Ykotika.WebAPI.Models
+﻿namespace Ykotika.WebAPI.QueryParams
 {
     public class ProductTypeFilterQueryParams
     {

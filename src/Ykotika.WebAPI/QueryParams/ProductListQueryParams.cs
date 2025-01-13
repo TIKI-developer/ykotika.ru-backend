@@ -5,20 +5,22 @@ using Ykotika.Application.Models;
 using Ykotika.Application.Queries;
 using Ykotika.WebAPI.ModelBinders;
 
-namespace Ykotika.WebAPI.Models
+namespace Ykotika.WebAPI.QueryParams
 {
-    public class FormListQueryParams : IMapWith<GetFormListQuery>
+    public class ProductListQueryParams : IMapWith<GetProductListQuery>
     {
         [ModelBinder(BinderType = typeof(SortingBinder))]
         public SortingQueryParams Sorting { get; set; } = new();
 
         [ModelBinder(BinderType = typeof(PaginationBinder))]
         public PaginationQueryParams Pagination { get; set; } = new();
-        public required FormFilterDto Filter { get; set; } = new();
+
+        [ModelBinder(BinderType = typeof(ProductFilterBinder))]
+        public required ProductFilterDto Filter { get; set; }
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<FormListQueryParams, GetFormListQuery>();
+            profile.CreateMap<ProductListQueryParams, GetProductListQuery>();
         }
     }
 }

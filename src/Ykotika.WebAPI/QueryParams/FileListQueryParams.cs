@@ -3,7 +3,7 @@ using Ykotika.Application.Common.Mappings;
 using Ykotika.Application.Queries;
 using Ykotika.WebAPI.ModelBinders;
 
-namespace Ykotika.WebAPI.Models
+namespace Ykotika.WebAPI.QueryParams
 {
     public class FileListQueryParams : IMapWith<GetFileListQuery>
     {
