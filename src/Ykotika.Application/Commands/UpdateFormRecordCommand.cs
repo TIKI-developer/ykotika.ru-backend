@@ -6,6 +6,7 @@ namespace Ykotika.Application.Commands
     {
         public required Guid Id { get; set; }
         public required List<InputRecordDto> InputRecords { get; set; }
+
         public class InputRecordDto
         {
             public required int Id { get; set; }

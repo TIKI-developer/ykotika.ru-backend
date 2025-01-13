@@ -17,7 +17,9 @@ namespace Ykotika.Application.Commands
         private readonly IMapper _mapper = mapper;
         private readonly IFileService _fileService = fileService;
 
-        public async Task<string> Handle(GenerateProductSpreadsheetCommand request, CancellationToken cancellationToken)
+        public async Task<string>
+            Handle(GenerateProductSpreadsheetCommand request,
+                   CancellationToken cancellationToken)
         {
             var products = await
                 _dbContext

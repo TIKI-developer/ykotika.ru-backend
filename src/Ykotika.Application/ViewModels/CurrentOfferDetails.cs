@@ -5,7 +5,7 @@ using Ykotika.Domain.ValueObjects;
 
 namespace Ykotika.Application.ViewModels
 {
-    public class CurrentOfferDetails : IMapWith<Offer>
+    public class CurrentOfferDetails : IMapWith<Offer>, IPublishable
     {
         public required Guid Id { get; set; }
         public required string Content { get; set; }

@@ -11,18 +11,18 @@ namespace Ykotika.Application.Queries
     public class GetAgreementByIdQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
-        : IRequestHandler<GetAgreementByIdQuery, AgreementDetails>
+        : BaseGetQueryHandler(dbContext, mapper),
+        IRequestHandler<GetAgreementByIdQuery, AgreementDetails>
     {
-        private readonly IYkotikaDbContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
-
-        public async Task<AgreementDetails> Handle(GetAgreementByIdQuery request, CancellationToken cancellationToken)
+        public async Task<AgreementDetails>
+            Handle(GetAgreementByIdQuery request,
+                   CancellationToken cancellationToken)
         {
             var agreement = await
                 _dbContext
                 .Agreements
                 .Include(e => e.Offer)
-                .Include(e => e.Author)
+                .Include(e => e.User)
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(Agreement), request.Id);
 

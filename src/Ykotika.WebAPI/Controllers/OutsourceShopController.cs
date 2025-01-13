@@ -17,33 +17,40 @@ namespace Ykotika.WebAPI.Controllers
         private readonly IMapper _mapper = mapper;
 
         [HttpGet]
-        public async Task<ActionResult<Guid>> Get()
+        public async Task<ActionResult<BaseList<OutsourceShopItem>>>
+            Get()
         {
             var query = new GetOutsourceShopListQuery();
             var vm = await Mediator.Send(query);
 
             return Ok(vm);
         }
+
         [HttpGet("{id}")]
-        public async Task<ActionResult<OutsourceShopDetails>> GetById(Guid id)
+        public async Task<ActionResult<OutsourceShopDetails>>
+            GetById(Guid id)
         {
-            var query = new GetOutsourceShopQuery { Id = id };
+            var query = new GetOutsourceShopByIdQuery { Id = id };
             var vm = await Mediator.Send(query);
 
             return Ok(vm);
         }
+
         [HttpPost]
         [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
-        public async Task<ActionResult<Guid>> Create([FromBody] CreateOutsourceShopDto dto)
+        public async Task<ActionResult<Guid>>
+            Create([FromBody] CreateOutsourceShopDto dto)
         {
             var command = _mapper.Map<CreateOutsourceShopCommand>(dto);
             var id = await Mediator.Send(command);
 
             return Ok(id);
         }
+
         [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateOutsourceShopDto dto)
+        public async Task<IActionResult>
+            Update(Guid id, [FromBody] UpdateOutsourceShopDto dto)
         {
             var command = _mapper.Map<UpdateOutsourceShopCommand>(dto);
             command.Id = id;
@@ -51,9 +58,11 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok();
         }
+
         [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult>
+            Delete(Guid id)
         {
             var command = new DeleteOutsourceShopCommand { Id = id };
             await Mediator.Send(command);

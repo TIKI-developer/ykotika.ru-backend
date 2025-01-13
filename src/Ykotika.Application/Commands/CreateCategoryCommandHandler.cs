@@ -16,7 +16,9 @@ namespace Ykotika.Application.Commands
         private readonly IYkotikaDbContext _dbContext = dbContext;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<Guid> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<Guid>
+            Handle(CreateCategoryCommand request,
+                   CancellationToken cancellationToken)
         {
             var author = await
                 _dbContext
@@ -38,10 +40,10 @@ namespace Ykotika.Application.Commands
                 Image = image,
                 Timestamps = new Timestamps(),
                 IsPublished = request.IsPublished,
-                Author = author
+                User = author
             };
 
-            await _dbContext.Categories.AddAsync(category);
+            await _dbContext.Categories.AddAsync(category, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return category.Id;

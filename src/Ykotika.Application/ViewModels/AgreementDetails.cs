@@ -7,7 +7,7 @@ namespace Ykotika.Application.ViewModels
     public class AgreementDetails : IMapWith<Agreement>, IHasAuthor, IPublishable
     {
         public required Guid Id { get; set; }
-        public required Guid AuthorId { get; set; }
+        public required Guid UserId { get; set; }
         public required Guid OfferId { get; set; }
         public required bool IsPublished { get; set; }
 

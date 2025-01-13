@@ -16,7 +16,9 @@ namespace Ykotika.Application.Commands
         private readonly IYkotikaDbContext _dbContext = dbContext;
         private readonly IMapper _mapper = mapper;
 
-        public async Task Handle(UpdateProductCommand request, CancellationToken cancellationToken)
+        public async Task
+            Handle(UpdateProductCommand request,
+                   CancellationToken cancellationToken)
         {
             var product = await
                 _dbContext

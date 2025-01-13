@@ -13,25 +13,35 @@ namespace Ykotika.Application.ViewModels
         public string? PhoneNumber { get; set; }
         public required string Email { get; set; }
         public string? ImagePath { get; set; }
-        public required AuthorStatus Status { get; set; }
-        public required AuthorRequest.ContactSocial WhichSocial { get; set; }
+        public required string Status { get; set; }
+        public required string ContactSocial { get; set; }
         public required Timestamps Timestamps { get; set; }
 
         public void Mapping(Profile profile)
         {
             profile.CreateMap<Author, AuthorItem>()
+
                 .ForMember(to => to.Name,
                 opt => opt.MapFrom(from => from.User.Name))
+
                 .ForMember(to => to.Surname,
                 opt => opt.MapFrom(from => from.User.Surname))
+
                 .ForMember(to => to.PhoneNumber,
                 opt => opt.MapFrom(from => from.User.PhoneNumber))
+
                 .ForMember(to => to.Email,
                 opt => opt.MapFrom(from => from.User.Email))
+
                 .ForMember(to => to.ImagePath,
-                opt => opt.MapFrom(from => from.User.Image))
-                .ForMember(to => to.WhichSocial,
-                opt => opt.MapFrom(from => from.Request.WhichSocial))
+                opt => opt.MapFrom(from => from.User.Image.Path))
+
+                .ForMember(to => to.Status,
+                opt => opt.MapFrom(from => from.Status.ToString()))
+
+                .ForMember(to => to.ContactSocial,
+                opt => opt.MapFrom(from => from.Request.WhichSocial.ToString()))
+
                 .ForMember(to => to.Timestamps,
                 opt => opt.MapFrom(from => from.Request.Timestamps));
         }

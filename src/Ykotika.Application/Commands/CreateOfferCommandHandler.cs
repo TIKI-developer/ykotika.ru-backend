@@ -13,7 +13,9 @@ namespace Ykotika.Application.Commands
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
 
-        public async Task<Guid> Handle(CreateOfferCommand request, CancellationToken cancellationToken)
+        public async Task<Guid>
+            Handle(CreateOfferCommand request,
+                   CancellationToken cancellationToken)
         {
             var author = await
                 _dbContext
@@ -27,7 +29,7 @@ namespace Ykotika.Application.Commands
                 Content = request.Content,
                 Timestamps = new Timestamps(),
                 IsPublished = false,
-                Author = author
+                User = author
             };
 
             await _dbContext.Offers.AddAsync(offer, cancellationToken);

@@ -1,10 +1,13 @@
 ﻿using MediatR;
+using Ykotika.Application.Models;
 using Ykotika.Application.ViewModels;
 
 namespace Ykotika.Application.Queries
 {
-    public class GetFormListQuery : IRequest<FormList>
+    public class GetFormListQuery : IRequest<PagedList<FormItem>>
     {
-        public bool? IsPublished { get; set; }
+        public required PaginationDto Pagination { get; set; }
+        public required SortingDto Sorting { get; set; }
+        public required FormFilterDto Filter { get; set; }
     }
 }

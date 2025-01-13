@@ -2,9 +2,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ykotika.Application.Commands;
+using Ykotika.Application.Common.Mappings;
+using Ykotika.Application.Models;
 using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
 using Ykotika.WebAPI.Constants;
+using Ykotika.WebAPI.ModelBinders;
 using Ykotika.WebAPI.Models;
 
 namespace Ykotika.WebAPI.Controllers
@@ -19,16 +22,14 @@ namespace Ykotika.WebAPI.Controllers
         private readonly IAuthorizationService _authorizationService = authorizationService;
 
         [HttpGet]
-        public async Task<ActionResult<ProductList>>
-            Get([FromQuery]
-                Guid? authorId,
-                Guid? productTypeId,
-                bool? isPublished)
+        public async Task<ActionResult<PagedList<ProductItem>>>
+            Get([FromQuery] ProductListQueryParams queryParams)
         {
+            var query = _mapper.Map<GetProductListQuery>(queryParams);
             var authorizationResult = await
                 _authorizationService
                 .AuthorizeAsync
-                (User, new ContentResourceDto { IsPublished = isPublished },
+                (User, new PublishableResourceDto { IsPublished = query.Filter.IsPublished },
                 Policies.PRODUCT_LIST_POLICY);
 
             if (!authorizationResult.Succeeded)
@@ -36,30 +37,17 @@ namespace Ykotika.WebAPI.Controllers
                 return Forbid();
             }
 
-            var query = new GetProductListQuery
-            {
-                IsPublished = isPublished,
-                AuthorId = authorId,
-                ProductTypeId = productTypeId
-            };
-
             var vm = await Mediator.Send(query);
             return Ok(vm);
         }
 
         [HttpGet("me")]
         [Authorize(Roles = $"{Roles.AUTHOR_ROLE}")]
-        public async Task<ActionResult<ProductList>>
-            GetMy([FromQuery] Guid? productType,
-                  [FromQuery] bool? isPublished)
+        public async Task<ActionResult<PagedList<ProductItem>>>
+            GetMy([FromQuery] ProductListQueryParams queryParams)
         {
-            var query = new GetProductListQuery
-            {
-                IsPublished = isPublished,
-                AuthorId = UserId,
-                ProductTypeId = productType
-            };
-
+            var query = _mapper.Map<GetProductListQuery>(queryParams);
+            query.Filter.UserId = UserId;
             var vm = await Mediator.Send(query);
             return Ok(vm);
         }
@@ -84,7 +72,7 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles =$"{Roles.AUTHOR_ROLE}")]
+        [Authorize(Roles = $"{Roles.AUTHOR_ROLE}")]
         public async Task<ActionResult<Guid>>
             Create([FromBody] CreateProductDto dto)
         {
@@ -96,7 +84,7 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles =$"{Roles.MODERATOR_ROLE}, {Roles.AUTHOR_ROLE}")]
+        [Authorize(Roles = $"{Roles.MODERATOR_ROLE}, {Roles.AUTHOR_ROLE}")]
         public async Task<IActionResult>
             Update(Guid id, [FromBody] UpdateProductDto dto)
         {
@@ -108,7 +96,7 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles =$"{Roles.MODERATOR_ROLE}, {Roles.AUTHOR_ROLE}")]
+        [Authorize(Roles = $"{Roles.MODERATOR_ROLE}, {Roles.AUTHOR_ROLE}")]
         public async Task<IActionResult>
             Delete(Guid id)
         {
@@ -119,7 +107,7 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpPost("generate-spreadsheet")]
-        [Authorize(Roles =$"{Roles.MODERATOR_ROLE}")]
+        [Authorize(Roles = $"{Roles.MODERATOR_ROLE}")]
         public async Task<ActionResult<Guid>>
             GenerateSpreadSheet([FromBody] GenerateProductSpreadsheetDto dto)
         {
@@ -130,7 +118,7 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpPost("generate-catalog")]
-        [Authorize(Roles =$"{Roles.MODERATOR_ROLE}")]
+        [Authorize(Roles = $"{Roles.MODERATOR_ROLE}")]
         public async Task<IActionResult>
             GenerateCatalog([FromBody] GenerateProductSourcesDto dto)
         {
@@ -141,7 +129,7 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpPatch("outsource-shops")]
-        [Authorize(Roles =$"{Roles.MODERATOR_ROLE}, {Roles.ADMIN_ROLE}, {Roles.DIRECTOR_ROLE}")]
+        [Authorize(Roles = $"{Roles.MODERATOR_ROLE}, {Roles.ADMIN_ROLE}, {Roles.DIRECTOR_ROLE}")]
         public async Task<IActionResult>
             ChangeOutsourceShops([FromBody] UpdateProductOutsourceShopDto dto)
         {
@@ -149,6 +137,43 @@ namespace Ykotika.WebAPI.Controllers
             await Mediator.Send(command);
 
             return Ok();
+        }
+    }
+    public class ProductListQueryParams : IMapWith<GetProductListQuery>
+    {
+        [ModelBinder(BinderType = typeof(SortingBinder))]
+        public SortingQueryParams Sorting { get; set; } = new();
+
+        [ModelBinder(BinderType = typeof(PaginationBinder))]
+        public PaginationQueryParams Pagination { get; set; } = new();
+
+        [ModelBinder(BinderType = typeof(ProductFilterBinder))]
+        public ProductFilterQueryParams Filter { get; set; } = new();
+
+        public void Mapping(Profile profile)
+        {
+            profile.CreateMap<ProductListQueryParams, GetProductListQuery>();
+        }
+    }
+    public class ProductFilterQueryParams : IMapWith<ProductFilterDto>
+    {
+        public string? IsPublished { get; set; }
+        public string? UserId { get; set; }
+        public string? ProductTypeId { get; set; }
+
+        public void Mapping(Profile profile)
+        {
+            profile.CreateMap<ProductFilterQueryParams, ProductFilterDto>()
+                .ForMember(to => to.IsPublished,
+                    opt => opt.MapFrom(from =>
+                        string.IsNullOrEmpty(from.IsPublished) ? (bool?)null :
+                        (from.IsPublished.Equals("true", StringComparison.OrdinalIgnoreCase) ? (bool?)true : (bool?)false)))
+                .ForMember(to => to.UserId,
+                    opt => opt.MapFrom(from =>
+                        string.IsNullOrEmpty(from.UserId) ? (Guid?)null : Guid.Parse(from.UserId)))
+                .ForMember(to => to.ProductTypeId,
+                    opt => opt.MapFrom(from =>
+                        string.IsNullOrEmpty(from.ProductTypeId) ? (Guid?)null : Guid.Parse(from.ProductTypeId)));
         }
     }
 }

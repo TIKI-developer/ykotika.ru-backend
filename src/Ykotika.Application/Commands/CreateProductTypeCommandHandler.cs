@@ -7,11 +7,15 @@ using Ykotika.Domain.ValueObjects;
 
 namespace Ykotika.Application.Commands
 {
-    public class CreateProductTypeCommandHandler(IYkotikaDbContext dbContext) : IRequestHandler<CreateProductTypeCommand, Guid>
+    public class CreateProductTypeCommandHandler
+        (IYkotikaDbContext dbContext)
+        : IRequestHandler<CreateProductTypeCommand, Guid>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
 
-        public async Task<Guid> Handle(CreateProductTypeCommand request, CancellationToken cancellationToken)
+        public async Task<Guid>
+            Handle(CreateProductTypeCommand request,
+                   CancellationToken cancellationToken)
         {
             var author = await
                 _dbContext
@@ -33,7 +37,7 @@ namespace Ykotika.Application.Commands
                 Form = form,
                 Timestamps = new Timestamps(),
                 IsPublished = false,
-                Author = author
+                User = author
             };
 
             await _dbContext.ProductTypes.AddAsync(productType, cancellationToken);

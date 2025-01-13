@@ -13,7 +13,9 @@ namespace Ykotika.Application.Commands
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
 
-        public async Task Handle(UpdateProductOutsourceShopCommand request, CancellationToken cancellationToken)
+        public async Task
+            Handle(UpdateProductOutsourceShopCommand request,
+                   CancellationToken cancellationToken)
         {
             var product = await
                 _dbContext
@@ -35,7 +37,7 @@ namespace Ykotika.Application.Commands
 
                 product.OutsourceShops.Add(new OutsourceShopProductInfo
                 {
-                    OutsourceShop = outsourceShop, 
+                    OutsourceShop = outsourceShop,
                     Link = shop.Link,
                 });
             }

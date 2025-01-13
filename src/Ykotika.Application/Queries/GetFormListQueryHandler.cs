@@ -10,30 +10,26 @@ namespace Ykotika.Application.Queries
     public class GetFormListQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
-        : IRequestHandler<GetFormListQuery, FormList>
+        : BaseGetListQueryHandler(dbContext, mapper),
+        IRequestHandler<GetFormListQuery, PagedList<FormItem>>
     {
-        private readonly IYkotikaDbContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
-
-        public async Task<FormList> Handle(GetFormListQuery request, CancellationToken cancellationToken)
+        public async Task<PagedList<FormItem>>
+            Handle(GetFormListQuery request,
+                   CancellationToken cancellationToken)
         {
-            var query =
-                _dbContext
+            var query = _dbContext
                 .Forms
+                .AsQueryable()
+                .Where(p => !request.Filter.IsPublished.HasValue || p.IsPublished == request.Filter.IsPublished.Value);
+
+            var queryItems = query
                 .Include(e => e.Inputs)
-                .AsQueryable();
-
-            if (request.IsPublished.HasValue)
-            {
-                query = query.Where(p => p.IsPublished == request.IsPublished.Value);
-            }
-
-            var forms = await query
-                .ProjectTo<FormItem>(_mapper.ConfigurationProvider)
                 .AsNoTracking()
-                .ToListAsync(cancellationToken);
+                .ProjectTo<FormItem>(_mapper.ConfigurationProvider);
 
-            return new FormList { Forms = forms };
+            query = Sort(query, request.Sorting.SortBy, request.Sorting.IsDescending);
+
+            return await PagedList<FormItem>.CreateAsync(queryItems, request.Pagination.Page, request.Pagination.PageSize);
         }
     }
 }

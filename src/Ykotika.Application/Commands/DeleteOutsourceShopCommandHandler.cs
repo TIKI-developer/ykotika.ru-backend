@@ -12,7 +12,9 @@ namespace Ykotika.Application.Commands
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
 
-        public async Task Handle(DeleteOutsourceShopCommand request, CancellationToken cancellationToken)
+        public async Task
+            Handle(DeleteOutsourceShopCommand request,
+                   CancellationToken cancellationToken)
         {
             var outsourceShop = await
                 _dbContext

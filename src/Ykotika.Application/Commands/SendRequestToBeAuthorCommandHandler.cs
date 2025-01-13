@@ -8,12 +8,13 @@ namespace Ykotika.Application.Commands
 {
     public class SendRequestToBeAuthorCommandHandler
         (IYkotikaDbContext dbContext)
-        :
-        IRequestHandler<SendRequestToBeAuthorCommand, Guid>
+        : IRequestHandler<SendRequestToBeAuthorCommand, Guid>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
 
-        public async Task<Guid> Handle(SendRequestToBeAuthorCommand request, CancellationToken cancellationToken)
+        public async Task<Guid>
+            Handle(SendRequestToBeAuthorCommand request,
+                   CancellationToken cancellationToken)
         {
             var user = await
                 _dbContext

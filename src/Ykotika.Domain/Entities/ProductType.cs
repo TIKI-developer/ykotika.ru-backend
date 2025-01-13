@@ -9,6 +9,6 @@ namespace Ykotika.Domain.Entities
         public required bool IsPublished { get; set; }
         public required Form Form { get; set; }
         public List<Product>? Products { get; set; }
-        public required User Author { get; set; }
+        public required User User { get; set; }
     }
 }

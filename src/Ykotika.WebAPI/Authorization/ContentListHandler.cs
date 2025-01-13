@@ -6,13 +6,13 @@ using Ykotika.WebAPI.Models;
 namespace Ykotika.WebAPI.Authorization
 {
     public class ContentListHandler
-        : AuthorizationHandler<ContentListRequirement, ContentResourceDto>
+        : AuthorizationHandler<ContentListRequirement, PublishableResourceDto>
     {
         protected override
             Task HandleRequirementAsync
             (AuthorizationHandlerContext context,
             ContentListRequirement requirement,
-            ContentResourceDto resource)
+            PublishableResourceDto resource)
         {
             if (resource.IsPublished.HasValue && resource.IsPublished.Value)
             {
@@ -24,7 +24,7 @@ namespace Ykotika.WebAPI.Authorization
                     .Where(c => c.Type == ClaimTypes.Role)
                     .Select(c => c.Value);
 
-                if (requirement.Roles.Any(role => userRoles.Contains(role.ToString())))
+                if (requirement.PermanentAccessRoles.Any(role => userRoles.Contains(role.ToString())))
                 {
                     context.Succeed(requirement);
                 }

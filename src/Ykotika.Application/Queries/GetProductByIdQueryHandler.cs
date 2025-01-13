@@ -11,12 +11,12 @@ namespace Ykotika.Application.Queries
     public class GetProductByIdQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
-        : IRequestHandler<GetProductByIdQuery, ProductDetails>
+        : BaseGetQueryHandler(dbContext, mapper),
+        IRequestHandler<GetProductByIdQuery, ProductDetails>
     {
-        private readonly IYkotikaDbContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
-
-        public async Task<ProductDetails> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
+        public async Task<ProductDetails>
+            Handle(GetProductByIdQuery request,
+                   CancellationToken cancellationToken)
         {
             var product = await
                 _dbContext
@@ -25,6 +25,7 @@ namespace Ykotika.Application.Queries
                 .ThenInclude(e => e.Image)
                 .Include(e => e.OutsourceShops)
                 .Include(e => e.Tags)
+                .Include(e => e.User)
                 .Include(e => e.Categories)
                 .Include(e => e.ProductType)
                 .Include(e => e.FormRecord)

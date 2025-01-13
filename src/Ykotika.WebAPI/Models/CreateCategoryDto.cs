@@ -8,8 +8,8 @@ namespace Ykotika.WebAPI.Models
     {
         public required string Name { get; set; }
         public required string Description { get; set; }
-        public required bool IsPublished { get; set; }
         public required string ImagePath { get; set; }
+        public required bool IsPublished { get; set; }
 
         public void Mapping(Profile profile)
         {

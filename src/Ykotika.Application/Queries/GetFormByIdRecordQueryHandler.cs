@@ -8,16 +8,15 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Queries
 {
-    public class GetFormRecordQueryHandler
+    public class GetFormByIdRecordQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
-        :
-        IRequestHandler<GetFormRecordQuery, FormRecordDetails>
+        : BaseGetQueryHandler(dbContext, mapper),
+        IRequestHandler<GetFormByIdRecordQuery, FormRecordDetails>
     {
-        private readonly IYkotikaDbContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
-
-        public async Task<FormRecordDetails> Handle(GetFormRecordQuery request, CancellationToken cancellationToken)
+        public async Task<FormRecordDetails>
+            Handle(GetFormByIdRecordQuery request,
+                   CancellationToken cancellationToken)
         {
             var formRecord = await
                 _dbContext

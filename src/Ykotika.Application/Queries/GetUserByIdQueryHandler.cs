@@ -11,12 +11,12 @@ namespace Ykotika.Application.Queries
     public class GetUserByIdQueryHandler
         (IYkotikaDbContext dbContext,
         IMapper mapper)
-        : IRequestHandler<GetUserByIdQuery, UserDetails>
+        : BaseGetQueryHandler(dbContext, mapper),
+        IRequestHandler<GetUserByIdQuery, UserDetails>
     {
-        private readonly IYkotikaDbContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
-
-        public async Task<UserDetails> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
+        public async Task<UserDetails>
+            Handle(GetUserByIdQuery request,
+                   CancellationToken cancellationToken)
         {
             var user = await
                 _dbContext

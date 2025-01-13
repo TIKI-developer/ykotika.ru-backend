@@ -3,12 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Ykotika.Domain.Entities;
 using Ykotika.Security;
 using Ykotika.WebAPI.Authorization;
-using Ykotika.WebAPI.Constants;
 using Ykotika.WebAPI.Authorization.Requirements;
-using Ykotika.Domain.Entities;
-using System.Text.Json;
+using Ykotika.WebAPI.Constants;
 
 namespace Ykotika.WebApi.Extensions
 {
@@ -47,28 +46,37 @@ namespace Ykotika.WebApi.Extensions
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy(Policies.CONTENT_POLICY, policy => 
+                options.AddPolicy(Policies.CONTENT_POLICY, policy =>
                 {
                     policy
                     .AddRequirements
                     (new ContentRequirement
-                    ([UserRole.Admin, 
+                    ([UserRole.Admin,
                       UserRole.Director]));
                 });
-                options.AddPolicy(Policies.CATEGORY_LIST_POLICY, policy => 
+
+                options.AddPolicy(Policies.READ_AGREEMENT_POLICY, policy =>
+                {
+                    policy
+                    .AddRequirements
+                    (new ContentRequirement
+                    ([UserRole.Admin], checkPublished: false));
+                });
+
+                options.AddPolicy(Policies.CATEGORY_LIST_POLICY, policy =>
                 {
                     policy
                     .AddRequirements
                     (new ContentListRequirement
-                    ([UserRole.Admin, 
+                    ([UserRole.Admin,
                       UserRole.Director]));
                 });
-                options.AddPolicy(Policies.FORM_LIST_POLICY, policy => 
+                options.AddPolicy(Policies.FORM_LIST_POLICY, policy =>
                 {
                     policy
                     .AddRequirements
                     (new ContentListRequirement
-                    ([UserRole.Admin, 
+                    ([UserRole.Admin,
                       UserRole.Director]));
                 });
                 options.AddPolicy(Policies.PRODUCT_TYPE_LIST_POLICY, policy =>
@@ -76,7 +84,7 @@ namespace Ykotika.WebApi.Extensions
                     policy
                     .AddRequirements
                     (new ContentListRequirement
-                    ([UserRole.Admin, 
+                    ([UserRole.Admin,
                       UserRole.Director]));
                 });
                 options.AddPolicy(Policies.PRODUCT_LIST_POLICY, policy =>
@@ -85,7 +93,7 @@ namespace Ykotika.WebApi.Extensions
                     .AddRequirements
                     (new ContentListRequirement
                     ([UserRole.Moderator,
-                      UserRole.Admin, 
+                      UserRole.Admin,
                       UserRole.Director]));
                 });
             });

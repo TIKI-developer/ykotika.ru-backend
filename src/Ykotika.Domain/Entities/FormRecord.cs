@@ -2,11 +2,11 @@
 
 namespace Ykotika.Domain.Entities
 {
-    public class FormRecord : Entity, IContent
+    public class FormRecord : Entity, IHasAuthor, IPublishable
     {
         public required Form Form { get; set; }
-        public required User Author { get; set; }
         public required List<InputRecord> InputRecords { get; set; } = [];
+        public required User User { get; set; }
         public bool IsPublished { get; set; }
 
         public class InputRecord

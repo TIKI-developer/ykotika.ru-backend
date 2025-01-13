@@ -6,8 +6,17 @@ namespace Ykotika.WebAPI.Authorization
 {
     public class RoleHandler : AuthorizationHandler<ContentRequirement>
     {
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, ContentRequirement requirement)
+        protected override Task
+            HandleRequirementAsync
+            (AuthorizationHandlerContext context,
+            ContentRequirement requirement)
         {
+            if (!requirement.CheckRole)
+            {
+                context.Succeed(requirement);
+                return Task.CompletedTask;
+            }
+
             var userRoles = context.User.Claims
                 .Where(c => c.Type == ClaimTypes.Role)
                 .Select(c => c.Value);
