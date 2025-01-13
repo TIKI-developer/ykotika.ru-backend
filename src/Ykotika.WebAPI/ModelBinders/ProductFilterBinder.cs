@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Ykotika.Application.Models;
 
-namespace Ykotika.WebAPI.Models.Binders
+namespace Ykotika.WebAPI.ModelBinders
 {
-    public class CategoryFilterBinder : IModelBinder
+    public class ProductFilterBinder : IModelBinder
     {
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
@@ -11,8 +11,10 @@ namespace Ykotika.WebAPI.Models.Binders
 
             var query = bindingContext.HttpContext.Request.Query;
 
-            var model = new CategoryFilterDto
+            var model = new ProductFilterDto
             {
+                UserId = Guid.TryParse(query["user"], out var userId) ? userId : null,
+                ProductTypeId = Guid.TryParse(query["type"], out var productTypeId) ? productTypeId : null,
                 IsPublished = bool.TryParse(query["isPub"], out var desc) && desc
             };
 

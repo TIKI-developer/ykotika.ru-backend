@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Ykotika.Application.Models;
 
-namespace Ykotika.WebAPI.Models.Binders
+namespace Ykotika.WebAPI.ModelBinders
 {
-    public class SortingBinder : IModelBinder
+    public class UserFilterBinder : IModelBinder
     {
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
@@ -10,10 +11,9 @@ namespace Ykotika.WebAPI.Models.Binders
 
             var query = bindingContext.HttpContext.Request.Query;
 
-            var model = new SortingQueryDto
+            var model = new UserFilterDto
             {
-                SortBy = query["page"],
-                IsDescending = bool.TryParse(query["desc"], out var desc) && desc
+                IsPublished = bool.TryParse(query["isPub"], out var desc) && desc
             };
 
             bindingContext.Result = ModelBindingResult.Success(model);

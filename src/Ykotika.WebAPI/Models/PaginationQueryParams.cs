@@ -4,14 +4,14 @@ using Ykotika.Application.Models;
 
 namespace Ykotika.WebAPI.Models
 {
-    public class PaginationQueryDto : IMapWith<PaginationDto>
+    public class PaginationQueryParams : IMapWith<PaginationDto>
     {
         public int? Page { get; set; }
         public int? PageSize { get; set; }
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<PaginationQueryDto, PaginationDto>();
+            profile.CreateMap<PaginationQueryParams, PaginationDto>();
         }
     }
 }

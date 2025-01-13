@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Ykotika.Application.Models;
 
-namespace Ykotika.WebAPI.Models.Binders
+namespace Ykotika.WebAPI.ModelBinders
 {
-    public class PaginationBinder : IModelBinder
+    public class CustomQueryBinder<T> : IModelBinder where T : class, new()
     {
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
@@ -11,13 +10,10 @@ namespace Ykotika.WebAPI.Models.Binders
             {
                 throw new ArgumentNullException(nameof(bindingContext));
             }
-            var query = bindingContext.HttpContext.Request.Query;
 
-            var model = new PaginationQueryDto
-            {
-                Page = int.TryParse(query["page"], out var page) ? page : (int?)null,
-                PageSize = int.TryParse(query["pageSize"], out var pageSize) ? pageSize : (int?)null
-            };
+            var query = bindingContext.HttpContext.Request.Query;
+            var model = new T();
+
 
             bindingContext.Result = ModelBindingResult.Success(model);
             return Task.CompletedTask;

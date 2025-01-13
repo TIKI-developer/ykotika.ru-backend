@@ -19,13 +19,15 @@ namespace Ykotika.Application.Queries
         {
             var query = _dbContext
                 .Categories
-                .Include(e => e.Image)
                 .AsQueryable()
                 .Where(e => !request.Filter.IsPublished.HasValue || e.IsPublished == request.Filter.IsPublished);
 
             query = Sort(query, request.Sorting.SortBy, request.Sorting.IsDescending);
 
-            var queryItems = query.ProjectTo<CategoryItem>(_mapper.ConfigurationProvider);
+            var queryItems = query
+                .AsNoTracking()
+                .Include(e => e.Image)
+                .ProjectTo<CategoryItem>(_mapper.ConfigurationProvider);
 
             return await PagedList<CategoryItem>.CreateAsync(queryItems, request.Pagination.Page, request.Pagination.PageSize);
         }
