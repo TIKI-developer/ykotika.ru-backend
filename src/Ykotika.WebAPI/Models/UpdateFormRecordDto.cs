@@ -16,6 +16,11 @@ namespace Ykotika.WebAPI.Models
         {
             public required string Id { get; set; }
             public required string Value { get; set; }
+
+            public void Mapping(Profile profile)
+            {
+                profile.CreateMap<UpdateFormRecordInputDto, UpdateFormRecordCommand.InputRecordDto>();
+            }
         }
     }
 }
