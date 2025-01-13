@@ -120,7 +120,9 @@ namespace Ykotika.WebAPI.Controllers
         {
             profile.CreateMap<CategoryFilterQueryParams, CategoryFilterDto>()
                 .ForMember(to => to.IsPublished,
-                opt => opt.MapFrom(from => from.IsPublished));
+                    opt => opt.MapFrom(from =>
+                        string.IsNullOrEmpty(from.IsPublished) ? (bool?)null :
+                        (from.IsPublished.Equals("true", StringComparison.OrdinalIgnoreCase) ? (bool?)true : (bool?)false)));
         }
     }
 }

@@ -21,8 +21,8 @@ namespace Ykotika.Application.Queries
                 .Authors
                 .Where(e => string.IsNullOrEmpty(request.Filter.Name) || e.User.Name == request.Filter.Name)
                 .Where(e => string.IsNullOrEmpty(request.Filter.Surname) || e.User.Surname == request.Filter.Surname)
-                //.Where(e => !request.Filter.ContactSocial.HasValue || e.Request.WhichSocial == request.Filter.ContactSocial)
-                //.Where(e => !request.Filter.Status.HasValue || e.Status == request.Filter.Status)
+                .Where(e => !request.Filter.ContactSocial.HasValue || e.Request.WhichSocial == request.Filter.ContactSocial)
+                .Where(e => !request.Filter.Status.HasValue || e.Status == request.Filter.Status)
                 .AsQueryable();
 
             query = Sort(query, request.Sorting.SortBy, request.Sorting.IsDescending);

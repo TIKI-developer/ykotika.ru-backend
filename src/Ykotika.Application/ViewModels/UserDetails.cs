@@ -21,7 +21,7 @@ namespace Ykotika.Application.ViewModels
                 opt => opt.MapFrom(from => from.Image.Path))
                 .ForMember(to => to.Roles,
                 opt => opt.MapFrom(from => from.Roles
-                    .Select(permission => permission.ToString())
+                    .Select(role => role.ToString())
                     .ToList()));
         }
     }

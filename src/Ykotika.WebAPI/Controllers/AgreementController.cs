@@ -89,9 +89,11 @@ namespace Ykotika.WebAPI.Controllers
         {
             profile.CreateMap<AgreementFilterQueryParams, AgreementFilterDto>()
                 .ForMember(to => to.OfferId,
-                opt => opt.MapFrom(from => from.OfferId))
+                    opt => opt.MapFrom(from =>
+                        string.IsNullOrEmpty(from.OfferId) ? (Guid?)null : Guid.Parse(from.OfferId)))
                 .ForMember(to => to.UserId,
-                opt => opt.MapFrom(from => from.UserId));
+                    opt => opt.MapFrom(from =>
+                        string.IsNullOrEmpty(from.UserId) ? (Guid?)null : Guid.Parse(from.UserId)));
         }
     }
 }

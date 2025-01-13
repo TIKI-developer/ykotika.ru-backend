@@ -15,8 +15,8 @@ namespace Ykotika.WebAPI.ModelBinders
 
             var model = new PaginationQueryParams
             {
-                Page = int.TryParse(query["page"], out var page) ? page : null,
-                PageSize = int.TryParse(query["pageSize"], out var pageSize) ? pageSize : null
+                Page = query["page"],
+                PageSize = query["pageSize"]
             };
 
             bindingContext.Result = ModelBindingResult.Success(model);

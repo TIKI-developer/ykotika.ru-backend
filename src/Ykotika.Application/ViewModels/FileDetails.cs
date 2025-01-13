@@ -11,9 +11,7 @@ namespace Ykotika.Application.ViewModels
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Domain.Entities.File, FileDetails>()
-                .ForMember(to => to.Path,
-                opt => opt.MapFrom(from => System.IO.Path.Combine(from.Path).Replace("\\", "/")));
+            profile.CreateMap<Domain.Entities.File, FileDetails>();
         }
     }
 }

@@ -24,20 +24,28 @@ namespace Ykotika.Application.ViewModels
             profile.CreateMap<Author, AuthorDetails>()
                 .ForMember(to => to.Name,
                 opt => opt.MapFrom(from => from.User.Name))
+
                 .ForMember(to => to.Surname,
                 opt => opt.MapFrom(from => from.User.Surname))
+
                 .ForMember(to => to.PhoneNumber,
                 opt => opt.MapFrom(from => from.User.PhoneNumber))
+
                 .ForMember(to => to.Email,
                 opt => opt.MapFrom(from => from.User.Email))
+
                 .ForMember(to => to.ImagePath,
-                opt => opt.MapFrom(from => from.User.Image))
+                opt => opt.MapFrom(from => from.User.Image.Path))
+
                 .ForMember(to => to.TellAboutYourself,
                 opt => opt.MapFrom(from => from.Request.TellAboutYourself))
+
                 .ForMember(to => to.ContactSocial,
                 opt => opt.MapFrom(from => from.Request.WhichSocial.ToString()))
+
                 .ForMember(to => to.Status,
                 opt => opt.MapFrom(from => from.Status.ToString()))
+
                 .ForMember(to => to.Timestamps,
                 opt => opt.MapFrom(from => from.Request.Timestamps));
         }

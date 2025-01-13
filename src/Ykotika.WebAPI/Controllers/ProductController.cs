@@ -165,11 +165,15 @@ namespace Ykotika.WebAPI.Controllers
         {
             profile.CreateMap<ProductFilterQueryParams, ProductFilterDto>()
                 .ForMember(to => to.IsPublished,
-                opt => opt.MapFrom(from => from.IsPublished))
+                    opt => opt.MapFrom(from =>
+                        string.IsNullOrEmpty(from.IsPublished) ? (bool?)null :
+                        (from.IsPublished.Equals("true", StringComparison.OrdinalIgnoreCase) ? (bool?)true : (bool?)false)))
                 .ForMember(to => to.UserId,
-                opt => opt.MapFrom(from => from.UserId))
+                    opt => opt.MapFrom(from =>
+                        string.IsNullOrEmpty(from.UserId) ? (Guid?)null : Guid.Parse(from.UserId)))
                 .ForMember(to => to.ProductTypeId,
-                opt => opt.MapFrom(from => from.ProductTypeId));
+                    opt => opt.MapFrom(from =>
+                        string.IsNullOrEmpty(from.ProductTypeId) ? (Guid?)null : Guid.Parse(from.ProductTypeId)));
         }
     }
 }

@@ -8,6 +8,6 @@ namespace Ykotika.Application.Queries
     {
         public required PaginationDto Pagination { get; set; }
         public required SortingDto Sorting { get; set; }
-        public required PublishableFilterDto Filter { get; set; }
+        public required FormFilterDto Filter { get; set; }
     }
 }

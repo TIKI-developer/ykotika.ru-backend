@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Ykotika.Application.Models;
 using Ykotika.WebAPI.Controllers;
 
 namespace Ykotika.WebAPI.ModelBinders

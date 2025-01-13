@@ -14,7 +14,7 @@ namespace Ykotika.WebAPI.ModelBinders
             var model = new SortingQueryParams
             {
                 SortBy = query["sortBy"],
-                IsDescending = bool.TryParse(query["desc"], out var desc) && desc
+                IsDescending = query["desc"]
             };
 
             bindingContext.Result = ModelBindingResult.Success(model);

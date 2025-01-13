@@ -101,6 +101,8 @@ namespace Ykotika.WebAPI.Controllers
 
         [ModelBinder(BinderType = typeof(PaginationBinder))]
         public PaginationQueryParams Pagination { get; set; } = new();
+
+        [ModelBinder(BinderType = typeof(ProductTypeFilterBinder))]
         public ProductTypeFilterQueryParams Filter { get; set; } = new();
 
         public void Mapping(Profile profile)
@@ -116,7 +118,9 @@ namespace Ykotika.WebAPI.Controllers
         {
             profile.CreateMap<ProductTypeFilterQueryParams, ProductTypeFilterDto>()
                 .ForMember(to => to.IsPublished,
-                opt => opt.MapFrom(from => from.IsPublished));
+                    opt => opt.MapFrom(from =>
+                        string.IsNullOrEmpty(from.IsPublished) ? (bool?)null :
+                        (from.IsPublished.Equals("true", StringComparison.OrdinalIgnoreCase) ? (bool?)true : (bool?)false)));
         }
     }
 }

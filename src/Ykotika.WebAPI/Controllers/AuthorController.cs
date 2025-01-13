@@ -6,6 +6,8 @@ using Ykotika.Application.Common.Mappings;
 using Ykotika.Application.Models;
 using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
+using Ykotika.Domain.Entities;
+using Ykotika.Domain.ValueObjects;
 using Ykotika.WebAPI.Constants;
 using Ykotika.WebAPI.ModelBinders;
 using Ykotika.WebAPI.Models;
@@ -99,13 +101,19 @@ namespace Ykotika.WebAPI.Controllers
         {
             profile.CreateMap<AuthorFilterQueryParams, AuthorFilterDto>()
                 .ForMember(to => to.Status,
-                opt => opt.MapFrom(from => from.Status))
+                    opt => opt.MapFrom(from =>
+                        string.IsNullOrEmpty(from.Status) ?
+                        (AuthorStatus?)null :
+                        Enum.Parse<AuthorStatus>(from.Status)))
                 .ForMember(to => to.Name,
-                opt => opt.MapFrom(from => from.Name))
+                    opt => opt.MapFrom(from => from.Name))
                 .ForMember(to => to.Surname,
-                opt => opt.MapFrom(from => from.Surname))
+                    opt => opt.MapFrom(from => from.Surname))
                 .ForMember(to => to.ContactSocial,
-                opt => opt.MapFrom(from => from.ContactSocial));
+                    opt => opt.MapFrom(from =>
+                        string.IsNullOrEmpty(from.ContactSocial) ?
+                        (AuthorRequest.ContactSocial?)null :
+                        Enum.Parse<AuthorRequest.ContactSocial>(from.ContactSocial)));
         }
     }
 }

@@ -102,5 +102,10 @@ namespace Ykotika.WebAPI.Controllers
     {
         [ModelBinder(BinderType = typeof(PaginationBinder))]
         public PaginationQueryParams Pagination { get; set; } = new();
+
+        public void Mapping(Profile profile)
+        {
+            profile.CreateMap<FileListQueryParams, GetFileListQuery>();
+        }
     }
 }
