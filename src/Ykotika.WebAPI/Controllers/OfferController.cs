@@ -72,6 +72,7 @@ namespace Ykotika.WebAPI.Controllers
         {
             var command = _mapper.Map<UpdateOfferCommand>(dto);
             command.Id = id;
+            command.AuthorId = UserId;
             var updatedId = await Mediator.Send(command);
 
             return Ok(updatedId);
