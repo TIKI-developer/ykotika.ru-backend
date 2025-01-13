@@ -15,7 +15,9 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
                 .Property(e => e.Email)
                 .HasMaxLength(256);
             builder
-                .HasOne(e => e.Image);
+                .HasOne(c => c.Image)
+                .WithMany()
+                .OnDelete(DeleteBehavior.SetNull);
 
             builder
                 .HasMany(e => e.Agreements)

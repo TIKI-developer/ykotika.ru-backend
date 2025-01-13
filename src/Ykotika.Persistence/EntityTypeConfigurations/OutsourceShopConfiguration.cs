@@ -9,7 +9,9 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
         public void Configure(EntityTypeBuilder<OutsourceShop> builder)
         {
             builder
-                .HasOne(e => e.Image);
+                .HasOne(c => c.Image)
+                .WithMany()
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

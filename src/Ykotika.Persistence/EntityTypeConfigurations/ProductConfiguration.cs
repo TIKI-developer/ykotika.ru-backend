@@ -28,7 +28,9 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
                 });
 
             builder
-                .HasOne(e => e.Source);
+                .HasOne(c => c.Source)
+                .WithMany()
+                .OnDelete(DeleteBehavior.SetNull);
             builder
                 .OwnsMany(e => e.Tags, tag =>
                 {
