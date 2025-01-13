@@ -27,7 +27,6 @@ namespace Ykotika.Application.Commands
                 .ThenInclude(e => e.InputRecords)
                 .Include(e => e.Categories)
                 .Include(e => e.Images)
-                .ThenInclude(e => e.Select(e => e.Image))
                 .Include(e => e.Tags)
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(Product), request.Id);
