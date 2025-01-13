@@ -4,6 +4,6 @@
     {
         public required string Name { get; set; }
         public required string Link { get; set; }
-        public required File Image { get; set; }
+        public File? Image { get; set; }
     }
 }

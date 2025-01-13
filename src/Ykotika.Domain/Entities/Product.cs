@@ -12,7 +12,7 @@ namespace Ykotika.Domain.Entities
         public required ProductStatus Status { get; set; }
         public required List<Tag> Tags { get; set; }
         public List<string>? Comments { get; set; }
-        public required File Source { get; set; }
+        public File? Source { get; set; }
         public required List<ImageListItem> Images { get; set; }
         public required List<OutsourceShopProductInfo> OutsourceShops { get; set; }
         public required FormRecord FormRecord { get; init; }

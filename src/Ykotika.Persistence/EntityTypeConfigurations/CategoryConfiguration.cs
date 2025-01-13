@@ -11,6 +11,10 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
             builder
                 .HasMany(e => e.Products)
                 .WithMany(e => e.Categories);
+            builder
+                .HasOne(c => c.Image)
+                .WithOne()
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }
