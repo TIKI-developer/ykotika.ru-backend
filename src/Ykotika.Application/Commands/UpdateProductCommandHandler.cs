@@ -23,6 +23,12 @@ namespace Ykotika.Application.Commands
             var product = await
                 _dbContext
                 .Products
+                .Include(e => e.FormRecord)
+                .ThenInclude(e => e.InputRecords)
+                .Include(e => e.Categories)
+                .Include(e => e.Images)
+                .ThenInclude(e => e.Select(e => e.Image))
+                .Include(e => e.Tags)
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(Product), request.Id);
 
