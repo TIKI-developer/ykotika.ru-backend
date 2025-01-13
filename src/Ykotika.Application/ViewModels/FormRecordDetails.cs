@@ -9,6 +9,7 @@ namespace Ykotika.Application.ViewModels
     {
         public required Guid Id { get; set; }
         public required string FormName { get; set; }
+        public required Guid FormId { get; set; }
         public required UserDetails Author { get; set; }
         public List<FormInputRecordDetails> InputRecords { get; set; } = [];
         public required Timestamps Timestamps { get; set; }
@@ -16,6 +17,8 @@ namespace Ykotika.Application.ViewModels
         public void Mapping(Profile profile)
         {
             profile.CreateMap<FormRecord, FormRecordDetails>()
+                .ForMember(to => to.FormId,
+                opt => opt.MapFrom(from => from.Form.Id))
                 .ForMember(to => to.FormName,
                 opt => opt.MapFrom(from => from.Form.Name));
         }
