@@ -23,18 +23,18 @@ namespace Ykotika.WebAPI.Controllers
         public async Task<ActionResult<PagedList<ProductItem>>>
             Get([FromQuery] ProductListQueryParams queryParams)
         {
+            var query = _mapper.Map<GetProductListQuery>(queryParams);
+
             var authorizationResult = await
                 _authorizationService
                 .AuthorizeAsync
-                (User, new ContentResourceDto { IsPublished = queryParams.Filter.IsPublished },
+                (User, new PublishableResourceDto { IsPublished = query.PublishableFilter.IsPublished },
                 Policies.PRODUCT_LIST_POLICY);
 
             if (!authorizationResult.Succeeded)
             {
                 return Forbid();
             }
-
-            var query = _mapper.Map<GetProductListQuery>(queryParams);
 
             var vm = await Mediator.Send(query);
             return Ok(vm);

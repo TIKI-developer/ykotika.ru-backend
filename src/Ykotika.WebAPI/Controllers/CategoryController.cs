@@ -27,7 +27,7 @@ namespace Ykotika.WebAPI.Controllers
             var authorizationResult = await
                 _authorizationService
                 .AuthorizeAsync
-                (User, new ContentResourceDto { IsPublished = queryParams.Filter.IsPublished },
+                (User, new PublishableResourceDto { IsPublished = queryParams.Filter.IsPublished },
                 Policies.CATEGORY_LIST_POLICY);
 
             if (!authorizationResult.Succeeded)

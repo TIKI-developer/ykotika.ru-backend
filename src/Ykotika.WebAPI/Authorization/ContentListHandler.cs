@@ -6,13 +6,13 @@ using Ykotika.WebAPI.Models;
 namespace Ykotika.WebAPI.Authorization
 {
     public class ContentListHandler
-        : AuthorizationHandler<ContentListRequirement, ContentResourceDto>
+        : AuthorizationHandler<ContentListRequirement, PublishableResourceDto>
     {
         protected override
             Task HandleRequirementAsync
             (AuthorizationHandlerContext context,
             ContentListRequirement requirement,
-            ContentResourceDto resource)
+            PublishableResourceDto resource)
         {
             if (resource.IsPublished.HasValue && resource.IsPublished.Value)
             {

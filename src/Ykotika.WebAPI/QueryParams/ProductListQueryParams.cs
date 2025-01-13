@@ -16,7 +16,10 @@ namespace Ykotika.WebAPI.QueryParams
         public PaginationQueryParams Pagination { get; set; } = new();
 
         [ModelBinder(BinderType = typeof(ProductFilterBinder))]
-        public required ProductFilterDto Filter { get; set; }
+        public required ProductFilterDto Filter { get; set; } = new();
+
+        [ModelBinder(BinderType = typeof(PublishableBinder))]
+        public required PublishableQueryParams PublishableFilter { get; set; } = new();
 
         public void Mapping(Profile profile)
         {

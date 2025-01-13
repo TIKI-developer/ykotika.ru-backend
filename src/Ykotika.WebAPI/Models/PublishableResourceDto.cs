@@ -1,6 +1,6 @@
 ﻿namespace Ykotika.WebAPI.Models
 {
-    public class ContentResourceDto
+    public class PublishableResourceDto
     {
         public bool? IsPublished { get; set; }
     }
