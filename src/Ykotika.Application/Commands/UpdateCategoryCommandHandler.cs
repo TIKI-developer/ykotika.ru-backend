@@ -29,7 +29,7 @@ namespace Ykotika.Application.Commands
             var image = await
                 _dbContext
                 .Files
-                .FirstOrDefaultAsync(e => e.Path == request.Path, cancellationToken);
+                .FirstOrDefaultAsync(e => e.Path == request.ImagePath, cancellationToken);
 
             category.Image = image ?? category.Image;
 
