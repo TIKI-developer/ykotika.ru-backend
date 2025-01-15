@@ -66,11 +66,11 @@ namespace Ykotika.Verification
                 throw;
             }
 
-            using var smtpClient = new SmtpClient("smtp.mail.ru")
+            using var smtpClient = new SmtpClient(_options.Host)
             {
-                Port = 587,
+                Port = _options.Port,
                 Credentials = new NetworkCredential(_options.Credentials.Address, _options.Credentials.Password),
-                EnableSsl = true,
+                EnableSsl = _options.EnableSsl,
                 DeliveryMethod = SmtpDeliveryMethod.Network
             };
 
@@ -115,6 +115,9 @@ namespace Ykotika.Verification
 
     public class EmailVerifierOptions
     {
+        public required string Host { get; set; }
+        public required int Port { get; set; }
+        public required bool EnableSsl { get; set; }
         public required EmailCredentials Credentials { get; set; }
         public required string AesIv { get; set; }
     }
