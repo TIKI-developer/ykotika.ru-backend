@@ -35,7 +35,7 @@ namespace Ykotika.WebAPI.Controllers
             return Ok(vm);
         }
 
-        [Authorize(Roles = $"{Roles.ADMIN_ROLE}")]
+        [Authorize(Roles = $"{Roles.ADMIN_ROLE}, {Roles.AUTHOR_ROLE}")]
         [HttpDelete("delete/{path}")]
         public async Task<ActionResult> Delete(string path)
         {
