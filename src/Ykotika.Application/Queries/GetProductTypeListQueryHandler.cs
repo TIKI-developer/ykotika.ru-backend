@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Ykotika.Application.Interfaces;
 using Ykotika.Application.ViewModels;
 
@@ -21,7 +22,9 @@ namespace Ykotika.Application.Queries
 
             query = Sort(query, request.Sorting.SortBy, request.Sorting.IsDescending);
 
-            var queryItems = query.ProjectTo<ProductTypeItem>(_mapper.ConfigurationProvider);
+            var queryItems = query
+                .Include(e => e.Form)
+                .ProjectTo<ProductTypeItem>(_mapper.ConfigurationProvider);
 
             return await PagedList<ProductTypeItem>.CreateAsync(queryItems, request.Pagination.Page, request.Pagination.PageSize);
         }
