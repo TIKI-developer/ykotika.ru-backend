@@ -6,5 +6,6 @@ namespace Ykotika.Application.Commands
     {
         public required Guid AuthorId { get; set; }
         public required string Content { get; set; }
+        public required bool IsPublished { get; set; }
     }
 }

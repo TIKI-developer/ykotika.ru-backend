@@ -28,7 +28,7 @@ namespace Ykotika.Application.Commands
                 Id = Guid.NewGuid(),
                 Content = request.Content,
                 Timestamps = new Timestamps(),
-                IsPublished = false,
+                IsPublished = request.IsPublished,
                 User = author
             };
 

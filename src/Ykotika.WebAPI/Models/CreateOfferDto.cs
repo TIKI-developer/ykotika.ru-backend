@@ -7,6 +7,7 @@ namespace Ykotika.WebAPI.Models
     public class CreateOfferDto : IMapWith<CreateOfferCommand>
     {
         public required string Content { get; set; }
+        public required bool IsPublished { get; set; }
 
         public void Mapping(Profile profile)
         {

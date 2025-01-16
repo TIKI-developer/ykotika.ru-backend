@@ -36,7 +36,7 @@ namespace Ykotika.Application.Commands
                 Name = request.Name,
                 Form = form,
                 Timestamps = new Timestamps(),
-                IsPublished = false,
+                IsPublished = request.IsPublished,
                 User = author
             };
 

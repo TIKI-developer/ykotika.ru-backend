@@ -8,5 +8,6 @@ namespace Ykotika.Application.Commands
         public required Guid FormId { get; set; }
         public required string Name { get; set; }
         public required List<string> ArticlePattern { get; set; }
+        public required bool IsPublished { get; set; }
     }
 }
