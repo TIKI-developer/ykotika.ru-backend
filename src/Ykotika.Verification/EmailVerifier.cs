@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
+using System.Text.Json.Serialization;
 using Ykotika.Application.Interfaces;
 
 namespace Ykotika.Verification
@@ -66,6 +67,12 @@ namespace Ykotika.Verification
                 throw;
             }
 
+
+            Console.WriteLine(_options.Credentials.Address);
+            Console.WriteLine(_options.Credentials.Password);
+            Console.WriteLine(_options.Host);
+            Console.WriteLine(_options.Port);
+            Console.WriteLine(_options.EnableSsl);
             using var smtpClient = new SmtpClient(_options.Host)
             {
                 Port = _options.Port,
