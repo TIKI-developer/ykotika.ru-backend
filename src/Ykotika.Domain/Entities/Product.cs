@@ -11,12 +11,12 @@ namespace Ykotika.Domain.Entities
         public required bool IsPublished { get; set; }
         public required ProductStatus Status { get; set; }
         public required List<Tag> Tags { get; set; }
-        public List<string>? Comments { get; set; }
+        public List<string> Comments { get; set; } = [];
         public File? Source { get; set; }
         public required List<ImageListItem> Images { get; set; }
         public required List<OutsourceShopProductInfo> OutsourceShops { get; set; }
         public required FormRecord FormRecord { get; init; }
-        public List<Category>? Categories { get; set; }
+        public List<Category> Categories { get; set; } = [];
         public required ProductType ProductType { get; init; }
         public required User User { get; set; }
     }

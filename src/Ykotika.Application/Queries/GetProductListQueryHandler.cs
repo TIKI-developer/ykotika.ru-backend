@@ -18,11 +18,22 @@ namespace Ykotika.Application.Queries
                    CancellationToken cancellationToken)
         {
             var query = _dbContext.Products
-                .AsQueryable()
-                .Where(p =>
-                    (!request.Filter.IsPublished.HasValue || p.IsPublished == request.Filter.IsPublished.Value) &&
-                    (!request.Filter.UserId.HasValue || p.User.Id == request.Filter.UserId.Value) &&
-                    (!request.Filter.ProductTypeId.HasValue || p.ProductType.Id == request.Filter.ProductTypeId.Value));
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(request.SearchTerm))
+            {
+                query = query.Where(p =>
+                    p.Name.Contains(request.SearchTerm) ||
+                    p.Description.Contains(request.SearchTerm) ||
+                    p.Tags.Any(tag => tag.Value.Contains(request.SearchTerm)));
+            }
+
+            query = query.Where(p =>
+                (!request.Filter.IsPublished.HasValue || p.IsPublished == request.Filter.IsPublished.Value) &&
+                (!request.Filter.UserId.HasValue || p.User.Id == request.Filter.UserId.Value) &&
+                (!request.Filter.ProductTypeId.HasValue || p.ProductType.Id == request.Filter.ProductTypeId.Value) &&
+                (!request.Filter.CategoryId.HasValue || p.Categories.Any(e => e.Id == request.Filter.CategoryId.Value)));
+
 
             query = Sort(query, request.Sorting.SortBy, request.Sorting.IsDescending);
 

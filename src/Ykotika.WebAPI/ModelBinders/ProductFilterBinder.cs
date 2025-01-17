@@ -15,7 +15,8 @@ namespace Ykotika.WebAPI.ModelBinders
             {
                 IsPublished = query["isPub"],
                 UserId = query["user"],
-                ProductTypeId = query["productType"]
+                ProductTypeId = query["productType"],
+                CategoryId = query["category"],
             };
 
             bindingContext.Result = ModelBindingResult.Success(model);

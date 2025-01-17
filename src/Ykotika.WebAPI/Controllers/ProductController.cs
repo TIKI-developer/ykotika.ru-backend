@@ -128,12 +128,41 @@ namespace Ykotika.WebAPI.Controllers
             return Ok();
         }
 
-        [HttpPatch("outsource-shops")]
+        [HttpPatch("{id}/outsource-shops")]
         [Authorize(Roles = $"{Roles.MODERATOR_ROLE}, {Roles.ADMIN_ROLE}, {Roles.DIRECTOR_ROLE}")]
         public async Task<IActionResult>
-            ChangeOutsourceShops([FromBody] UpdateProductOutsourceShopDto dto)
+            ChangeOutsourceShops(Guid id, [FromBody] UpdateProductOutsourceShopDto dto)
         {
             var command = _mapper.Map<UpdateProductOutsourceShopCommand>(dto);
+            command.Id = id;
+            await Mediator.Send(command);
+
+            return Ok();
+        }
+
+        [HttpPost("{id}/comments")]
+        [Authorize(Roles = $"{Roles.AUTHOR_ROLE}, {Roles.MODERATOR_ROLE}")]
+        public async Task<IActionResult> CreateComment(Guid id, [FromBody] CreateProductCommentDto dto)
+        {
+            var vm = new GetProductByIdQuery { Id = id };
+
+            var authorizationResult = await _authorizationService
+                .AuthorizeAsync(User, vm, Policies.POST_PRODUCT_COMMENT_POLICY);
+
+            if (authorizationResult.Succeeded)
+            {
+                var command = _mapper.Map<CreateProductCommentCommand>(dto);
+                await Mediator.Send(command);
+            }
+
+            return Forbid();
+        }
+        [HttpPost("{id}/published")]
+        [Authorize(Roles = $"{Roles.ADMIN_ROLE}, {Roles.MODERATOR_ROLE}")]
+        public async Task<IActionResult> UpdatePublished(Guid id, [FromBody] UpdateProductPublishedDto dto)
+        {
+            var command = _mapper.Map<UpdateProductPublishedCommand>(dto);
+            command.Id = id;
             await Mediator.Send(command);
 
             return Ok();
@@ -150,6 +179,9 @@ namespace Ykotika.WebAPI.Controllers
         [ModelBinder(BinderType = typeof(ProductFilterBinder))]
         public ProductFilterQueryParams Filter { get; set; } = new();
 
+        [FromQuery(Name = "searchTerm")]
+        public string? SearchTerm { get; set; }
+
         public void Mapping(Profile profile)
         {
             profile.CreateMap<ProductListQueryParams, GetProductListQuery>();
@@ -160,6 +192,7 @@ namespace Ykotika.WebAPI.Controllers
         public string? IsPublished { get; set; }
         public string? UserId { get; set; }
         public string? ProductTypeId { get; set; }
+        public string? CategoryId { get; set; }
 
         public void Mapping(Profile profile)
         {
