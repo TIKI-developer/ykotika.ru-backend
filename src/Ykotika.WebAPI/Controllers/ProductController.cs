@@ -157,7 +157,7 @@ namespace Ykotika.WebAPI.Controllers
 
             return Forbid();
         }
-        [HttpPost("{id}/published")]
+        [HttpPatch("{id}/published")]
         [Authorize(Roles = $"{Roles.ADMIN_ROLE}, {Roles.MODERATOR_ROLE}")]
         public async Task<IActionResult> UpdatePublished(Guid id, [FromBody] UpdateProductPublishedDto dto)
         {
