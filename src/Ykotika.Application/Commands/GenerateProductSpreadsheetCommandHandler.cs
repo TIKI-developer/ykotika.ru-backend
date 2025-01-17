@@ -33,6 +33,7 @@ namespace Ykotika.Application.Commands
                 .ThenInclude(e => e.InputRecords)
                 .Include(e => e.Source)
                 .Include(e => e.Images)
+                .ThenInclude(e => e.Image)
                 .ToListAsync(cancellationToken);
 
             if (products != null && products.Count > 0)

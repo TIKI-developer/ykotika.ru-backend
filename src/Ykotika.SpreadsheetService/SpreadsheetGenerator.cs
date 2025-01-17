@@ -28,7 +28,6 @@ namespace Ykotika.SpreadsheetService
                     var headerRow = worksheet.Row(1);
                     Form.Input[] inputs = [.. productType.Form.Inputs];
 
-                    // Заполняем заголовки: первый столбец - Article, затем динамические поля
                     headerRow.Cell(1).Value = "Артикул";
                     headerRow.Cell(2).Value = "Название";
                     headerRow.Cell(3).Value = "Описание";
@@ -36,17 +35,15 @@ namespace Ykotika.SpreadsheetService
                     headerRow.Cell(5).Value = "Исходник";
                     headerRow.Cell(6).Value = "Изображения";
 
-                    for (int col = 7; col <= inputs.Length + 1; col++)
+                    for (int col = 7; col <= inputs.Length + 6; col++)
                     {
                         headerRow.Cell(col).Value = inputs[col - 7].ExtraAttributes.Label;
                     }
 
-                    // Заполняем данные
                     for (int row = 2; row <= productsOfType.Count + 1; row++)
                     {
                         var product = productsOfType[row - 2];
 
-                        // Первый столбец - Article
                         worksheet.Cell(row, 1).Value = product.Article;
                         worksheet.Cell(row, 2).Value = product.Name;
                         worksheet.Cell(row, 3).Value = product.Description;
@@ -55,9 +52,8 @@ namespace Ykotika.SpreadsheetService
                         worksheet.Cell(row, 6).Value = string.Join(", ", product.Images.Select(e => e.Image.Path));
 
 
-                        // Динамические поля из InputRecords
                         var productInputRecords = product.FormRecord.InputRecords.ToArray();
-                        for (int col = 7; col <= inputs.Length + 1; col++)
+                        for (int col = 7; col <= inputs.Length + 6; col++)
                         {
                             var propertyValue = productInputRecords[col - 7].Value;
                             worksheet.Cell(row, col).Value = propertyValue?.ToString();
