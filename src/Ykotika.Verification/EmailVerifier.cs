@@ -84,23 +84,24 @@ namespace Ykotika.Verification
             var mailMessage = new MailMessage
             {
                 From = new MailAddress(_options.Credentials.Address),
+                Body = "Hello",
                 Subject = Subject,
                 IsBodyHtml = true
             };
             mailMessage.To.Add(userEmail);
 
-            var htmlView = AlternateView.CreateAlternateViewFromString(message, null, MediaTypeNames.Text.Html);
-            mailMessage.AlternateViews.Add(htmlView);
-            Console.WriteLine("HTML-сообщение:");
-            Console.WriteLine(htmlView.ContentStream);
+            //var htmlView = AlternateView.CreateAlternateViewFromString(message, null, MediaTypeNames.Text.Html);
+            //mailMessage.AlternateViews.Add(htmlView);
+            //Console.WriteLine("HTML-сообщение:");
+            //Console.WriteLine(htmlView.ContentStream);
 
-            var plainTextView = AlternateView.CreateAlternateViewFromString(
-                $"Пожалуйста, подтвердите вашу почту, перейдя по ссылке: {link}", null, MediaTypeNames.Text.Plain);
-            mailMessage.AlternateViews.Add(plainTextView);
+            //var plainTextView = AlternateView.CreateAlternateViewFromString(
+            //    $"Пожалуйста, подтвердите вашу почту, перейдя по ссылке: {link}", null, MediaTypeNames.Text.Plain);
+            //mailMessage.AlternateViews.Add(plainTextView);
 
-            Console.WriteLine("MailMessage.Subject: " + mailMessage.Subject);
-            Console.WriteLine("MailMessage.To: " + string.Join(", ", mailMessage.To));
-            Console.WriteLine("MailMessage.AlternateViews.Count: " + mailMessage.AlternateViews.Count);
+            //Console.WriteLine("MailMessage.Subject: " + mailMessage.Subject);
+            //Console.WriteLine("MailMessage.To: " + string.Join(", ", mailMessage.To));
+            //Console.WriteLine("MailMessage.AlternateViews.Count: " + mailMessage.AlternateViews.Count);
 
 
             try
