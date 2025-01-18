@@ -7,7 +7,7 @@ using Ykotika.Domain.ValueObjects;
 
 namespace Ykotika.Application.Commands
 {
-    public class CreateProductCommentCommandHandler 
+    public class CreateProductCommentCommandHandler
         (IYkotikaDbContext dbContext)
         : IRequestHandler<CreateProductCommentCommand>
     {
@@ -29,12 +29,12 @@ namespace Ykotika.Application.Commands
 
             product.Comments.Add
                 (
-                new Comment 
-                { 
-                    Author = user, 
+                new Comment
+                {
+                    Author = user,
                     Content = request.Content,
                     CreatedAt = DateTime.UtcNow
-                } 
+                }
                 );
 
             await _dbContext.SaveChangesAsync(cancellationToken);

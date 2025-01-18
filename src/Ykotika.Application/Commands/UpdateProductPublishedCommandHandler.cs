@@ -6,14 +6,14 @@ using Ykotika.Domain.Entities;
 
 namespace Ykotika.Application.Commands
 {
-    public class UpdateProductPublishedCommandHandler 
+    public class UpdateProductPublishedCommandHandler
         (IYkotikaDbContext dbContext)
         : IRequestHandler<UpdateProductPublishedCommand>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
 
-        public async Task 
-            Handle(UpdateProductPublishedCommand request, 
+        public async Task
+            Handle(UpdateProductPublishedCommand request,
                    CancellationToken cancellationToken)
         {
             var product = await

@@ -23,6 +23,8 @@ namespace Ykotika.Application.ViewModels
         public required ProductTypeDetails ProductType { get; init; }
         public required FormRecordDetails FormRecord { get; set; }
         public required Guid UserId { get; set; }
+        public required UserDetails User { get; set; }
+
 
         public void Mapping(Profile profile)
         {

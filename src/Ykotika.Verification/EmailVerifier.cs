@@ -3,7 +3,6 @@ using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
-using System.Text.Json.Serialization;
 using Ykotika.Application.Interfaces;
 
 namespace Ykotika.Verification

@@ -144,8 +144,8 @@ namespace Ykotika.WebAPI.Controllers
         [Authorize(Roles = $"{Roles.AUTHOR_ROLE}, {Roles.MODERATOR_ROLE}")]
         public async Task<IActionResult> CreateComment(Guid id, [FromBody] CreateProductCommentDto dto)
         {
-            var vm = new GetProductByIdQuery 
-            { 
+            var vm = new GetProductByIdQuery
+            {
                 Id = id
             };
 
