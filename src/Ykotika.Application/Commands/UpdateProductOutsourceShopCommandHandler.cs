@@ -20,7 +20,7 @@ namespace Ykotika.Application.Commands
             var product = await
                 _dbContext
                 .Products
-                .FirstOrDefaultAsync(e => e.Id == request.Id)
+                .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(Product), request.Id);
 
             foreach (var shop in request.OutsourceShopInfo)
