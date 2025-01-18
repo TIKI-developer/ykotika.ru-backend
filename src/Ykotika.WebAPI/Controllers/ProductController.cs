@@ -158,6 +158,8 @@ namespace Ykotika.WebAPI.Controllers
                 command.Id = id;
                 command.UserId = UserId;
                 await Mediator.Send(command);
+
+                return Ok();
             }
 
             return Forbid();
