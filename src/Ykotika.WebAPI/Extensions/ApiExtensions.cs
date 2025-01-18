@@ -55,6 +55,18 @@ namespace Ykotika.WebApi.Extensions
                       UserRole.Director]));
                 });
 
+                options.AddPolicy(Policies.POST_PRODUCT_COMMENT_POLICY, policy =>
+                {
+                    policy
+                    .AddRequirements
+                    (new ContentRequirement
+                    ([UserRole.Admin,
+                      UserRole.Director,
+                      UserRole.Moderator,
+                      UserRole.Author],
+                      checkPublished: false));
+                });
+
                 options.AddPolicy(Policies.READ_AGREEMENT_POLICY, policy =>
                 {
                     policy
