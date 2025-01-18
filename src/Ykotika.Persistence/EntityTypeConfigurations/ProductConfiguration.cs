@@ -36,6 +36,11 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
                 {
                     tag.WithOwner();
                 });
+            builder
+                .OwnsMany(e => e.Comments, comm =>
+                {
+                    comm.WithOwner();
+                });
         }
     }
 }
