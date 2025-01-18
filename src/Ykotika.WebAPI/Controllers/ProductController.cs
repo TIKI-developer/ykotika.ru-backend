@@ -144,7 +144,10 @@ namespace Ykotika.WebAPI.Controllers
         [Authorize(Roles = $"{Roles.AUTHOR_ROLE}, {Roles.MODERATOR_ROLE}")]
         public async Task<IActionResult> CreateComment(Guid id, [FromBody] CreateProductCommentDto dto)
         {
-            var vm = new GetProductByIdQuery { Id = id };
+            var vm = new GetProductByIdQuery 
+            { 
+                Id = id
+            };
 
             var authorizationResult = await _authorizationService
                 .AuthorizeAsync(User, vm, Policies.POST_PRODUCT_COMMENT_POLICY);
@@ -152,6 +155,8 @@ namespace Ykotika.WebAPI.Controllers
             if (authorizationResult.Succeeded)
             {
                 var command = _mapper.Map<CreateProductCommentCommand>(dto);
+                command.Id = id;
+                command.UserId = UserId;
                 await Mediator.Send(command);
             }
 

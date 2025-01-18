@@ -11,7 +11,7 @@ namespace Ykotika.Domain.Entities
         public required bool IsPublished { get; set; }
         public required ProductStatus Status { get; set; }
         public required List<Tag> Tags { get; set; }
-        public List<string> Comments { get; set; } = [];
+        public List<Comment> Comments { get; set; } = [];
         public File? Source { get; set; }
         public required List<ImageListItem> Images { get; set; }
         public required List<OutsourceShopProductInfo> OutsourceShops { get; set; }

@@ -30,6 +30,8 @@ namespace Ykotika.Application.Queries
                 .Include(e => e.ProductType)
                 .Include(e => e.FormRecord)
                 .ThenInclude(e => e.Form)
+                .Include(e => e.Comments)
+                .ThenInclude(e => e.Author)
                 .Include(e => e.Source)
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(Product), request.Id);

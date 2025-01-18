@@ -14,7 +14,7 @@ namespace Ykotika.Application.ViewModels
         public required string Description { get; set; }
         public required List<OutsourceShopProductInfoDto> OutsourceShops { get; set; }
         public required List<Tag> Tags { get; set; }
-        public List<string>? Comments { get; set; }
+        public List<CommentDetails>? Comments { get; set; }
         public required string SourcePath { get; set; }
         public required string Status { get; set; }
         public required List<ImageListItemDto> Images { get; set; }
