@@ -23,6 +23,8 @@ namespace Ykotika.Application.Commands
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(Product), request.Id);
 
+            var outsourceShops = new List<OutsourceShopProductInfo>();
+
             foreach (var shop in request.OutsourceShopInfo)
             {
                 var outsourceShop = await
@@ -35,13 +37,14 @@ namespace Ykotika.Application.Commands
                     continue;
                 }
 
-                product.OutsourceShops.Add(new OutsourceShopProductInfo
+                outsourceShops.Add(new OutsourceShopProductInfo
                 {
                     OutsourceShop = outsourceShop,
                     Link = shop.Link,
                 });
             }
 
+            product.OutsourceShops = outsourceShops;
 
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
