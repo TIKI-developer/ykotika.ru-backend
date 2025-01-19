@@ -7,30 +7,21 @@ using Ykotika.Application.Interfaces;
 
 namespace Ykotika.Verification
 {
-    public class EmailVerifier : IEmailVerifier
+    public class EmailVerifier(IOptions<EmailVerifierOptions> options) : IEmailVerifier
     {
         private const string Subject = "Подтверждение почты ykotika.ru";
-        private readonly EmailVerifierOptions _options;
+        private readonly EmailVerifierOptions _options = options.Value ?? throw new ArgumentNullException(nameof(options));
 
-        public EmailVerifier(IOptions<EmailVerifierOptions> options)
-        {
-            _options = options.Value ?? throw new ArgumentNullException(nameof(options));
-        }
-
-        private string LoadTemplate(string resourceName, Dictionary<string, string> placeholders)
+        private static string LoadTemplate(string resourceName, Dictionary<string, string> placeholders)
         {
             var assembly = typeof(EmailVerifier).Assembly;
 
             var fullResourceName = assembly.GetManifestResourceNames()
-                .FirstOrDefault(name => name.EndsWith(resourceName, StringComparison.OrdinalIgnoreCase));
+                .FirstOrDefault(name => name.EndsWith(resourceName, StringComparison.OrdinalIgnoreCase))
+                ?? throw new FileNotFoundException($"Ресурс с именем {resourceName} не найден в сборке.");
 
-            if (fullResourceName == null)
-            {
-                throw new FileNotFoundException($"Ресурс с именем {resourceName} не найден в сборке.");
-            }
-
-            using var stream = assembly.GetManifestResourceStream(fullResourceName);
-            if (stream == null) throw new InvalidOperationException($"Не удалось получить поток для ресурса {fullResourceName}.");
+            using var stream = assembly.GetManifestResourceStream(fullResourceName)
+            ?? throw new InvalidOperationException($"Не удалось получить поток для ресурса {fullResourceName}.");
 
             using var reader = new StreamReader(stream, Encoding.UTF8);
             string template = reader.ReadToEnd();
@@ -57,8 +48,6 @@ namespace Ykotika.Verification
             try
             {
                 message = LoadTemplate("Templates.VerificationMessage.html", placeholders);
-                Console.WriteLine("Сообщение после замены плейсхолдеров:");
-                Console.WriteLine(message);
             }
             catch (Exception ex)
             {
@@ -67,11 +56,6 @@ namespace Ykotika.Verification
             }
 
 
-            Console.WriteLine(_options.Credentials.Address);
-            Console.WriteLine(_options.Credentials.Password);
-            Console.WriteLine(_options.Host);
-            Console.WriteLine(_options.Port);
-            Console.WriteLine(_options.EnableSsl);
             using var smtpClient = new SmtpClient(_options.Host)
             {
                 Port = _options.Port,
@@ -84,23 +68,18 @@ namespace Ykotika.Verification
             {
                 From = new MailAddress(_options.Credentials.Address),
                 Subject = Subject,
-                IsBodyHtml = true
+                Body = message,
+                IsBodyHtml = true,
             };
             mailMessage.To.Add(userEmail);
 
-            var htmlView = AlternateView.CreateAlternateViewFromString(message, null, MediaTypeNames.Text.Html);
-            mailMessage.AlternateViews.Add(htmlView);
-            Console.WriteLine("HTML-сообщение:");
-            Console.WriteLine(htmlView.ContentStream);
+            //var htmlView = AlternateView.CreateAlternateViewFromString(message, null, MediaTypeNames.Text.Html);
+            //mailMessage.AlternateViews.Add(htmlView);
 
-            var plainTextView = AlternateView.CreateAlternateViewFromString(
-                $"Пожалуйста, подтвердите вашу почту, перейдя по ссылке: {link}", null, MediaTypeNames.Text.Plain);
-            mailMessage.AlternateViews.Add(plainTextView);
+            //var plainTextView = AlternateView.CreateAlternateViewFromString(
+            //    $"Пожалуйста, подтвердите вашу почту, перейдя по ссылке: {link}", null, MediaTypeNames.Text.Plain);
 
-            Console.WriteLine("MailMessage.Subject: " + mailMessage.Subject);
-            Console.WriteLine("MailMessage.To: " + string.Join(", ", mailMessage.To));
-            Console.WriteLine("MailMessage.AlternateViews.Count: " + mailMessage.AlternateViews.Count);
-
+            //mailMessage.AlternateViews.Add(plainTextView);
 
             try
             {
