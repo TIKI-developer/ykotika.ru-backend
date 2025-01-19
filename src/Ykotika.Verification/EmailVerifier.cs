@@ -73,13 +73,13 @@ namespace Ykotika.Verification
             };
             mailMessage.To.Add(userEmail);
 
-            //var htmlView = AlternateView.CreateAlternateViewFromString(message, null, MediaTypeNames.Text.Html);
-            //mailMessage.AlternateViews.Add(htmlView);
+            var htmlView = AlternateView.CreateAlternateViewFromString(message, null, MediaTypeNames.Text.Html);
+            mailMessage.AlternateViews.Add(htmlView);
 
-            //var plainTextView = AlternateView.CreateAlternateViewFromString(
-            //    $"Пожалуйста, подтвердите вашу почту, перейдя по ссылке: {link}", null, MediaTypeNames.Text.Plain);
+            var plainTextView = AlternateView.CreateAlternateViewFromString(
+                $"Пожалуйста, подтвердите вашу почту, перейдя по ссылке: {link}", null, MediaTypeNames.Text.Plain);
 
-            //mailMessage.AlternateViews.Add(plainTextView);
+            mailMessage.AlternateViews.Add(plainTextView);
 
             try
             {
