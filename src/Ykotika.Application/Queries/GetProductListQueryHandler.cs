@@ -23,9 +23,9 @@ namespace Ykotika.Application.Queries
             if (!string.IsNullOrEmpty(request.SearchTerm))
             {
                 query = query.Where(p =>
-                    p.Name.Contains(request.SearchTerm) ||
-                    p.Description.Contains(request.SearchTerm) ||
-                    p.Tags.Any(tag => tag.Value.Contains(request.SearchTerm)));
+                    p.Name.ToLower().Contains(request.SearchTerm.ToLower()) ||
+                    p.Description.ToLower().Contains(request.SearchTerm.ToLower()) ||
+                    p.Tags.Any(tag => tag.Value.ToLower().Contains(request.SearchTerm.ToLower())));
             }
 
             query = query.Where(p =>
