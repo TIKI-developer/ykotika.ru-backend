@@ -1,0 +1,20 @@
+﻿using AutoMapper;
+using Ykotika.Application.Common.Mappings;
+using Ykotika.Domain.Entities;
+
+namespace Ykotika.Application.ViewModels
+{
+    public class ProductTypeDetails : IMapWith<ProductType>, IPublishable
+    {
+        public required Guid Id { get; set; }
+        public required string Name { get; set; }
+        public required List<string> ArticlePattern { get; set; }
+        public required FormDetails Form { get; set; }
+        public required bool IsPublished { get; set; }
+
+        public void Mapping(Profile profile)
+        {
+            profile.CreateMap<ProductType, ProductTypeDetails>();
+        }
+    }
+}

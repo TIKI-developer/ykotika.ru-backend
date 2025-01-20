@@ -1,0 +1,44 @@
+name: Development Workflow
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      SERVER_IP: ${{ vars.SERVER_IP }}  # Переменная для IP-адреса из секретов
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Clean up Docker on server
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa root@$SERVER_IP << 'EOF'
+            # Очистка неиспользуемых образов, контейнеров и кэша сборки
+            sudo docker system prune -af
+            sudo docker volume prune -f
+          EOF
+
+      - name: Deploy to server
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa root@$SERVER_IP << 'EOF'
+            cd /var/www/ykotika/dev/ykotika.ru-backend/ || exit
+            sudo git fetch --all
+            sudo git pull origin dev
+            sudo docker-compose down api
+            sudo docker-compose up -d --build api
+          EOF
