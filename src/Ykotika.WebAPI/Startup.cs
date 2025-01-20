@@ -40,55 +40,20 @@ namespace Ykotika.WebAPI
                 options.ModelBinderProviders.Insert(0, new CustomQueryBinderProvider());
             });
 
-
-            //var corsOptionsSection = Configuration.GetSection($"{nameof(ClientsOptions)}:WebURLs");
-            //var clientOptionsSection = Configuration.GetSection($"{nameof(ClientsOptions)}");
-            //var generalClientUrl = clientOptionsSection.GetValue<string>("GeneralClientUrl");
-            //string[]? webURLs = corsOptionsSection.Get<string[]>();
-
-            //services.Configure<ClientsOptions>(options =>
-            //{
-            //    options.GeneralClientUrl = generalClientUrl ?? string.Empty;
-            //    options.WebURLs = webURLs ?? Array.Empty<string>();
-            //});
-            //if (!webURLs.IsNullOrEmpty())
-            //{
-            //    services.AddCors(options =>
-            //    {
-            //        options.AddPolicy(_policyCORSName, policy =>
-            //        {
-            //            policy
-            //                .WithOrigins(webURLs!)
-            //                .AllowCredentials()
-            //                .AllowAnyHeader()
-            //                .AllowAnyMethod();
-            //        });
-            //    });
-            //}
-            //else
-            //{
-            //    services.AddCors(options =>
-            //    {
-            //        options.AddPolicy(_policyCORSName, policy =>
-            //        {
-            //            policy
-            //                .AllowAnyHeader()
-            //                .AllowAnyMethod();
-            //        });
-            //    });
-            //}
+            var allowedOrigins = Configuration.GetValue<string>("AllowedOrigins")?.Split(";");
 
             services.AddCors(options =>
             {
                 options.AddPolicy(_policyCORSName, policy =>
                 {
                     policy
-                        .WithOrigins("http://localhost:3000", "https://ykotika.tw1.ru")
+                        .WithOrigins(allowedOrigins ?? ["https://localhost:3000"])
                         .AllowCredentials()
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
             });
+
             services.AddSwaggerGen();
         }
 
@@ -97,6 +62,13 @@ namespace Ykotika.WebAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(config =>
+                {
+                    config.RoutePrefix = string.Empty;
+                    config.SwaggerEndpoint("swagger/v1/swagger.json", "Ykotika API");
+                    config.InjectStylesheet("/swagger-ui/SwaggerDark.css");
+                });
             }
             if (env.IsProduction() || env.IsStaging())
             {
@@ -112,13 +84,6 @@ namespace Ykotika.WebAPI
                 RequestPath = "/static"
             });
             app.UseHttpsRedirection();
-            app.UseSwagger();
-            app.UseSwaggerUI(config =>
-            {
-                config.RoutePrefix = string.Empty;
-                config.SwaggerEndpoint("swagger/v1/swagger.json", "Ykotika API");
-                config.InjectStylesheet("/swagger-ui/SwaggerDark.css");
-            });
 
             app.UseAuthentication();
             app.UseAuthorization();
