@@ -14,6 +14,9 @@ namespace Ykotika.Domain.Entities
     public enum AuthorStatus
     {
         New,
-        Confirmed
+        Confirmed,
+        Inactive,
+        Rejected,
+        Banned
     }
 }
