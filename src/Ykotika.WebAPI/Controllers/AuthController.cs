@@ -29,11 +29,6 @@ namespace Ykotika.WebAPI.Controllers
             var command = _mapper.Map<SignupCommand>(signupDto);
             var vm = await Mediator.Send(command);
 
-            if (HttpContext.Request.Headers.Origin.ToString().Contains("api"))
-            {
-                HttpContext.Response.Cookies.Append(Cookies.ACCESS_TOKEN_NAME, vm.AccessToken);
-            }
-
             return Ok(vm);
         }
 
@@ -44,12 +39,6 @@ namespace Ykotika.WebAPI.Controllers
         {
             var command = _mapper.Map<LoginCommand>(signupDto);
             var vm = await Mediator.Send(command);
-
-            if (HttpContext.Request.Headers.Origin.ToString().Contains("api"))
-            {
-                HttpContext.Response.Cookies.Append(Cookies.ACCESS_TOKEN_NAME, vm.AccessToken);
-                HttpContext.Response.Cookies.Append(Cookies.REFRESH_TOKEN_NAME, vm.RefreshToken);
-            }
 
             return Ok(vm);
         }
@@ -81,12 +70,6 @@ namespace Ykotika.WebAPI.Controllers
                     RefreshToken = refreshToken
                 };
                 var vm = await Mediator.Send(command);
-
-                if (HttpContext.Request.Headers.Origin.ToString().Contains("api"))
-                {
-                    HttpContext.Response.Cookies.Append(Cookies.ACCESS_TOKEN_NAME, vm.AccessToken);
-                    HttpContext.Response.Cookies.Append(Cookies.REFRESH_TOKEN_NAME, vm.RefreshToken);
-                }
 
                 return Ok(vm);
             }
@@ -126,13 +109,7 @@ namespace Ykotika.WebAPI.Controllers
 
             var vm = await Mediator.Send(command);
 
-            if (HttpContext.Request.Headers.Origin.ToString().Contains("api"))
-            {
-                HttpContext.Response.Cookies.Append(Cookies.ACCESS_TOKEN_NAME, vm.AccessToken);
-                HttpContext.Response.Cookies.Append(Cookies.REFRESH_TOKEN_NAME, vm.RefreshToken);
-            }
-
-            return Ok();
+            return Ok(vm);
         }
 
         [HttpPatch("password")]
