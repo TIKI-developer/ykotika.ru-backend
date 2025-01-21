@@ -104,7 +104,6 @@ namespace Ykotika.Verification
         public required int Port { get; set; }
         public required bool EnableSsl { get; set; }
         public required EmailCredentials Credentials { get; set; }
-        public required string AesIv { get; set; }
     }
 
     public class EmailCredentials

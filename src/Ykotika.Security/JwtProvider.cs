@@ -2,18 +2,20 @@
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 using Ykotika.Application.Interfaces;
 using Ykotika.Domain.Entities;
 
 namespace Ykotika.Security
 {
-    public class JwtProvider(IOptions<AccessTokenOptions> options) : IJwtProvider
+    public class JwtProvider
+        (IOptions<AccessTokenOptions> options,
+        IEncryptor encryptor) 
+        : IJwtProvider
     {
         private readonly AccessTokenOptions _options = options.Value;
         private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler = new();
-        private const string AES_IV = "sdofisldjfklsd3ldedddsddhiew";
+        private readonly IEncryptor _encryptor = encryptor;
 
         public string GenerateAccessToken(User user)
         {
@@ -72,14 +74,14 @@ namespace Ykotika.Security
              );
             var tokenString = _jwtSecurityTokenHandler.WriteToken(token);
 
-            return EncryptToken(tokenString);
+            return _encryptor.Encrypt(tokenString);
         }
         public bool VerifyEmailToken(string token, Guid userId, string userEmail)
         {
             string decryptedToken;
             try
             {
-                decryptedToken = DecryptToken(token);
+                decryptedToken = _encryptor.Decrypt(token);
             }
             catch
             {
@@ -93,10 +95,10 @@ namespace Ykotika.Security
 
             var tokenValidationParameters = new TokenValidationParameters
             {
-                ValidateIssuer = true,
-                ValidateAudience = true,
+                ValidateIssuer = false,
+                ValidateAudience = false,
                 ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
+                ValidateIssuerSigningKey = false,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.JwtOptions.SecretKey))
             };
 
@@ -119,30 +121,6 @@ namespace Ykotika.Security
             catch (Exception) { }
 
             return false;
-        }
-        private string EncryptToken(string token)
-        {
-            using var aes = Aes.Create();
-            aes.Key = Encoding.UTF8.GetBytes(_options.JwtOptions.SecretKey.PadRight(32).Substring(0, 32));
-            aes.IV = Encoding.UTF8.GetBytes(AES_IV.PadRight(16).Substring(0, 16));
-
-            using var encryptor = aes.CreateEncryptor();
-            var tokenBytes = Encoding.UTF8.GetBytes(token);
-            var encryptedBytes = encryptor.TransformFinalBlock(tokenBytes, 0, tokenBytes.Length);
-
-            return Convert.ToBase64String(encryptedBytes);
-        }
-        private string DecryptToken(string encryptedToken)
-        {
-            using var aes = Aes.Create();
-            aes.Key = Encoding.UTF8.GetBytes(_options.JwtOptions.SecretKey.PadRight(32).Substring(0, 32));
-            aes.IV = Encoding.UTF8.GetBytes(AES_IV.PadRight(16).Substring(0, 16));
-
-            using var decryptor = aes.CreateDecryptor();
-            var encryptedBytes = Convert.FromBase64String(encryptedToken);
-            var decryptedBytes = decryptor.TransformFinalBlock(encryptedBytes, 0, encryptedBytes.Length);
-
-            return Encoding.UTF8.GetString(decryptedBytes);
         }
         public string GenerateRefreshToken()
         {

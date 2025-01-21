@@ -12,6 +12,10 @@ namespace Ykotika.Security
             services.AddScoped<IPasswordHasher, PasswordHasher>();
             services.AddScoped<IRefreshTokenHasher, RefreshTokenHasher>();
             services.AddScoped<IJwtProvider, JwtProvider>();
+            services.AddScoped<IEncryptor, Encryptor>();
+
+            services.Configure<EncryptionOptions>(options =>
+            configuration.GetSection(nameof(EncryptionOptions)).Bind(options));    
 
             services.Configure<AccessTokenOptions>(options =>
             configuration.GetSection(nameof(AccessTokenOptions)).Bind(options));

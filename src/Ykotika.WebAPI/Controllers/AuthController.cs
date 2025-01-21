@@ -120,7 +120,7 @@ namespace Ykotika.WebAPI.Controllers
             HttpContext.Response.Cookies.Append(Cookies.ACCESS_TOKEN_NAME, vm.AccessToken);
             HttpContext.Response.Cookies.Append(Cookies.REFRESH_TOKEN_NAME, vm.RefreshToken);
 
-            return Ok();
+            return Ok(vm);
         }
 
         [HttpPatch("password")]
