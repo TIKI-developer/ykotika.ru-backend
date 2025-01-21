@@ -29,8 +29,6 @@ namespace Ykotika.WebAPI.Controllers
             var command = _mapper.Map<SignupCommand>(signupDto);
             var vm = await Mediator.Send(command);
 
-            HttpContext.Response.Cookies.Append(Cookies.ACCESS_TOKEN_NAME, vm.AccessToken);
-
             return Ok(vm);
         }
 
@@ -102,7 +100,6 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpGet("verifications/email")]
-        [Authorize(Roles = $"{Roles.UNVERIFIED_ROLE}")]
         public async Task<IActionResult>
             VerifyEmail([FromQuery] string token)
         {
