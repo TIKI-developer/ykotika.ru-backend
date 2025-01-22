@@ -27,9 +27,9 @@ namespace Ykotika.WebAPI.Controllers
             Signup([FromBody] SignupDto signupDto)
         {
             var command = _mapper.Map<SignupCommand>(signupDto);
-            await Mediator.Send(command);
+            var vm = await Mediator.Send(command);
 
-            return Ok();
+            return Ok(vm);
         }
 
         [Route("login")]
@@ -94,6 +94,7 @@ namespace Ykotika.WebAPI.Controllers
         }
 
         [HttpGet("verifications/email")]
+        [Authorize(Roles = $"{Roles.UNVERIFIED_ROLE}")]
         public async Task<IActionResult>
             VerifyEmail([FromQuery] string token)
         {
