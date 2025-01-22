@@ -46,7 +46,7 @@ namespace Ykotika.Application.Commands
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            string accessToken = _jwtProvider.GenerateAccessToken(user);
+            string accessToken = _jwtProvider.GenerateAccessToken(user, request.Issuer, request.Audience);
             string refreshToken = _jwtProvider.GenerateRefreshToken();
             user.RefreshTokenHash = _refreshTokenHasher.Encode(refreshToken);
 

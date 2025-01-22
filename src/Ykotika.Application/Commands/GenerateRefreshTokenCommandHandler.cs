@@ -42,7 +42,7 @@ namespace Ykotika.Application.Commands
 
             return new LoginResponse
             {
-                AccessToken = _jwtProvider.GenerateAccessToken(user),
+                AccessToken = _jwtProvider.GenerateAccessToken(user, request.Issuer, request.Audience),
                 RefreshToken = refreshToken
             };
         }

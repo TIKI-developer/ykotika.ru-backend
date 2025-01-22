@@ -48,7 +48,7 @@ namespace Ykotika.Application.Commands
 
                 await _dbContext.Users.AddAsync(user, cancellationToken);
 
-                accessToken = _jwtProvider.GenerateAccessToken(user);
+                accessToken = _jwtProvider.GenerateAccessToken(user, request.Issuer, request.Audience);
             }
             else
             {
@@ -60,7 +60,7 @@ namespace Ykotika.Application.Commands
                     existUser.Email = request.Email;
                     existUser.PasswordHash = _passwordHasher.Generate(request.Password);
                     existUser.Timestamps.MarkUpdated();
-                    accessToken = _jwtProvider.GenerateAccessToken(existUser);
+                    accessToken = _jwtProvider.GenerateAccessToken(existUser, request.Issuer, request.Audience);
                 }
                 else
                 {

@@ -27,6 +27,8 @@ namespace Ykotika.WebAPI.Controllers
             Signup([FromBody] SignupDto signupDto)
         {
             var command = _mapper.Map<SignupCommand>(signupDto);
+            command.Issuer = Request.Headers.Host.ToString();
+            command.Audience = Request.Headers.Origin.ToString();
             var vm = await Mediator.Send(command);
 
             return Ok(vm);
@@ -38,6 +40,8 @@ namespace Ykotika.WebAPI.Controllers
         public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginDto signupDto)
         {
             var command = _mapper.Map<LoginCommand>(signupDto);
+            command.Issuer = Request.Headers.Host.ToString();
+            command.Audience = Request.Headers.Origin.ToString();
             var vm = await Mediator.Send(command);
 
             return Ok(vm);
@@ -67,8 +71,11 @@ namespace Ykotika.WebAPI.Controllers
                     UserId = Guid.Parse(_jwtProvider
                     .GetPrincipalFromExpiredToken(accessToken)
                     .FindFirstValue(ClaimTypes.NameIdentifier)),
-                    RefreshToken = refreshToken
+                    RefreshToken = refreshToken,
+                    Issuer = Request.Headers.Host.ToString(),
+                    Audience = Request.Headers.Origin.ToString(),
                 };
+
                 var vm = await Mediator.Send(command);
 
                 return Ok(vm);
@@ -105,7 +112,11 @@ namespace Ykotika.WebAPI.Controllers
             }
 
             var command = new VerifyEmailCommand
-            { UserId = UserId };
+            { 
+                UserId = UserId,
+                Issuer = Request.Headers.Host.ToString(),
+                Audience = Request.Headers.Origin.ToString(),
+            };
 
             var vm = await Mediator.Send(command);
 
