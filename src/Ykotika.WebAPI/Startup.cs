@@ -10,6 +10,9 @@ using Ykotika.Verification;
 using Ykotika.WebApi.Extensions;
 using Ykotika.WebAPI.Middleware;
 using Ykotika.WebAPI.ModelBinders;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
+using System.Collections.Concurrent;
 
 namespace Ykotika.WebAPI
 {
@@ -39,6 +42,30 @@ namespace Ykotika.WebAPI
             {
                 options.ModelBinderProviders.Insert(0, new CustomQueryBinderProvider());
             });
+            services.AddRateLimiter(options =>
+            {
+                options.AddPolicy("fixed", httpContext =>
+                {
+                    return
+                    RateLimitPartition.GetFixedWindowLimiter
+                    (partitionKey: httpContext.User.Identity?.Name
+                    ?? httpContext.Connection.RemoteIpAddress?.ToString()
+                    ?? httpContext.Request.Headers.Host.ToString(),
+                    factory: partition => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 15,
+                        Window = TimeSpan.FromSeconds(5)
+                    });
+                });
+                options.AddPolicy("RefreshTokenLimiter", context =>
+                    RateLimitPartition.GetFixedWindowLimiter(context.Connection.RemoteIpAddress?.ToString(), _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 1, 
+                        Window = TimeSpan.FromSeconds(5), 
+                        QueueLimit = 0 
+                    }));
+                options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+            });
 
             var allowedOrigins = Configuration.GetValue<string>("AllowedOrigins")?.Split(";");
 
@@ -47,7 +74,7 @@ namespace Ykotika.WebAPI
                 options.AddPolicy(_policyCORSName, policy =>
                 {
                     policy
-                        .WithOrigins(allowedOrigins ?? ["https://localhost:3000"])
+                        .WithOrigins(allowedOrigins ?? ["http://localhost:3000", "https://localhost:3000"])
                         .AllowCredentials()
                         .AllowAnyHeader()
                         .AllowAnyMethod();
@@ -84,7 +111,7 @@ namespace Ykotika.WebAPI
                 RequestPath = "/static"
             });
             app.UseHttpsRedirection();
-
+            app.UseRateLimiter();
             app.UseAuthentication();
             app.UseAuthorization();
 

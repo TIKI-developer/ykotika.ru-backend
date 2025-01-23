@@ -2,6 +2,7 @@
 using DocumentFormat.OpenXml.Packaging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Security.Claims;
 using Ykotika.Application.Commands;
 using Ykotika.Application.Interfaces;
@@ -60,6 +61,7 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok();
         }
+        [EnableRateLimiting("RefreshTokenLimiter")]
         [HttpPost("refresh-token")]
         public async Task<ActionResult<LoginResponse>>
             NewRefreshToken([FromBody] UpdateRefreshTokenDto dto)
