@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DocumentFormat.OpenXml.Packaging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -64,12 +65,12 @@ namespace Ykotika.WebAPI.Controllers
             NewRefreshToken([FromBody] UpdateRefreshTokenDto dto)
         {
             if (dto.RefreshToken != null &&
-                Request.Cookies.TryGetValue(Cookies.ACCESS_TOKEN_NAME, out var accessToken))
+                dto.AccessToken != null)
             {
                 var command = new GenerateRefreshTokenCommand
                 {
                     UserId = Guid.Parse(_jwtProvider
-                    .GetPrincipalFromExpiredToken(accessToken)
+                    .GetPrincipalFromExpiredToken(dto.AccessToken)
                     .FindFirstValue(ClaimTypes.NameIdentifier)),
                     RefreshToken = dto.RefreshToken,
                     Issuer = Request.Headers.Host.ToString(),
@@ -82,7 +83,7 @@ namespace Ykotika.WebAPI.Controllers
             }
             else
             {
-                return Forbid();
+                return BadRequest();
             }
         }
 
