@@ -16,9 +16,9 @@ namespace Ykotika.WebApi.Extensions
         public static void AddApiAuthentication(this IServiceCollection services)
         {
             using var provider = services.BuildServiceProvider();
-            var jwtOptions = provider.GetRequiredService<IOptions<AccessTokenOptions>>().Value;
+            var accessTokenOptions = provider.GetRequiredService<IOptions<AccessTokenOptions>>().Value;
 
-            if (string.IsNullOrEmpty(jwtOptions.JwtOptions.SecretKey))
+            if (string.IsNullOrEmpty(accessTokenOptions.JwtOptions.SecretKey))
             {
                 throw new InvalidOperationException("SecretKey для JWT не найден.");
             }
@@ -29,11 +29,12 @@ namespace Ykotika.WebApi.Extensions
                     {
                         ValidateIssuer = false,
                         ValidateAudience = false,
+                        RequireExpirationTime = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.JwtOptions.SecretKey))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(accessTokenOptions.JwtOptions.SecretKey)),
+                        ClockSkew = TimeSpan.Zero
                     };
-
                     options.Events = new JwtBearerEvents
                     {
                         OnMessageReceived = context =>

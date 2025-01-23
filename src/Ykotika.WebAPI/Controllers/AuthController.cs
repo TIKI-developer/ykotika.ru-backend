@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using DocumentFormat.OpenXml.Packaging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Security.Claims;
 using Ykotika.Application.Commands;
 using Ykotika.Application.Interfaces;
@@ -27,9 +29,9 @@ namespace Ykotika.WebAPI.Controllers
             Signup([FromBody] SignupDto signupDto)
         {
             var command = _mapper.Map<SignupCommand>(signupDto);
+            command.Issuer = Request.Headers.Host.ToString();
+            command.Audience = Request.Headers.Origin.ToString();
             var vm = await Mediator.Send(command);
-
-            HttpContext.Response.Cookies.Append(Cookies.ACCESS_TOKEN_NAME, vm.AccessToken);
 
             return Ok(vm);
         }
@@ -40,10 +42,9 @@ namespace Ykotika.WebAPI.Controllers
         public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginDto signupDto)
         {
             var command = _mapper.Map<LoginCommand>(signupDto);
+            command.Issuer = Request.Headers.Host.ToString();
+            command.Audience = Request.Headers.Origin.ToString();
             var vm = await Mediator.Send(command);
-
-            HttpContext.Response.Cookies.Append(Cookies.ACCESS_TOKEN_NAME, vm.AccessToken);
-            HttpContext.Response.Cookies.Append(Cookies.REFRESH_TOKEN_NAME, vm.RefreshToken);
 
             return Ok(vm);
         }
@@ -60,30 +61,31 @@ namespace Ykotika.WebAPI.Controllers
 
             return Ok();
         }
+        [EnableRateLimiting("RefreshTokenLimiter")]
         [HttpPost("refresh-token")]
         public async Task<ActionResult<LoginResponse>>
-            NewRefreshToken()
+            NewRefreshToken([FromBody] UpdateRefreshTokenDto dto)
         {
-            if (Request.Cookies.TryGetValue(Cookies.REFRESH_TOKEN_NAME, out var refreshToken) &&
-                Request.Cookies.TryGetValue(Cookies.ACCESS_TOKEN_NAME, out var accessToken))
+            if (dto.RefreshToken != null &&
+                dto.AccessToken != null)
             {
                 var command = new GenerateRefreshTokenCommand
                 {
                     UserId = Guid.Parse(_jwtProvider
-                    .GetPrincipalFromExpiredToken(accessToken)
+                    .GetPrincipalFromExpiredToken(dto.AccessToken)
                     .FindFirstValue(ClaimTypes.NameIdentifier)),
-                    RefreshToken = refreshToken
+                    RefreshToken = dto.RefreshToken,
+                    Issuer = Request.Headers.Host.ToString(),
+                    Audience = Request.Headers.Origin.ToString(),
                 };
-                var vm = await Mediator.Send(command);
 
-                HttpContext.Response.Cookies.Append(Cookies.ACCESS_TOKEN_NAME, vm.AccessToken);
-                HttpContext.Response.Cookies.Append(Cookies.REFRESH_TOKEN_NAME, vm.RefreshToken);
+                var vm = await Mediator.Send(command);
 
                 return Ok(vm);
             }
             else
             {
-                return Forbid();
+                return BadRequest();
             }
         }
 
@@ -113,12 +115,13 @@ namespace Ykotika.WebAPI.Controllers
             }
 
             var command = new VerifyEmailCommand
-            { UserId = UserId };
+            { 
+                UserId = UserId,
+                Issuer = Request.Headers.Host.ToString(),
+                Audience = Request.Headers.Origin.ToString(),
+            };
 
             var vm = await Mediator.Send(command);
-
-            HttpContext.Response.Cookies.Append(Cookies.ACCESS_TOKEN_NAME, vm.AccessToken);
-            HttpContext.Response.Cookies.Append(Cookies.REFRESH_TOKEN_NAME, vm.RefreshToken);
 
             return Ok(vm);
         }

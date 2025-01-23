@@ -7,5 +7,7 @@ namespace Ykotika.Application.Commands
     {
         public required Guid UserId { get; set; }
         public required string RefreshToken { get; set; }
+        public required string Issuer { get; set; }
+        public required string Audience { get; set; }
     }
 }

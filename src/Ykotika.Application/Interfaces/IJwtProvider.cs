@@ -5,7 +5,7 @@ namespace Ykotika.Application.Interfaces
 {
     public interface IJwtProvider
     {
-        string GenerateAccessToken(User user);
+        string GenerateAccessToken(User user, string issuer, string audience);
         string GenerateRefreshToken();
         ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
         string GenerateEmailVerificationToken(Guid userId, string userEmail);

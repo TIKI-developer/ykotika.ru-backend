@@ -16,6 +16,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.0.0" />
+    <PackageReference Include="System.Threading.RateLimiting" Version="9.0.1" />
   </ItemGroup>
 
   <ItemGroup>

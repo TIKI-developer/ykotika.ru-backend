@@ -10,7 +10,6 @@ namespace Ykotika.Persistence
 
         public void Initialize(YkotikaDbContext restaurantDbContext)
         {
-            restaurantDbContext.Database.EnsureDeleted();
             restaurantDbContext.Database.EnsureCreated();
 
             CreateSuperUser(restaurantDbContext);

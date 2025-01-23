@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Security.Claims;
 using Ykotika.Application.Common.Mappings;
 using Ykotika.Application.Models;
@@ -8,6 +9,7 @@ using Ykotika.Application.Models;
 namespace Ykotika.WebAPI.Controllers
 {
     [ApiController]
+    [EnableRateLimiting("fixed")]
     public abstract class BaseController : ControllerBase
     {
         private IMediator _mediator;

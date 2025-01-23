@@ -1,24 +1,91 @@
 ﻿<!DOCTYPE html>
 <html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Подтверждение почты</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
 
     <style>
-        button {
-            background-color: blue;
-        }
+      body {
+        font-family: "Inter", serif;
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: normal;
+        text-align: center;
+      }
+      #main {
+        box-shadow: 0px 3px 3px rgba(27, 27, 27, 0.412);
+        border-radius: 15px;
+        padding: 25px;
+      }
+      #container {
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        width: 400px;
+      }
+      a {
+        display: inline-block;
+        background-color: #3a72ec;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        vertical-align: middle;
+        line-height: 40px;
+        height: 40px;
+        width: 250px;
+        text-align: center;
+      }
+      a:hover {
+        background-color: #477bea;
+      }
+      .warn {
+        font-size: 13px;
+        color: red;
+      }
+      h1 {
+        margin: 5px;
+        font-size: 25px;
+      }
+      .logo {
+        height: 30px;
+        margin-bottom: 25px;
+      }
     </style>
-</head>
-<body>
-    <h1>Здравствуйте!</h1>
-    <p>Пожалуйста, подтвердите вашу почту, перейдя по ссылке ниже:</p>
-    <a href="{{link}}">
-        <button>
-            Подтвердить почту
-        </button>
-    </a>
-    <p>Если вы не отправляли этот запрос, просто проигнорируйте это сообщение.</p>
-</body>
+  </head>
+  <body>
+    <div id="main">
+      <div id="container">
+        <img
+          class="logo"
+          src="https://ykotika.ru/images/Logo.png"
+          alt="Дом мелового котика"
+        />
+        <div>
+          <h1>Подтверждение почты</h1>
+        </div>
+        <div>
+          <p>
+            Необходимо подтвердить адрес электронной почты, чтобы продолжить
+            регистрацию
+          </p>
+        </div>
+        <a href="{{link}}"> Подтвердить почту </a>
+        <div>
+          <i class="warn">
+            Если вы не отправляли этот запрос, <br />
+            просто проигнорируйте это сообщение.
+          </i>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

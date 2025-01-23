@@ -34,7 +34,7 @@ namespace Ykotika.Application.Commands
                 throw new Exception(Messages.EMAIL_NOT_VERIFIED);
             }
 
-            var accessToken = _jwtProvider.GenerateAccessToken(user);
+            var accessToken = _jwtProvider.GenerateAccessToken(user, request.Issuer, request.Audience);
             var refreshToken = _jwtProvider.GenerateRefreshToken();
             user.RefreshTokenHash = _refreshTokenHasher.Encode(refreshToken);
 

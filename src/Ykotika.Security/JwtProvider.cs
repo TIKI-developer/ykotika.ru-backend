@@ -17,7 +17,7 @@ namespace Ykotika.Security
         private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler = new();
         private readonly IEncryptor _encryptor = encryptor;
 
-        public string GenerateAccessToken(User user)
+        public string GenerateAccessToken(User user, string issuer, string audience)
         {
             var claims = new List<Claim>
             {
@@ -40,9 +40,7 @@ namespace Ykotika.Security
             var token = new JwtSecurityToken(
 
                     claims: claims,
-
                     signingCredentials: signingCredentials,
-
                     expires: DateTime.UtcNow.AddHours(_options.JwtOptions.ExpiresHours)
                 );
 
