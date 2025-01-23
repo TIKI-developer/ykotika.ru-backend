@@ -61,9 +61,9 @@ namespace Ykotika.WebAPI.Controllers
         }
         [HttpPost("refresh-token")]
         public async Task<ActionResult<LoginResponse>>
-            NewRefreshToken()
+            NewRefreshToken([FromBody] UpdateRefreshTokenDto dto)
         {
-            if (Request.Cookies.TryGetValue(Cookies.REFRESH_TOKEN_NAME, out var refreshToken) &&
+            if (dto.RefreshToken != null &&
                 Request.Cookies.TryGetValue(Cookies.ACCESS_TOKEN_NAME, out var accessToken))
             {
                 var command = new GenerateRefreshTokenCommand
@@ -71,7 +71,7 @@ namespace Ykotika.WebAPI.Controllers
                     UserId = Guid.Parse(_jwtProvider
                     .GetPrincipalFromExpiredToken(accessToken)
                     .FindFirstValue(ClaimTypes.NameIdentifier)),
-                    RefreshToken = refreshToken,
+                    RefreshToken = dto.RefreshToken,
                     Issuer = Request.Headers.Host.ToString(),
                     Audience = Request.Headers.Origin.ToString(),
                 };
