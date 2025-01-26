@@ -112,7 +112,8 @@ namespace Ykotika.WebAPI.Controllers
             GenerateSpreadSheet([FromBody] GenerateProductSpreadsheetDto dto)
         {
             var command = _mapper.Map<GenerateProductSpreadsheetCommand>(dto);
-            command.RootUrl = $"{Request.Scheme}://{Request.Host}";
+            //command.RootUrl = $"{Request.Scheme}://{Request.Host}";
+            command.RootUrl = Request.Headers.Origin.ToString() ?? $"{Request.Scheme}://{Request.Host}";
             var id = await Mediator.Send(command);
 
             return Ok(id);

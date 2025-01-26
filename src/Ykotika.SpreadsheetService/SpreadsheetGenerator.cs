@@ -24,6 +24,8 @@ namespace Ykotika.SpreadsheetService
                 .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
                 .ToList();
 
+            productsDto.ForEach(e => e.AuthorId = Path.Combine(rootUrl,"manage","admin", "authors", e.AuthorId).Replace("\\", "/"));
+
             Dictionary<ProductType, List<ProductDto>> productTypeDictionary =
                 productsDto
                 .GroupBy(product => product.ProductType)

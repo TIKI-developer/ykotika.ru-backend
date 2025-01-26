@@ -25,15 +25,15 @@ namespace Ykotika.SpreadsheetService
         [CellProperty]
         public required List<string> Images { get; set; }
         
-        [CellProperty]
-        public required string Author { get; set; }
+        [CellProperty(isHyperLink: true)]
+        public required string AuthorId { get; set; }
         public required ProductType ProductType { get; init; }
         public required FormRecord FormRecord { get; init; }
 
         public void Mapping(Profile profile)
         {
             profile.CreateMap<Product, ProductDto>()
-                .ForMember(to => to.Author,
+                .ForMember(to => to.AuthorId,
                 opt => opt.MapFrom(from => from.User.Id))
                 .ForMember(to => to.Tags,
                 opt => opt.MapFrom(from => from.Tags.Select(e => e.Value)))
