@@ -31,7 +31,7 @@ namespace Ykotika.Article
 
             article = article.TrimStart('-');
 
-            return article;
+            return article.Replace(" ", "");
         }
     }
 }

@@ -13,6 +13,7 @@ using Ykotika.WebAPI.ModelBinders;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
 using System.Collections.Concurrent;
+using Ykotika.SpreadsheetService;
 
 namespace Ykotika.WebAPI
 {
@@ -28,6 +29,7 @@ namespace Ykotika.WebAPI
             {
                 config.AddProfile(new AssemblyMappingProfile(Assembly.GetExecutingAssembly()));
                 config.AddProfile(new AssemblyMappingProfile(typeof(IYkotikaDbContext).Assembly));
+                config.AddProfile(new AssemblyMappingProfile(typeof(CellProperty).Assembly));
             });
 
             services.AddPersistence(Configuration);

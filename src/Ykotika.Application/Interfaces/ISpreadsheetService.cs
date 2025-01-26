@@ -5,7 +5,6 @@ namespace Ykotika.Application.Interfaces
 {
     public interface ISpreadsheetService
     {
-        FileData Generate<T>(List<T> dto);
-        FileData GenerateProductsTable(List<Product> products);
+        FileData GenerateProductsTable(List<Product> products, string rootUrl);
     }
 }

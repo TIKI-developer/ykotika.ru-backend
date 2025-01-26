@@ -31,14 +31,16 @@ namespace Ykotika.Application.Commands
                 .ThenInclude(e => e.ExtraAttributes)
                 .Include(e => e.FormRecord)
                 .ThenInclude(e => e.InputRecords)
+                .Include(e => e.User)
                 .Include(e => e.Source)
                 .Include(e => e.Images)
                 .ThenInclude(e => e.Image)
+                .AsNoTracking()
                 .ToListAsync(cancellationToken);
 
             if (products != null && products.Count > 0)
             {
-                var fileData = _spreadsheetService.GenerateProductsTable(products);
+                var fileData = _spreadsheetService.GenerateProductsTable(products, request.RootUrl);
                 var file = await _fileService.Upload(fileData, "tables", false);
                 await _dbContext.Files.AddAsync(file, cancellationToken);
                 await _dbContext.SaveChangesAsync(cancellationToken);

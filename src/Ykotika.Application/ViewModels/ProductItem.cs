@@ -15,6 +15,7 @@ namespace Ykotika.Application.ViewModels
         public List<OutsourceShopProductInfoDto>? OutsourceShops { get; set; }
         public List<ImageListItem>? Images { get; set; }
         public required bool IsPublished { get; set; }
+        public required ProductType ProductType { get; init; }
         public required UserDetails User { get; set; }
 
         public void Mapping(Profile profile)
