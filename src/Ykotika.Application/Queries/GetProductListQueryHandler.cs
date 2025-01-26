@@ -39,6 +39,7 @@ namespace Ykotika.Application.Queries
 
             var queryItems = query
                 .Include(e => e.User)
+                .Include(e => e.ProductType)
                 .Include(e => e.Images)
                 .ThenInclude(e => e.Image)
                 .Include(e => e.FormRecord)
