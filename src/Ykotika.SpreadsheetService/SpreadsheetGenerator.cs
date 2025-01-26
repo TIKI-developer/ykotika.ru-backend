@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Spreadsheet;
 using Ykotika.Application.Interfaces;
 using Ykotika.Domain.Entities;
 using Ykotika.Domain.ValueObjects;
@@ -25,13 +24,23 @@ namespace Ykotika.SpreadsheetService
                 .ToList();
 
             productsDto.ForEach(e => e.AuthorId = Path.Combine(rootUrl,"manage","admin", "authors", e.AuthorId).Replace("\\", "/"));
+            productsDto.ForEach(e => e.Id = Path.Combine(rootUrl,"manage","moderator", "products", e.Id).Replace("\\", "/"));
 
             Dictionary<ProductType, List<ProductDto>> productTypeDictionary =
                 productsDto
-                .GroupBy(product => product.ProductType)
-                .ToDictionary(group => group.Key, group => group.ToList());
+                .GroupBy(product => product.ProductType.Id) 
+                .ToDictionary(
+                    group => productsDto.First(product => product.ProductType.Id == group.Key).ProductType, 
+                    group => group.ToList() 
+                );
 
-            using (var memoryStream = new MemoryStream())
+            foreach (var kvp in productTypeDictionary)
+            {
+                var productType = kvp.Key;
+                var productsOfType = kvp.Value;
+            }
+
+                using (var memoryStream = new MemoryStream())
             {
                 var workbook = new XLWorkbook();
 
@@ -47,17 +56,18 @@ namespace Ykotika.SpreadsheetService
                     var headerRow = worksheet.Row(1);
                     Form.Input[] inputs = [.. productType.Form.Inputs];
 
-                    headerRow.Cell(1).Value = "Артикул";
-                    headerRow.Cell(2).Value = "Название";
-                    headerRow.Cell(3).Value = "Описание";
-                    headerRow.Cell(4).Value = "Теги";
-                    headerRow.Cell(5).Value = "Исходник";
-                    headerRow.Cell(6).Value = "Изображения";
-                    headerRow.Cell(7).Value = "Автор";
+                    headerRow.Cell(1).Value = "№";
+                    headerRow.Cell(2).Value = "Артикул";
+                    headerRow.Cell(3).Value = "Название";
+                    headerRow.Cell(4).Value = "Описание";
+                    headerRow.Cell(5).Value = "Теги";
+                    headerRow.Cell(6).Value = "Исходник";
+                    headerRow.Cell(7).Value = "Изображения";
+                    headerRow.Cell(8).Value = "Автор";
 
-                    for (int col = 8; col <= inputs.Length + 7; col++)
+                    for (int col = 9; col <= inputs.Length + 8; col++)
                     {
-                        headerRow.Cell(col).Value = inputs[col - 8].ExtraAttributes.Label;
+                        headerRow.Cell(col).Value = inputs[col - 9].ExtraAttributes.Label;
                     }
                     //
 
@@ -80,6 +90,10 @@ namespace Ykotika.SpreadsheetService
                         {
                             worksheet.Cell(row, col).Value = cells[col - 1].Value;
 
+                            if (col == 1)
+                            {
+                                worksheet.Cell(row, col).Value = row - 1;
+                            }
                             if (cells[col - 1].HyperLink != null)
                             {
                                 worksheet.Cell(row, col).SetHyperlink(new XLHyperlink(cells[col - 1].HyperLink));

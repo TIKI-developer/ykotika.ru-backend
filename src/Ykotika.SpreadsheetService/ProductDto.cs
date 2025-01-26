@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using Ykotika.Application.Common.Mappings;
 using Ykotika.Domain.Entities;
-using Ykotika.Domain.ValueObjects;
 
 namespace Ykotika.SpreadsheetService
 {
     public class ProductDto : IMapWith<Product>
     {
+        [CellProperty(isHyperLink:true)]
+        public required string Id { get; set; }
+
         [CellProperty]
         public required string Article { get; set; }        
 
@@ -27,14 +29,16 @@ namespace Ykotika.SpreadsheetService
         
         [CellProperty(isHyperLink: true)]
         public required string AuthorId { get; set; }
-        public required ProductType ProductType { get; init; }
-        public required FormRecord FormRecord { get; init; }
+        public required ProductType ProductType { get; set; }
+        public required FormRecord FormRecord { get; set; }
 
         public void Mapping(Profile profile)
         {
             profile.CreateMap<Product, ProductDto>()
                 .ForMember(to => to.AuthorId,
                 opt => opt.MapFrom(from => from.User.Id))
+                .ForMember(to => to.ProductType,
+                opt => opt.MapFrom(from => from.ProductType))
                 .ForMember(to => to.Tags,
                 opt => opt.MapFrom(from => from.Tags.Select(e => e.Value)))
                 .ForMember(to => to.Images,
