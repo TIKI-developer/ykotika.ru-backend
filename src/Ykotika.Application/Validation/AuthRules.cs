@@ -6,7 +6,7 @@ namespace Ykotika.Application.Validation
     {
         private readonly string _passwordExpression = "^(?=.*[a-z])(?=.*\\d)[A-Za-z\\d]{8,50}$";
 
-        public IRuleBuilderOptions<T, string?> Number<T>(IRuleBuilder<T, string?> ruleBuilder)
+        public IRuleBuilderOptions<T, string?> Email<T>(IRuleBuilder<T, string?> ruleBuilder)
         {
             return ruleBuilder
                     .NotEmpty().WithMessage("Email is required.")
@@ -15,12 +15,9 @@ namespace Ykotika.Application.Validation
         public IRuleBuilderOptions<T, string?> Password<T>(IRuleBuilder<T, string?> ruleBuilder)
         {
             return ruleBuilder
-                   .MinimumLength(8)
-                   .WithMessage("Пароль должен иметь больше 8 символов!")
-                   .MaximumLength(50)
-                   .WithMessage("Пароль должен иметь меньше 50 символов!")
-                   .Matches(_passwordExpression)
-                   .WithMessage("Пароль должен иметь хотя бы одну букву и одну цифру");
+                   .MinimumLength(8).WithMessage("Пароль должен иметь больше 8 символов!")
+                   .MaximumLength(50).WithMessage("Пароль должен иметь меньше 50 символов!")
+                   .Matches(_passwordExpression).WithMessage("Пароль должен иметь хотя бы одну букву и одну цифру");
         }
     }
 }
