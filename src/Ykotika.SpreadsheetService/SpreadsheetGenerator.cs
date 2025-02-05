@@ -94,6 +94,10 @@ namespace Ykotika.SpreadsheetService
                             {
                                 worksheet.Cell(row, col).Value = row - 1;
                             }
+                            if (col == 8)
+                            {
+                                worksheet.Cell(row, col).Value = product.User.Email;
+                            }
                             if (cells[col - 1].HyperLink != null)
                             {
                                 worksheet.Cell(row, col).SetHyperlink(new XLHyperlink(cells[col - 1].HyperLink));

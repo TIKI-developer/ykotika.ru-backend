@@ -31,6 +31,7 @@ namespace Ykotika.SpreadsheetService
         public required string AuthorId { get; set; }
         public required ProductType ProductType { get; set; }
         public required FormRecord FormRecord { get; set; }
+        public required User User { get; set; }
 
         public void Mapping(Profile profile)
         {
