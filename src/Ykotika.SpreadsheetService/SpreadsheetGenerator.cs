@@ -54,7 +54,7 @@ namespace Ykotika.SpreadsheetService
 
                     //Setup headers
                     var headerRow = worksheet.Row(1);
-                    Form.Input[] inputs = [.. productType.Form.Inputs];
+                    Form.Input[] inputs = [.. productType.Form.Inputs.OrderBy(e => e.OrderIndex)];
 
                     headerRow.Cell(1).Value = "№";
                     headerRow.Cell(2).Value = "Артикул";
@@ -70,6 +70,8 @@ namespace Ykotika.SpreadsheetService
                         headerRow.Cell(col).Value = inputs[col - 9].ExtraAttributes.Label;
                     }
                     //
+                    var inputOrder = inputs.Select((input, index) => new { input.Id, Index = index })
+                       .ToDictionary(x => x.Id, x => x.Index);
 
                     for (int row = 2; row <= productsOfType.Count + 1; row++)
                     {
@@ -78,11 +80,10 @@ namespace Ykotika.SpreadsheetService
                         // Get values list
                         var cells = GetCellPropertiesFromDto(product);
                         cells
-                            .AddRange(product.FormRecord.InputRecords.Select(e => new CellDto
-                            {
-                                Value = e.Value,
-                            })
-                            .ToList());
+                        .AddRange(product.FormRecord.InputRecords
+                        .OrderBy(e => inputOrder.TryGetValue(e.Id, out var index) ? index : int.MaxValue)
+                        .Select(e => new CellDto { Value = e.Value })
+                        .ToList());
                         //
 
                         //Fill values
