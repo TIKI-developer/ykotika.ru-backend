@@ -17,6 +17,7 @@ namespace Ykotika.Application.ViewModels
         public required bool IsPublished { get; set; }
         public required ProductType ProductType { get; init; }
         public required UserDetails User { get; set; }
+        public required Timestamps Timestamps { get; set; }
 
         public void Mapping(Profile profile)
         {
