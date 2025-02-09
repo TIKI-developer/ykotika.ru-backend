@@ -144,7 +144,8 @@ namespace Ykotika.WebAPI.Controllers
 
         [HttpPost("{id}/comments")]
         [Authorize(Roles = $"{Roles.AUTHOR_ROLE}, {Roles.MODERATOR_ROLE}")]
-        public async Task<IActionResult> CreateComment(Guid id, [FromBody] CreateProductCommentDto dto)
+        public async Task<IActionResult> 
+            CreateComment(Guid id, [FromBody] CreateProductCommentDto dto)
         {
             var vm = new GetProductByIdQuery
             {
@@ -168,11 +169,52 @@ namespace Ykotika.WebAPI.Controllers
         }
         [HttpPatch("{id}/published")]
         [Authorize(Roles = $"{Roles.ADMIN_ROLE}, {Roles.MODERATOR_ROLE}")]
-        public async Task<IActionResult> UpdatePublished(Guid id, [FromBody] UpdateProductPublishedDto dto)
+        public async Task<IActionResult> 
+            UpdatePublished(Guid id, [FromBody] UpdateProductPublishedDto dto)
         {
             var command = _mapper.Map<UpdateProductPublishedCommand>(dto);
             command.Id = id;
             await Mediator.Send(command);
+
+            return Ok();
+        }
+        [HttpPatch("{id}/status")]
+        [Authorize(Roles = $"{Roles.ADMIN_ROLE}, {Roles.MODERATOR_ROLE}, {Roles.AUTHOR_ROLE}")]
+        public async Task<IActionResult>
+            UpdateStatus(Guid id, [FromBody] UpdateProductStatusDto dto)
+        {
+            var command = _mapper.Map<UpdateProductStatusCommand>(dto);
+            command.Id = id;
+
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, dto, Policies.PRODUCT_STATUS_POLICY);
+
+            if (authorizationResult.Succeeded)
+            {
+                await Mediator.Send(command);
+
+                return Ok();
+            }
+            else
+            {
+                return Forbid();
+            }
+        }
+        [HttpPatch("status")]
+        [Authorize(Roles = $"{Roles.ADMIN_ROLE}, {Roles.MODERATOR_ROLE}")]
+        public async Task<IActionResult>
+            UpdateStatusMultiple([FromBody] UpdateProductStatusMultipleDto dto)
+        {
+            foreach (var id  in dto.ProductIds) 
+            {
+                var command = _mapper.Map<UpdateProductStatusCommand>(dto);
+                command.Id = id;
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, dto, Policies.PRODUCT_STATUS_POLICY);
+
+                if (authorizationResult.Succeeded)
+                {
+                    await Mediator.Send(command);
+                }
+            }
 
             return Ok();
         }

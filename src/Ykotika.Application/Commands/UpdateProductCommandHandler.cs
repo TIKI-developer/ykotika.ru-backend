@@ -32,7 +32,7 @@ namespace Ykotika.Application.Commands
                 ?? throw new NotFoundException(nameof(Product), request.Id);
 
 
-            if (product.Status is not ProductStatus.New)
+            if (product.Status is not ProductStatus.Edit)
             {
                 throw new Exception("Сейчас товар изменить нельзя!");
             }

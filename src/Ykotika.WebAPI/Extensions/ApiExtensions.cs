@@ -109,8 +109,15 @@ namespace Ykotika.WebApi.Extensions
                       UserRole.Admin,
                       UserRole.Director]));
                 });
+                options.AddPolicy(Policies.PRODUCT_STATUS_POLICY, policy =>
+                {
+                    policy
+                    .AddRequirements
+                    (new ProductStatusRequirement());
+                });
             });
             services.AddSingleton<IAuthorizationHandler, AuthorHandler>();
+            services.AddSingleton<IAuthorizationHandler, ProductStatusHandler>();
             services.AddSingleton<IAuthorizationHandler, PublishedHandler>();
             services.AddSingleton<IAuthorizationHandler, RoleHandler>();
             services.AddSingleton<IAuthorizationHandler, ContentListHandler>();

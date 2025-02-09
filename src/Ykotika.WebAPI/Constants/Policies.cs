@@ -3,6 +3,7 @@
     public class Policies
     {
         public const string CONTENT_POLICY = "ContentPolicy";
+        public const string PRODUCT_STATUS_POLICY = "ProductStatusPolicy";
         public const string PRODUCT_TYPE_LIST_POLICY = "ProductTypeListPolicy";
         public const string PRODUCT_LIST_POLICY = "ProductListPolicy";
         public const string CATEGORY_LIST_POLICY = "CategoryListPolicy";

@@ -20,6 +20,9 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
                     i.OwnsOne(e => e.ExtraAttributes, ea =>
                     {
                         ea.WithOwner();
+
+
+                        ea.OwnsOne(e => e.Validation, v => v.WithOwner());
                         ea.Property(e => e.IsRequired)
                          .HasDefaultValue(false);
                     });

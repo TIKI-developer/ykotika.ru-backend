@@ -23,9 +23,16 @@ namespace Ykotika.Domain.Entities
 
     public enum ProductStatus
     {
-        New,
+        Edit,
+        PendingModeration,
         Moderating,
-        Sell,
-        Rejected
+        Done,
+        Selling,
+        NotSelling,
+        Incorrect,
+        Fixed
     }
 }
+
+
+//В работе, Готово, Загружено, ЕстьОшибки, Ошибка исправлена

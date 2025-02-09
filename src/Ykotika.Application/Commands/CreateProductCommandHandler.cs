@@ -144,7 +144,7 @@ namespace Ykotika.Application.Commands
                 Id = Guid.NewGuid(),
                 Source = source,
                 Tags = request.Tags,
-                Status = ProductStatus.New,
+                Status = ProductStatus.Edit,
                 Article = request.Name,
                 Name = request.Name,
                 Description = request.Description,
