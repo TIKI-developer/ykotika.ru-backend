@@ -6,6 +6,7 @@ using Ykotika.Application.Common.Mappings;
 using Ykotika.Application.Models;
 using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
+using Ykotika.Domain.Entities;
 using Ykotika.WebAPI.Constants;
 using Ykotika.WebAPI.ModelBinders;
 using Ykotika.WebAPI.Models;
@@ -186,7 +187,16 @@ namespace Ykotika.WebAPI.Controllers
             var command = _mapper.Map<UpdateProductStatusCommand>(dto);
             command.Id = id;
 
-            var authorizationResult = await _authorizationService.AuthorizeAsync(User, dto, Policies.PRODUCT_STATUS_POLICY);
+            var query = new GetProductByIdQuery { Id = id };
+            var vm = await Mediator.Send(query);
+
+            var authorizationDto = new UpdateProductStatusAuthorizationDto 
+            { 
+                From = Enum.Parse<ProductStatus>(vm.Status),
+                To = Enum.Parse<ProductStatus>(dto.NewStatus)
+            };
+
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, authorizationDto, Policies.PRODUCT_STATUS_POLICY);
 
             if (authorizationResult.Succeeded)
             {
@@ -208,7 +218,16 @@ namespace Ykotika.WebAPI.Controllers
             {
                 var command = _mapper.Map<UpdateProductStatusCommand>(dto);
                 command.Id = id;
-                var authorizationResult = await _authorizationService.AuthorizeAsync(User, dto, Policies.PRODUCT_STATUS_POLICY);
+                var query = new GetProductByIdQuery { Id = id };
+                var vm = await Mediator.Send(query);
+
+                var authorizationDto = new UpdateProductStatusAuthorizationDto
+                {
+                    From = Enum.Parse<ProductStatus>(vm.Status),
+                    To = Enum.Parse<ProductStatus>(dto.NewStatus)
+                };
+
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, authorizationDto, Policies.PRODUCT_STATUS_POLICY);
 
                 if (authorizationResult.Succeeded)
                 {

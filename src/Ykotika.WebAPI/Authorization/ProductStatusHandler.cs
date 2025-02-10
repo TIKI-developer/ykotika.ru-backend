@@ -2,23 +2,24 @@
 using System.Security.Claims;
 using Ykotika.Domain.Entities;
 using Ykotika.WebAPI.Authorization.Requirements;
+using Ykotika.WebAPI.Models;
 
 namespace Ykotika.WebAPI.Authorization
 {
     public class ProductStatusHandler
-        : AuthorizationHandler<ProductStatusRequirement, ProductStatus>
+        : AuthorizationHandler<ProductStatusRequirement, UpdateProductStatusAuthorizationDto>
     {
         protected override Task 
             HandleRequirementAsync
             (AuthorizationHandlerContext context, 
             ProductStatusRequirement requirement,
-            ProductStatus resource)
+            UpdateProductStatusAuthorizationDto resource)
         {
             var userRoles = context.User.Claims
                 .Where(c => c.Type == ClaimTypes.Role)
                 .Select(c => c.Value);
 
-            switch (resource)
+            switch (resource.To)
             {
                 case ProductStatus.Edit:
                     if (userRoles.Contains(UserRole.Author.ToString()))
