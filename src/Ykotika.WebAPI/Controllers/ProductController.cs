@@ -145,7 +145,7 @@ namespace Ykotika.WebAPI.Controllers
 
         [HttpPost("{id}/comments")]
         [Authorize(Roles = $"{Roles.AUTHOR_ROLE}, {Roles.MODERATOR_ROLE}")]
-        public async Task<IActionResult> 
+        public async Task<IActionResult>
             CreateComment(Guid id, [FromBody] CreateProductCommentDto dto)
         {
             var vm = new GetProductByIdQuery
@@ -170,7 +170,7 @@ namespace Ykotika.WebAPI.Controllers
         }
         [HttpPatch("{id}/published")]
         [Authorize(Roles = $"{Roles.ADMIN_ROLE}, {Roles.MODERATOR_ROLE}")]
-        public async Task<IActionResult> 
+        public async Task<IActionResult>
             UpdatePublished(Guid id, [FromBody] UpdateProductPublishedDto dto)
         {
             var command = _mapper.Map<UpdateProductPublishedCommand>(dto);
@@ -190,8 +190,8 @@ namespace Ykotika.WebAPI.Controllers
             var query = new GetProductByIdQuery { Id = id };
             var vm = await Mediator.Send(query);
 
-            var authorizationDto = new UpdateProductStatusAuthorizationDto 
-            { 
+            var authorizationDto = new UpdateProductStatusAuthorizationDto
+            {
                 From = Enum.Parse<ProductStatus>(vm.Status),
                 To = Enum.Parse<ProductStatus>(dto.NewStatus)
             };
@@ -214,7 +214,7 @@ namespace Ykotika.WebAPI.Controllers
         public async Task<IActionResult>
             UpdateStatusMultiple([FromBody] UpdateProductStatusMultipleDto dto)
         {
-            foreach (var id  in dto.ProductIds) 
+            foreach (var id in dto.ProductIds)
             {
                 var command = _mapper.Map<UpdateProductStatusCommand>(dto);
                 command.Id = id;

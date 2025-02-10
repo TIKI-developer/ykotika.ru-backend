@@ -1,5 +1,4 @@
-﻿using Ykotika.Application.Common.Mappings;
-using Ykotika.Domain.Entities;
+﻿using Ykotika.Domain.Entities;
 
 namespace Ykotika.WebAPI.Models
 {

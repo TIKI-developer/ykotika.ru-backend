@@ -6,11 +6,11 @@ namespace Ykotika.SpreadsheetService
 {
     public class ProductDto : IMapWith<Product>
     {
-        [CellProperty(isHyperLink:true)]
+        [CellProperty(isHyperLink: true)]
         public required string Id { get; set; }
 
         [CellProperty]
-        public required string Article { get; set; }        
+        public required string Article { get; set; }
 
         [CellProperty]
         public required string Name { get; set; }
@@ -21,12 +21,12 @@ namespace Ykotika.SpreadsheetService
         [CellProperty]
         public required List<string> Tags { get; set; }
 
-        [CellProperty(isHyperLink:true)]
+        [CellProperty(isHyperLink: true)]
         public string? Source { get; set; }
 
         [CellProperty]
         public required List<string> Images { get; set; }
-        
+
         [CellProperty(isHyperLink: true)]
         public required string AuthorId { get; set; }
         public required ProductType ProductType { get; set; }
@@ -46,6 +46,6 @@ namespace Ykotika.SpreadsheetService
                 opt => opt.MapFrom(from => from.Images.Select(e => e.Image.Path)))
                 .ForMember(to => to.Source,
                 opt => opt.MapFrom(from => from.Source.Path));
-        }   
+        }
     }
 }

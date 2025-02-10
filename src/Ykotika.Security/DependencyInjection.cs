@@ -15,7 +15,7 @@ namespace Ykotika.Security
             services.AddScoped<IEncryptor, Encryptor>();
 
             services.Configure<EncryptionOptions>(options =>
-            configuration.GetSection(nameof(EncryptionOptions)).Bind(options));    
+            configuration.GetSection(nameof(EncryptionOptions)).Bind(options));
 
             services.Configure<AccessTokenOptions>(options =>
             configuration.GetSection(nameof(AccessTokenOptions)).Bind(options));

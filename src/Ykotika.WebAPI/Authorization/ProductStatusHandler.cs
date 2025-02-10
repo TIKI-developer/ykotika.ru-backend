@@ -9,9 +9,9 @@ namespace Ykotika.WebAPI.Authorization
     public class ProductStatusHandler
         : AuthorizationHandler<ProductStatusRequirement, UpdateProductStatusAuthorizationDto>
     {
-        protected override Task 
+        protected override Task
             HandleRequirementAsync
-            (AuthorizationHandlerContext context, 
+            (AuthorizationHandlerContext context,
             ProductStatusRequirement requirement,
             UpdateProductStatusAuthorizationDto resource)
         {

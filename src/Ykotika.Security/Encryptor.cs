@@ -1,11 +1,11 @@
-﻿using System.Text;
-using Ykotika.Application.Interfaces;
+﻿using Microsoft.Extensions.Options;
 using System.Security.Cryptography;
-using Microsoft.Extensions.Options;
+using System.Text;
+using Ykotika.Application.Interfaces;
 
 namespace Ykotika.Security
 {
-    public class Encryptor 
+    public class Encryptor
         (IOptions<EncryptionOptions> options)
         : IEncryptor
     {

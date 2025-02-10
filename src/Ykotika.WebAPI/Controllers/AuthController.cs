@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using DocumentFormat.OpenXml.Packaging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -115,7 +114,7 @@ namespace Ykotika.WebAPI.Controllers
             }
 
             var command = new VerifyEmailCommand
-            { 
+            {
                 UserId = UserId,
                 Issuer = Request.Headers.Host.ToString(),
                 Audience = Request.Headers.Origin.ToString(),

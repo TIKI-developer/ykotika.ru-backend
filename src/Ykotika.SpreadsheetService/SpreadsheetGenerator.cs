@@ -23,15 +23,15 @@ namespace Ykotika.SpreadsheetService
                 .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
                 .ToList();
 
-            productsDto.ForEach(e => e.AuthorId = Path.Combine(rootUrl,"manage","admin", "authors", e.AuthorId).Replace("\\", "/"));
-            productsDto.ForEach(e => e.Id = Path.Combine(rootUrl,"manage","moderator", "products", e.Id).Replace("\\", "/"));
+            productsDto.ForEach(e => e.AuthorId = Path.Combine(rootUrl, "manage", "admin", "authors", e.AuthorId).Replace("\\", "/"));
+            productsDto.ForEach(e => e.Id = Path.Combine(rootUrl, "manage", "moderator", "products", e.Id).Replace("\\", "/"));
 
             Dictionary<ProductType, List<ProductDto>> productTypeDictionary =
                 productsDto
-                .GroupBy(product => product.ProductType.Id) 
+                .GroupBy(product => product.ProductType.Id)
                 .ToDictionary(
-                    group => productsDto.First(product => product.ProductType.Id == group.Key).ProductType, 
-                    group => group.ToList() 
+                    group => productsDto.First(product => product.ProductType.Id == group.Key).ProductType,
+                    group => group.ToList()
                 );
 
             foreach (var kvp in productTypeDictionary)
@@ -40,7 +40,7 @@ namespace Ykotika.SpreadsheetService
                 var productsOfType = kvp.Value;
             }
 
-                using (var memoryStream = new MemoryStream())
+            using (var memoryStream = new MemoryStream())
             {
                 var workbook = new XLWorkbook();
 
