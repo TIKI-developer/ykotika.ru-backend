@@ -147,6 +147,7 @@ namespace Ykotika.Application.Commands
                 Status = ProductStatus.Edit,
                 Article = request.Name,
                 Name = request.Name,
+                IsAdult = request.IsAdult,
                 Description = request.Description,
                 User = user,
                 Images = imageListItems,

@@ -9,6 +9,7 @@ namespace Ykotika.Domain.Entities
         public required string Name { get; set; }
         public required string Description { get; set; }
         public required bool IsPublished { get; set; }
+        public required bool IsAdult { get; set; }
         public required ProductStatus Status { get; set; }
         public required List<Tag> Tags { get; set; }
         public List<Comment> Comments { get; set; } = [];

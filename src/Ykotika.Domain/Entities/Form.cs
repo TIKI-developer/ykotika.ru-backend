@@ -23,11 +23,8 @@ namespace Ykotika.Domain.Entities
             public required string Placeholder { get; set; }
             public required bool IsRequired { get; set; }
             public string[]? Options { get; set; }
-            public InputValidation? Validation { get; set; }
-        }
-        public class InputValidation
-        {
             public string? Regex { get; set; }
+            public int? MaxSelections { get; set; }
         }
         public enum InputType
         {

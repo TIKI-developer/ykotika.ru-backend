@@ -63,6 +63,7 @@ namespace Ykotika.Application.Commands
 
             product.Name = request.Name ?? product.Name;
             product.Description = request.Description ?? product.Description;
+            product.IsAdult = request.IsAdult ?? product.IsAdult;
             product.Tags = request.Tags ?? product.Tags;
 
             if (request.SourcePath != null)

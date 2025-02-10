@@ -10,6 +10,7 @@ namespace Ykotika.Application.Commands
         public string? SourcePath { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
+        public bool? IsAdult { get; set; }
         public UpdateFormRecordCommand? FormRecord { get; set; }
         public List<Tag>? Tags { get; set; }
         public List<Guid>? CategoryIds { get; set; }

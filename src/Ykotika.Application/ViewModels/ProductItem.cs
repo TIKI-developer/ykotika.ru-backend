@@ -13,6 +13,7 @@ namespace Ykotika.Application.ViewModels
         public required string Name { get; set; }
         public required string Description { get; set; }
         public List<OutsourceShopProductInfoDto>? OutsourceShops { get; set; }
+        public required bool IsAdult { get; set; }
         public List<ImageListItem>? Images { get; set; }
         public required bool IsPublished { get; set; }
         public required ProductType ProductType { get; init; }

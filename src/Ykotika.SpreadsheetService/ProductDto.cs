@@ -19,6 +19,9 @@ namespace Ykotika.SpreadsheetService
         public required string Description { get; set; }
 
         [CellProperty]
+        public required bool IsAdult { get; set; }
+
+        [CellProperty]
         public required List<string> Tags { get; set; }
 
         [CellProperty(isHyperLink: true)]

@@ -22,48 +22,20 @@ namespace Ykotika.WebAPI.Authorization
             switch (resource.To)
             {
                 case ProductStatus.Edit:
-                    if (userRoles.Contains(UserRole.Author.ToString()))
-                    {
-                        context.Succeed(requirement);
-                    }
-                    break;
                 case ProductStatus.PendingModeration:
-                    if (userRoles.Contains(UserRole.Author.ToString()))
+                case ProductStatus.Fixed:
+                    if (userRoles.Contains(UserRole.Author.ToString()) ||
+                        userRoles.Contains(UserRole.Moderator.ToString()) ||
+                        userRoles.Contains(UserRole.Admin.ToString()))
                     {
                         context.Succeed(requirement);
                     }
                     break;
                 case ProductStatus.Moderating:
-                    if (userRoles.Contains(UserRole.Moderator.ToString()) ||
-                        userRoles.Contains(UserRole.Admin.ToString()))
-                    {
-                        context.Succeed(requirement);
-                    }
-                    break;
                 case ProductStatus.Done:
-                    if (userRoles.Contains(UserRole.Moderator.ToString()) ||
-                        userRoles.Contains(UserRole.Admin.ToString()))
-                    {
-                        context.Succeed(requirement);
-                    }
-                    break;
                 case ProductStatus.Selling:
-                    if (userRoles.Contains(UserRole.Moderator.ToString()) ||
-                        userRoles.Contains(UserRole.Admin.ToString()))
-                    {
-                        context.Succeed(requirement);
-                    }
-                    break;
                 case ProductStatus.Incorrect:
                     if (userRoles.Contains(UserRole.Moderator.ToString()) ||
-                        userRoles.Contains(UserRole.Admin.ToString()))
-                    {
-                        context.Succeed(requirement);
-                    }
-                    break;
-                case ProductStatus.Fixed:
-                    if (userRoles.Contains(UserRole.Author.ToString()) ||
-                        userRoles.Contains(UserRole.Moderator.ToString()) ||
                         userRoles.Contains(UserRole.Admin.ToString()))
                     {
                         context.Succeed(requirement);

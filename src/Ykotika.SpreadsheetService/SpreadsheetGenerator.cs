@@ -60,14 +60,15 @@ namespace Ykotika.SpreadsheetService
                     headerRow.Cell(2).Value = "Артикул";
                     headerRow.Cell(3).Value = "Название";
                     headerRow.Cell(4).Value = "Описание";
-                    headerRow.Cell(5).Value = "Теги";
-                    headerRow.Cell(6).Value = "Исходник";
-                    headerRow.Cell(7).Value = "Изображения";
-                    headerRow.Cell(8).Value = "Автор";
+                    headerRow.Cell(5).Value = "18+?";
+                    headerRow.Cell(6).Value = "Теги";
+                    headerRow.Cell(7).Value = "Исходник";
+                    headerRow.Cell(8).Value = "Изображения";
+                    headerRow.Cell(9).Value = "Автор";
 
-                    for (int col = 9; col <= inputs.Length + 8; col++)
+                    for (int col = 10; col <= inputs.Length + 9; col++)
                     {
-                        headerRow.Cell(col).Value = inputs[col - 9].ExtraAttributes.Label;
+                        headerRow.Cell(col).Value = inputs[col - 10].ExtraAttributes.Label;
                     }
                     //
                     var inputOrder = inputs.Select((input, index) => new { input.Id, Index = index })
