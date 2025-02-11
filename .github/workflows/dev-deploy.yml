@@ -1,17 +1,13 @@
 name: Development Workflow
 
 on:
-  workflow_dispatch:
-    inputs:
-      confirm:
-        description: 'Do you want to proceed with the build?'
-        required: true
-        default: 'no'
-        type: choice
-        options:
-          - yes
-          - no
-
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+      
 jobs:
   deploy:
     runs-on: ubuntu-latest
