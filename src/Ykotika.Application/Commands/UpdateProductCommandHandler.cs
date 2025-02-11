@@ -32,7 +32,9 @@ namespace Ykotika.Application.Commands
                 ?? throw new NotFoundException(nameof(Product), request.Id);
 
 
-            if (product.Status is not ProductStatus.New)
+            if (product.Status is not ProductStatus.Edit &&
+                product.Status is not ProductStatus.Fixed &&
+                product.Status is not ProductStatus.Incorrect)
             {
                 throw new Exception("Сейчас товар изменить нельзя!");
             }
@@ -63,6 +65,7 @@ namespace Ykotika.Application.Commands
 
             product.Name = request.Name ?? product.Name;
             product.Description = request.Description ?? product.Description;
+            product.IsAdult = request.IsAdult ?? product.IsAdult;
             product.Tags = request.Tags ?? product.Tags;
 
             if (request.SourcePath != null)

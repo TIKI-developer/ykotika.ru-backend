@@ -10,7 +10,7 @@ namespace Ykotika.Security
 {
     public class JwtProvider
         (IOptions<AccessTokenOptions> options,
-        IEncryptor encryptor) 
+        IEncryptor encryptor)
         : IJwtProvider
     {
         private readonly AccessTokenOptions _options = options.Value;

@@ -1,19 +1,17 @@
 ﻿using Microsoft.Extensions.FileProviders;
 using System.Reflection;
+using System.Threading.RateLimiting;
 using Ykotika.Application;
 using Ykotika.Application.Common.Mappings;
 using Ykotika.Application.Interfaces;
 using Ykotika.FileStorage;
 using Ykotika.Persistence;
 using Ykotika.Security;
+using Ykotika.SpreadsheetService;
 using Ykotika.Verification;
 using Ykotika.WebApi.Extensions;
 using Ykotika.WebAPI.Middleware;
 using Ykotika.WebAPI.ModelBinders;
-using Microsoft.AspNetCore.RateLimiting;
-using System.Threading.RateLimiting;
-using System.Collections.Concurrent;
-using Ykotika.SpreadsheetService;
 
 namespace Ykotika.WebAPI
 {
@@ -62,9 +60,9 @@ namespace Ykotika.WebAPI
                 options.AddPolicy("RefreshTokenLimiter", context =>
                     RateLimitPartition.GetFixedWindowLimiter(context.Connection.RemoteIpAddress?.ToString(), _ => new FixedWindowRateLimiterOptions
                     {
-                        PermitLimit = 1, 
-                        Window = TimeSpan.FromSeconds(5), 
-                        QueueLimit = 0 
+                        PermitLimit = 1,
+                        Window = TimeSpan.FromSeconds(5),
+                        QueueLimit = 0
                     }));
                 options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
             });

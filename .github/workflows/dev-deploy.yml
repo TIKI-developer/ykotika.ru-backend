@@ -7,11 +7,11 @@ on:
   pull_request:
     branches:
       - dev
-
+      
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    
     env:
       SERVER_IP: ${{ vars.SERVER_IP }}  # Переменная для IP-адреса из секретов
 

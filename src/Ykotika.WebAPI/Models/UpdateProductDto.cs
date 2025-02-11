@@ -10,6 +10,7 @@ namespace Ykotika.WebAPI.Models
     {
         public string? Name { get; set; }
         public string? Description { get; set; }
+        public bool? IsAdult { get; set; }
         public List<Tag>? Tags { get; set; }
         public UpdateFormRecordDto? FormRecord { get; set; }
         public List<ImageListItemDto>? Images { get; set; }

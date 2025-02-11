@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.RateLimiting;
 using Ykotika.Application.Commands;
 using Ykotika.Application.Common.Mappings;
 using Ykotika.Application.Models;

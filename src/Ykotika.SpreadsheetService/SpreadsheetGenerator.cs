@@ -23,15 +23,15 @@ namespace Ykotika.SpreadsheetService
                 .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
                 .ToList();
 
-            productsDto.ForEach(e => e.AuthorId = Path.Combine(rootUrl,"manage","admin", "authors", e.AuthorId).Replace("\\", "/"));
-            productsDto.ForEach(e => e.Id = Path.Combine(rootUrl,"manage","moderator", "products", e.Id).Replace("\\", "/"));
+            productsDto.ForEach(e => e.AuthorId = Path.Combine(rootUrl, "manage", "admin", "authors", e.AuthorId).Replace("\\", "/"));
+            productsDto.ForEach(e => e.Id = Path.Combine(rootUrl, "manage", "moderator", "products", e.Id).Replace("\\", "/"));
 
             Dictionary<ProductType, List<ProductDto>> productTypeDictionary =
                 productsDto
-                .GroupBy(product => product.ProductType.Id) 
+                .GroupBy(product => product.ProductType.Id)
                 .ToDictionary(
-                    group => productsDto.First(product => product.ProductType.Id == group.Key).ProductType, 
-                    group => group.ToList() 
+                    group => productsDto.First(product => product.ProductType.Id == group.Key).ProductType,
+                    group => group.ToList()
                 );
 
             foreach (var kvp in productTypeDictionary)
@@ -40,7 +40,7 @@ namespace Ykotika.SpreadsheetService
                 var productsOfType = kvp.Value;
             }
 
-                using (var memoryStream = new MemoryStream())
+            using (var memoryStream = new MemoryStream())
             {
                 var workbook = new XLWorkbook();
 
@@ -54,22 +54,25 @@ namespace Ykotika.SpreadsheetService
 
                     //Setup headers
                     var headerRow = worksheet.Row(1);
-                    Form.Input[] inputs = [.. productType.Form.Inputs];
+                    Form.Input[] inputs = [.. productType.Form.Inputs.OrderBy(e => e.OrderIndex)];
 
                     headerRow.Cell(1).Value = "№";
                     headerRow.Cell(2).Value = "Артикул";
                     headerRow.Cell(3).Value = "Название";
                     headerRow.Cell(4).Value = "Описание";
-                    headerRow.Cell(5).Value = "Теги";
-                    headerRow.Cell(6).Value = "Исходник";
-                    headerRow.Cell(7).Value = "Изображения";
-                    headerRow.Cell(8).Value = "Автор";
+                    headerRow.Cell(5).Value = "18+?";
+                    headerRow.Cell(6).Value = "Теги";
+                    headerRow.Cell(7).Value = "Исходник";
+                    headerRow.Cell(8).Value = "Изображения";
+                    headerRow.Cell(9).Value = "Автор";
 
-                    for (int col = 9; col <= inputs.Length + 8; col++)
+                    for (int col = 10; col <= inputs.Length + 9; col++)
                     {
-                        headerRow.Cell(col).Value = inputs[col - 9].ExtraAttributes.Label;
+                        headerRow.Cell(col).Value = inputs[col - 10].ExtraAttributes.Label;
                     }
                     //
+                    var inputOrder = inputs.Select((input, index) => new { input.Id, Index = index })
+                       .ToDictionary(x => x.Id, x => x.Index);
 
                     for (int row = 2; row <= productsOfType.Count + 1; row++)
                     {
@@ -78,11 +81,10 @@ namespace Ykotika.SpreadsheetService
                         // Get values list
                         var cells = GetCellPropertiesFromDto(product);
                         cells
-                            .AddRange(product.FormRecord.InputRecords.Select(e => new CellDto
-                            {
-                                Value = e.Value,
-                            })
-                            .ToList());
+                        .AddRange(product.FormRecord.InputRecords
+                        .OrderBy(e => inputOrder.TryGetValue(e.Id, out var index) ? index : int.MaxValue)
+                        .Select(e => new CellDto { Value = e.Value })
+                        .ToList());
                         //
 
                         //Fill values
@@ -93,6 +95,10 @@ namespace Ykotika.SpreadsheetService
                             if (col == 1)
                             {
                                 worksheet.Cell(row, col).Value = row - 1;
+                            }
+                            if (col == 8)
+                            {
+                                worksheet.Cell(row, col).Value = product.User.Email;
                             }
                             if (cells[col - 1].HyperLink != null)
                             {

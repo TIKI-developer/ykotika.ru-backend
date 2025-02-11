@@ -11,6 +11,7 @@ namespace Ykotika.WebAPI.Models
         public required Guid ProductTypeId { get; set; }
         public required string Name { get; set; }
         public required string Description { get; set; }
+        public required bool IsAdult { get; set; }
         public required List<Tag> Tags { get; set; }
         public required List<ImageListItemDto> Images { get; set; }
         public List<Guid>? CategoryIds { get; set; }
