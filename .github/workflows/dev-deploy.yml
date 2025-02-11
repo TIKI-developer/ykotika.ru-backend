@@ -1,16 +1,21 @@
 name: Development Workflow
 
 on:
-  push:
-    branches:
-      - dev
-  pull_request:
-    branches:
-      - dev
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Do you want to proceed with the build?'
+        required: true
+        default: 'no'
+        type: choice
+        options:
+          - yes
+          - no
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.confirm == 'yes' }}
 
     env:
       SERVER_IP: ${{ vars.SERVER_IP }}  # Переменная для IP-адреса из секретов
@@ -42,3 +47,11 @@ jobs:
             sudo docker-compose down api
             sudo docker-compose up -d --build api
           EOF
+          
+      - name: Update database
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa root@$SERVER_IP << 'EOF'
+            cd /var/www/ykotika/dev/ykotika.ru-backend/ || exit
+            sudo dotnet ef database update --project Ykotika.Persistence --startup-project Ykotika.WebAPI
+          EOF
+      
