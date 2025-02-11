@@ -34,6 +34,7 @@ namespace Ykotika.WebAPI.Authorization
                 case ProductStatus.Moderating:
                 case ProductStatus.Done:
                 case ProductStatus.Selling:
+                case ProductStatus.NotSelling:
                 case ProductStatus.Incorrect:
                     if (userRoles.Contains(UserRole.Moderator.ToString()) ||
                         userRoles.Contains(UserRole.Admin.ToString()))
