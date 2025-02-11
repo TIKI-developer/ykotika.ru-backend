@@ -11,8 +11,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.confirm == 'yes' }}
-
+    
     env:
       SERVER_IP: ${{ vars.SERVER_IP }}  # Переменная для IP-адреса из секретов
 
