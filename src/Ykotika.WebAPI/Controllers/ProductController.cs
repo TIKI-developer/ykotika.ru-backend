@@ -216,8 +216,11 @@ namespace Ykotika.WebAPI.Controllers
         {
             foreach (var id in dto.ProductIds)
             {
-                var command = _mapper.Map<UpdateProductStatusCommand>(dto);
-                command.Id = id;
+                var command = new UpdateProductStatusCommand
+                {
+                    Id = id,
+                    NewStatus = Enum.Parse<ProductStatus>(dto.NewStatus)
+                };
                 var query = new GetProductByIdQuery { Id = id };
                 var vm = await Mediator.Send(query);
 
