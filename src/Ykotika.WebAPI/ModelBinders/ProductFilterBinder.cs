@@ -14,6 +14,7 @@ namespace Ykotika.WebAPI.ModelBinders
             var model = new ProductFilterQueryParams
             {
                 IsPublished = query["isPub"],
+                Status = query["status"],
                 UserId = query["user"],
                 ProductTypeId = query["productType"],
                 CategoryId = query["category"],

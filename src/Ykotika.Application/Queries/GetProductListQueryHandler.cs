@@ -31,6 +31,7 @@ namespace Ykotika.Application.Queries
             query = query.Where(p =>
                 (!request.Filter.IsPublished.HasValue || p.IsPublished == request.Filter.IsPublished.Value) &&
                 (!request.Filter.UserId.HasValue || p.User.Id == request.Filter.UserId.Value) &&
+                (!request.Filter.Status.HasValue || p.Status == request.Filter.Status.Value) &&
                 (!request.Filter.ProductTypeId.HasValue || p.ProductType.Id == request.Filter.ProductTypeId.Value) &&
                 (!request.Filter.CategoryId.HasValue || p.Categories.Any(e => e.Id == request.Filter.CategoryId.Value)));
 

@@ -96,7 +96,7 @@ namespace Ykotika.SpreadsheetService
                             {
                                 worksheet.Cell(row, col).Value = row - 1;
                             }
-                            if (col == 8)
+                            if (col == 9)
                             {
                                 worksheet.Cell(row, col).Value = product.User.Email;
                             }
@@ -156,7 +156,6 @@ namespace Ykotika.SpreadsheetService
                 if (cellAttribute.IsHyperLink)
                 {
                     cellDto.HyperLink = cellDto.Value;
-                    cellDto.Value = "Link";
                 }
 
                 cells.Add(cellDto);
