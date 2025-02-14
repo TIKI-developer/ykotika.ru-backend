@@ -271,9 +271,9 @@ namespace Ykotika.WebAPI.Controllers
         public void Mapping(Profile profile)
         {
             profile.CreateMap<ProductFilterQueryParams, ProductFilterDto>()
-                .ForMember(to => to.IsPublished,
-                    opt => opt.MapFrom(from => Enum.Parse<ProductStatus>(from.Status)))
                 .ForMember(to => to.Status,
+                    opt => opt.MapFrom(from => Enum.Parse<ProductStatus>(from.Status)))
+                .ForMember(to => to.IsPublished,
                     opt => opt.MapFrom(from =>
                         string.IsNullOrEmpty(from.IsPublished) ? (bool?)null :
                         (from.IsPublished.Equals("true", StringComparison.OrdinalIgnoreCase) ? (bool?)true : (bool?)false)))
