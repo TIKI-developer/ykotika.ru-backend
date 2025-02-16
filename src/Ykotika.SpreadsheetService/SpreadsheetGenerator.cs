@@ -150,7 +150,7 @@ namespace Ykotika.SpreadsheetService
 
                 if (value is ICollection<string> collection)
                 {
-                    string concatenatedValue = string.Join(";\n", collection);
+                    string concatenatedValue = string.Join(";", collection);
                     cellDto.Value = concatenatedValue;
                 }
                 if (cellAttribute.IsHyperLink)
