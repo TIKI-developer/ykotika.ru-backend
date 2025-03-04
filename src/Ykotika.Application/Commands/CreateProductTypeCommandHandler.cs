@@ -34,6 +34,7 @@ namespace Ykotika.Application.Commands
                 Id = Guid.NewGuid(),
                 ArticlePattern = request.ArticlePattern,
                 Name = request.Name,
+                ManualLink = request.ManualLink,
                 Form = form,
                 Timestamps = new Timestamps(),
                 IsPublished = request.IsPublished,
