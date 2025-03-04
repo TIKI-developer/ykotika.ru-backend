@@ -8,6 +8,7 @@ namespace Ykotika.WebAPI.Models
     {
         public string? Name { get; set; }
         public List<string>? ArticlePattern { get; set; }
+        public string? ManualLink { get; set; }
         public bool? IsPublished { get; set; }
 
         public void Mapping(Profile profile)

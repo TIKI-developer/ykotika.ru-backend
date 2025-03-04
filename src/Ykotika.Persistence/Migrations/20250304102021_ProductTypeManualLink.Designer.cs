@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Ykotika.Persistence;
@@ -12,9 +13,11 @@ using Ykotika.Persistence;
 namespace Ykotika.Persistence.Migrations
 {
     [DbContext(typeof(YkotikaDbContext))]
-    partial class YkotikaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250304102021_ProductTypeManualLink")]
+    partial class ProductTypeManualLink
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

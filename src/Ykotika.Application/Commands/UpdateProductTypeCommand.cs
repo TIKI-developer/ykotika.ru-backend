@@ -6,6 +6,7 @@ namespace Ykotika.Application.Commands
     {
         public required Guid Id { get; set; }
         public string? Name { get; set; }
+        public string? ManualLink { get; set; }
         public List<string>? ArticlePattern { get; set; }
         public bool? IsPublished { get; set; }
     }
