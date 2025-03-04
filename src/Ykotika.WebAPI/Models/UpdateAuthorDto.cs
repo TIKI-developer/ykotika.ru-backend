@@ -12,7 +12,7 @@ namespace Ykotika.WebAPI.Models
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<UpdateAuthorCommand, UpdateAuthorDto>();
+            profile.CreateMap<UpdateAuthorDto, UpdateAuthorCommand>();
         }
     }
 }
