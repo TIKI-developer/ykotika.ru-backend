@@ -34,7 +34,7 @@ namespace Ykotika.WebAPI.Controllers
 
         [HttpPut("me")]
         [Authorize(Roles = $"{Roles.AUTHOR_ROLE}")]
-        public async Task<ActionResult<IActionResult>>
+        public async Task<IActionResult>
             Update([FromBody] UpdateAuthorDto dto)
         {
             var command = _mapper.Map<UpdateAuthorCommand>(dto);
