@@ -22,6 +22,7 @@ namespace Ykotika.Application.Commands
                 ?? throw new NotFoundException(nameof(Author), request.Id);
 
             author.About = request.About ?? author.About;
+            author.Socials = request.Socials ?? author.Socials;
 
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
