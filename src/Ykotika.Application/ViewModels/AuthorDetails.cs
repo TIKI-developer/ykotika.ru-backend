@@ -13,6 +13,7 @@ namespace Ykotika.Application.ViewModels
         public string? PhoneNumber { get; set; }
         public required string Email { get; set; }
         public string? ImagePath { get; set; }
+        public string? About { get; set; }
         public required List<Social> Socials { get; set; }
         public required string Status { get; set; }
         public required string TellAboutYourself { get; set; }
