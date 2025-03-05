@@ -13,7 +13,8 @@ namespace Ykotika.Application.ViewModels
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Form, FormItem>();
+            profile.CreateMap<Form, FormItem>()
+                .ForMember(to => to.Inputs, opt => opt.MapFrom(from => from.Inputs.OrderBy(i => i.OrderIndex)));
         }
     }
 }
