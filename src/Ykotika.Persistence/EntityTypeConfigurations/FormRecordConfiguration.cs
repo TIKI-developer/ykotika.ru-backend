@@ -15,7 +15,8 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
             builder
                 .OwnsMany(e => e.InputRecords, ir =>
                 {
-                    ir.WithOwner();
+                    ir.WithOwner().HasForeignKey(e => e.FormRecordId);
+                    ir.HasKey(e => new { e.Id, e.FormRecordId });
                 });
         }
     }

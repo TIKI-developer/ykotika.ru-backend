@@ -12,6 +12,7 @@ namespace Ykotika.Domain.Entities
         public class InputRecord
         {
             public required string Id { get; set; }
+            public Guid FormRecordId { get; set; }
             public required string Value { get; set; }
         }
     }

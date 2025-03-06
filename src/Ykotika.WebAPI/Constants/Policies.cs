@@ -10,5 +10,6 @@
         public const string FORM_LIST_POLICY = "FormListPolicy";
         public const string READ_AGREEMENT_POLICY = "ReadAgreementPolicy";
         public const string POST_PRODUCT_COMMENT_POLICY = "CreateCommentForProductPolicy";
+        public const string PRODUCT_DUPLICATE_POLICY = "ProductDuplicatePolicy";
     }
 }

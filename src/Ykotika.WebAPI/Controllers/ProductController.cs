@@ -168,6 +168,34 @@ namespace Ykotika.WebAPI.Controllers
 
             return Forbid();
         }
+        [HttpPost("duplicate/{id}")]
+        [Authorize(Roles = $"{Roles.AUTHOR_ROLE}, {Roles.MODERATOR_ROLE}, {Roles.ADMIN_ROLE}")]
+        public async Task<IActionResult>
+            Duplicate(Guid id)
+        {
+            var vm = new GetProductByIdQuery
+            {
+                Id = id
+            };
+
+            var authorizationResult = await _authorizationService
+                .AuthorizeAsync(User, vm, Policies.PRODUCT_DUPLICATE_POLICY);
+
+            if (authorizationResult.Succeeded)
+            {
+                var command = new DuplicateProductCommand 
+                {
+                    Id = id,
+                    UserId = UserId
+                };
+
+                await Mediator.Send(command);
+
+                return Ok();
+            }
+
+            return Forbid();
+        }
         [HttpPatch("{id}/published")]
         [Authorize(Roles = $"{Roles.ADMIN_ROLE}, {Roles.MODERATOR_ROLE}")]
         public async Task<IActionResult>
