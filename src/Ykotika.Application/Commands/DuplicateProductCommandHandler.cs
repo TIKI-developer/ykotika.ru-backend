@@ -128,7 +128,6 @@ namespace Ykotika.Application.Commands
 
             if (product.Source != null)
             {
-                Console.WriteLine(product.Source.Path);
                 var newFileData = await _fileService.Duplicate(product.Source);
 
                 var newSource = new Domain.Entities.File
@@ -137,7 +136,7 @@ namespace Ykotika.Application.Commands
                     Timestamps = new Timestamps()
                 };
                 newProduct.Source = newSource;
-                Console.WriteLine(newSource.Path);
+
                 await _dbContext.Files.AddAsync(newSource, cancellationToken);
             }
 
