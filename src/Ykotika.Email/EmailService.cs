@@ -10,7 +10,8 @@ namespace Ykotika.Email
     {
         private readonly EmailVerifierOptions _options = options.Value ?? throw new ArgumentNullException(nameof(options));
         private readonly TemplateLoader _templateLoader = new(new() {
-            {"Verification", "Templates.VerificationMessage.html"}
+            {"Verification", "Templates.VerificationMessage.html"},
+            {"RecoverPassword", "Templates.RecoverPasswordMessage.html"}
         });
 
         public string GetStringTemplateByName(string name, Dictionary<string, string> placeholders)

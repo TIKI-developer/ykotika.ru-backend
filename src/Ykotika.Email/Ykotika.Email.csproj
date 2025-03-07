@@ -7,10 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Templates\RecoverPasswordMessage.html" />
     <None Remove="Templates\VerificationMessage.html" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Templates\RecoverPasswordMessage.html" />
     <EmbeddedResource Include="Templates\VerificationMessage.html" />
   </ItemGroup>
   <ItemGroup>
