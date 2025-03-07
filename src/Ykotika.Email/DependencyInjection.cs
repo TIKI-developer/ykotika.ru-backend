@@ -2,13 +2,13 @@
 using Microsoft.Extensions.DependencyInjection;
 using Ykotika.Application.Interfaces;
 
-namespace Ykotika.Verification
+namespace Ykotika.Email
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddVerification(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddEmail(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<IEmailVerifier, EmailVerifier>();
+            services.AddScoped<IEmailService, EmailService>();
             services.Configure<EmailVerifierOptions>(options =>
             configuration.GetSection(nameof(EmailVerifierOptions)).Bind(options));
 
