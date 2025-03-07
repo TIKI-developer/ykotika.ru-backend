@@ -97,6 +97,17 @@ namespace Ykotika.Application.Commands
                 });
             }
 
+            var newOutsourceShops = new List<OutsourceShopProductInfo>();
+
+            foreach (var outsourceShop in product.OutsourceShops) 
+            {
+                newOutsourceShops.Add(new OutsourceShopProductInfo
+                {
+                    OutsourceShop = outsourceShop.OutsourceShop,
+                    Link = outsourceShop.Link,
+                });
+            }
+
             var newProduct = new Product
             {
                 Id = Guid.NewGuid(),
@@ -108,7 +119,7 @@ namespace Ykotika.Application.Commands
                 IsAdult = product.IsAdult,
                 Status = ProductStatus.Edit,
                 Tags = newTags,
-                OutsourceShops = product.OutsourceShops,
+                OutsourceShops = newOutsourceShops,
                 ProductType = product.ProductType,
                 User = user,
                 Images = newImages,
@@ -117,7 +128,6 @@ namespace Ykotika.Application.Commands
 
             if (product.Source != null)
             {
-                Console.WriteLine(product.Source.Path);
                 var newFileData = await _fileService.Duplicate(product.Source);
 
                 var newSource = new Domain.Entities.File
@@ -126,7 +136,7 @@ namespace Ykotika.Application.Commands
                     Timestamps = new Timestamps()
                 };
                 newProduct.Source = newSource;
-                Console.WriteLine(newSource.Path);
+
                 await _dbContext.Files.AddAsync(newSource, cancellationToken);
             }
 
