@@ -7,7 +7,7 @@
 
         public TemplateLoader(Dictionary<string, string> templatesToInitialize)
         {
-            foreach (var templateToInit in templatesToInitialize) 
+            foreach (var templateToInit in templatesToInitialize)
             {
                 try
                 {

@@ -115,7 +115,7 @@ namespace Ykotika.WebApi.Extensions
                     .AddRequirements
                     (new ContentRequirement([UserRole.Moderator,
                       UserRole.Admin,
-                      UserRole.Director], checkPublished:false));
+                      UserRole.Director], checkPublished: false));
                 });
                 options.AddPolicy(Policies.PRODUCT_STATUS_POLICY, policy =>
                 {

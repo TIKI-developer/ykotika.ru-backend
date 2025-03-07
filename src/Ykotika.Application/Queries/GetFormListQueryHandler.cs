@@ -4,8 +4,6 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Ykotika.Application.Interfaces;
 using Ykotika.Application.ViewModels;
-using Ykotika.Domain.Entities;
-using static Ykotika.Domain.Entities.Form;
 
 namespace Ykotika.Application.Queries
 {
@@ -23,7 +21,7 @@ namespace Ykotika.Application.Queries
                 .Forms
                 .AsQueryable()
                 .Where(p => !request.Filter.IsPublished.HasValue || p.IsPublished == request.Filter.IsPublished.Value);
-            
+
             query = Sort(query, request.Sorting.SortBy, request.Sorting.IsDescending);
 
             var queryItems = query
