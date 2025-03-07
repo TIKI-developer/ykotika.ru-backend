@@ -33,6 +33,7 @@ namespace Ykotika.Application.Commands
                 .Include(e => e.Images)
                 .ThenInclude(e => e.Image)
                 .Include(e => e.OutsourceShops)
+                .ThenInclude(e => e.OutsourceShop)
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(Product), request.Id);
 
