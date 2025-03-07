@@ -97,6 +97,17 @@ namespace Ykotika.Application.Commands
                 });
             }
 
+            var newOutsourceShops = new List<OutsourceShopProductInfo>();
+
+            foreach (var outsourceShop in product.OutsourceShops) 
+            {
+                newOutsourceShops.Add(new OutsourceShopProductInfo
+                {
+                    OutsourceShop = outsourceShop.OutsourceShop,
+                    Link = outsourceShop.Link,
+                });
+            }
+
             var newProduct = new Product
             {
                 Id = Guid.NewGuid(),
@@ -108,7 +119,7 @@ namespace Ykotika.Application.Commands
                 IsAdult = product.IsAdult,
                 Status = ProductStatus.Edit,
                 Tags = newTags,
-                OutsourceShops = product.OutsourceShops,
+                OutsourceShops = newOutsourceShops,
                 ProductType = product.ProductType,
                 User = user,
                 Images = newImages,
