@@ -8,7 +8,7 @@ using Ykotika.FileStorage;
 using Ykotika.Persistence;
 using Ykotika.Security;
 using Ykotika.SpreadsheetService;
-using Ykotika.Verification;
+using Ykotika.Email;
 using Ykotika.WebApi.Extensions;
 using Ykotika.WebAPI.Middleware;
 using Ykotika.WebAPI.ModelBinders;
@@ -32,9 +32,9 @@ namespace Ykotika.WebAPI
 
             services.AddPersistence(Configuration);
             services.AddFileStorage();
-            services.AddVerification(Configuration);
             services.AddSecurity(Configuration);
             services.AddArticle();
+            services.AddEmail(Configuration);
             services.AddSpreadsheet();
             services.AddApiAuthentication();
             services.AddApplication();

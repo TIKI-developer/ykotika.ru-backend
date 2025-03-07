@@ -7,18 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Templates\RecoverPasswordMessage.html" />
     <None Remove="Templates\VerificationMessage.html" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Templates\RecoverPasswordMessage.html" />
     <EmbeddedResource Include="Templates\VerificationMessage.html" />
   </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\Ykotika.Application\Ykotika.Application.csproj" />
+	<ProjectReference Include="..\Ykotika.Application\Ykotika.Application.csproj" />
 	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.10" />
 	<PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
 	<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
   </ItemGroup>
-
 </Project>

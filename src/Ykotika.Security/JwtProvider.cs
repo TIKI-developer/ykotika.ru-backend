@@ -17,7 +17,7 @@ namespace Ykotika.Security
         private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler = new();
         private readonly IEncryptor _encryptor = encryptor;
 
-        public string GenerateAccessToken(User user, string issuer, string audience)
+        public string GenerateAccessToken(User user, string? issuer, string? audience)
         {
             var claims = new List<Claim>
             {
@@ -157,6 +157,73 @@ namespace Ykotika.Security
             if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
                 throw new SecurityTokenException("Invalid token");
             return principal;
+        }
+        public string GeneratePasswordRecoverToken(string userEmail)
+        {
+            var claims = new List<Claim>
+            {
+                new(ClaimTypes.Email, userEmail)
+            };
+            var signingCredentials = new SigningCredentials(
+
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.JwtOptions.SecretKey)),
+
+                SecurityAlgorithms.HmacSha256
+            );
+            var token = new JwtSecurityToken(
+
+                 claims: claims,
+
+                 signingCredentials: signingCredentials,
+
+                 expires: DateTime.UtcNow.AddMinutes(5)
+             );
+            var tokenString = _jwtSecurityTokenHandler.WriteToken(token);
+
+            return _encryptor.Encrypt(tokenString);
+        }
+        public string VerifyPasswordRecoverToken(string token)
+        {
+            string decryptedToken;
+            try
+            {
+                decryptedToken = _encryptor.Decrypt(token);
+            }
+            catch
+            {
+                return "";
+            }
+
+            if (!_jwtSecurityTokenHandler.CanReadToken(decryptedToken))
+            {
+                return "";
+            }
+
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = false,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.JwtOptions.SecretKey))
+            };
+
+            try
+            {
+                var principal = _jwtSecurityTokenHandler.ValidateToken(decryptedToken, tokenValidationParameters, out var validatedToken);
+
+                if (validatedToken is JwtSecurityToken jwtToken &&
+                    jwtToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var tokenUserId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                    var tokenEmail = principal.FindFirst(ClaimTypes.Email)?.Value;
+
+                    return tokenEmail ?? "";
+                }
+            }
+            catch (Exception) { }
+
+            return "";
         }
     }
 }
