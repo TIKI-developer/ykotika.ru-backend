@@ -124,6 +124,13 @@ namespace Ykotika.Application.Commands
                     .Where(e => spreadsheetProduct.CategoryNames.Contains(e.Name))
                     .ToListAsync(cancellationToken);
 
+                await _dbContext.Files.AddAsync(spreadsheetProduct.Files.Source, cancellationToken);
+
+                foreach (var imageFile in spreadsheetProduct.Files.Images)
+                {
+                    await _dbContext.Files.AddAsync(imageFile.Image, cancellationToken);
+                }
+
                 var newProduct = new Product
                 {
                     Id = Guid.NewGuid(),
