@@ -40,7 +40,7 @@ namespace Ykotika.Application.Commands
 
             if (products != null && products.Count > 0)
             {
-                var fileData = _spreadsheetService.GenerateProductsTable(products, request.RootUrl);
+                var fileData = _spreadsheetService.GenerateProductsSpreadsheet(products, request.RootUrl);
                 var file = await _fileService.Upload(fileData, "tables", false);
                 await _dbContext.Files.AddAsync(file, cancellationToken);
                 await _dbContext.SaveChangesAsync(cancellationToken);

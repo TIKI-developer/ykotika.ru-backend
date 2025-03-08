@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.104.2" />
 	<PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+	<PackageReference Include="SharpCompress" Version="0.39.0" />
   </ItemGroup>
 
   <ItemGroup>
