@@ -9,12 +9,12 @@ namespace Ykotika.Application.Commands
 {
     public class CreateProductsBySpreadsheetCommandHandler
         (IYkotikaDbContext dbContext,
-        ISpreadsheetService spreadsheetService,
+        ISpreadsheetWorker spreadsheetService,
         IFileService fileService)
         : IRequestHandler<CreateProductsBySpreadsheetCommand>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
-        private readonly ISpreadsheetService _spreadsheetService = spreadsheetService;
+        private readonly ISpreadsheetWorker _spreadsheetService = spreadsheetService;
         private readonly IFileService _fileService = fileService;
 
         public async Task

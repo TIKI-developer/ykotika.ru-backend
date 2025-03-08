@@ -3,19 +3,17 @@ using AutoMapper.QueryableExtensions;
 using ClosedXML.Excel;
 using SharpCompress.Archives;
 using System.Text.Json;
-using Ykotika.Application.Commands;
 using Ykotika.Application.Interfaces;
 using Ykotika.Application.Models;
 using Ykotika.Domain.Entities;
 using Ykotika.Domain.ValueObjects;
-using static Ykotika.Application.Models.ProductFromSpreadsheetDto;
 
 namespace Ykotika.SpreadsheetService
 {
-    public class SpreadsheetGenerator
+    public class SpreadsheetWorker
         (IMapper mapper,
         IFileService fileService)
-        : ISpreadsheetService
+        : ISpreadsheetWorker
     {
         private readonly IMapper _mapper = mapper;
         private readonly IFileService _fileService = fileService;
@@ -171,9 +169,9 @@ namespace Ykotika.SpreadsheetService
             return cells;
         }
 
-        public async Task<List<ProductFromSpreadsheetDto>> GenerateRequestsFromSpreadsheet(FileData spreadsheet, FileData filesZip)
+        public async Task<List<ProductFromSpreadsheetDto>> GenerateProductRequests(FileData spreadsheet, FileData filesZip)
         {
-            var filesFromZips = new List<FilesFromZipForSpreadsheet>();
+            var filesFromZips = new List<SpreadsheetProductFilesDto>();
 
             using (var stream = new MemoryStream(filesZip.Content))
             {
@@ -193,7 +191,7 @@ namespace Ykotika.SpreadsheetService
                     if (sourceFile == null) continue;
 
                     var sourceFileEntity = await _fileService.Upload(new FileData
-                    { 
+                    {
                         Content = ReadEntryBytes(sourceFile),
                         Path = "static"
                     });
@@ -221,12 +219,12 @@ namespace Ykotika.SpreadsheetService
                         images.Add(new ImageListItem
                         {
                             Image = imageFile,
-                            OrderIndex = orderIndex 
+                            OrderIndex = orderIndex
                         });
                         orderIndex++;
                     }
 
-                    filesFromZips.Add(new FilesFromZipForSpreadsheet
+                    filesFromZips.Add(new SpreadsheetProductFilesDto
                     {
                         Article = article,
                         Source = sourceFileEntity,
@@ -237,7 +235,7 @@ namespace Ykotika.SpreadsheetService
 
             var productCommands = new List<ProductFromSpreadsheetDto>();
 
-            using (var stream = new MemoryStream(spreadsheet.Content)) 
+            using (var stream = new MemoryStream(spreadsheet.Content))
             using (var workbook = new XLWorkbook(stream))
             {
                 foreach (var worksheet in workbook.Worksheets)
@@ -252,12 +250,12 @@ namespace Ykotika.SpreadsheetService
 
                     for (int row = 2; row <= lastRow; row++)
                     {
-                        var inputRecords = new List<ProductFromSpreadsheetDto.FormRecordFromSpreadsheet.InputRecordFromSpreadsheet>();
+                        var inputRecords = new List<FormRecordFromSpreadsheetDto.InputRecordFromSpreadsheetDto>();
 
-                        for (int col = 13;  col <= lastCol; col++)
+                        for (int col = 13; col <= lastCol; col++)
                         {
-                            inputRecords.Add(new ProductFromSpreadsheetDto.FormRecordFromSpreadsheet.InputRecordFromSpreadsheet
-                            { 
+                            inputRecords.Add(new FormRecordFromSpreadsheetDto.InputRecordFromSpreadsheetDto
+                            {
                                 Name = worksheet.Cell(1, col).GetValue<string>(),
                                 Value = worksheet.Cell(row, col).GetValue<string>()
                             });
@@ -293,10 +291,10 @@ namespace Ykotika.SpreadsheetService
                         }
                         var filesFromZip = filesFromZips.FirstOrDefault(e => e.Article == worksheet.Cell(row, 1).GetValue<string>().Replace(" ", "").Replace("\r", "").Replace("\n", ""));
 
-                        if (filesFromZip == null) 
+                        if (filesFromZip == null)
                         {
                             Console.WriteLine($"Отсутствуют файлы товара: {worksheet.Cell(row, 1).GetValue<string>()}");
-                            continue; 
+                            continue;
                         }
 
                         var product = new ProductFromSpreadsheetDto
@@ -312,9 +310,9 @@ namespace Ykotika.SpreadsheetService
                             Files = filesFromZip,
                             Status = status,
                             IsPublished = worksheet.Cell(row, 11).GetValue<string>() == "Да",
-                            OutsourceShops = JsonSerializer.Deserialize<List<OutsourceShopFromSpreadsheet>>(worksheet.Cell(row, 12).GetValue<string>()),
-                            FormRecord = new FormRecordFromSpreadsheet 
-                            { 
+                            OutsourceShops = JsonSerializer.Deserialize<List<OutsourceShopFromSpreadsheetDto>>(worksheet.Cell(row, 12).GetValue<string>()),
+                            FormRecord = new FormRecordFromSpreadsheetDto
+                            {
                                 InputRecords = inputRecords,
                                 UserEmail = worksheet.Cell(row, 4).GetValue<string>(),
                                 IsPublished = worksheet.Cell(row, 11).GetValue<string>() == "Да"

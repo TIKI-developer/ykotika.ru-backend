@@ -7,13 +7,13 @@ namespace Ykotika.Application.Commands
 {
     public class GenerateProductSpreadsheetCommandHandler
         (IYkotikaDbContext dbContext,
-        ISpreadsheetService spreadsheetService,
+        ISpreadsheetWorker spreadsheetService,
         IMapper mapper,
         IFileService fileService)
         : IRequestHandler<GenerateProductSpreadsheetCommand, string>
     {
         private readonly IYkotikaDbContext _dbContext = dbContext;
-        private readonly ISpreadsheetService _spreadsheetService = spreadsheetService;
+        private readonly ISpreadsheetWorker _spreadsheetService = spreadsheetService;
         private readonly IMapper _mapper = mapper;
         private readonly IFileService _fileService = fileService;
 
