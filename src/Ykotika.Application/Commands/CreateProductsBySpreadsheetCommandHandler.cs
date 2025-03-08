@@ -35,17 +35,18 @@ namespace Ykotika.Application.Commands
             var spreadsheetFileData = await _fileService.Download(spreadsheetFile);
             var fileZipData = await _fileService.Download(filesZip);
 
-            var spreadsheetProducts = await _spreadsheetService.GenerateRequestsFromSpreadsheet(spreadsheetFileData, fileZipData);
+            var spreadsheetProducts = await _spreadsheetService.GenerateProductRequests(spreadsheetFileData, fileZipData);
 
-            foreach (var spreadsheetProduct in spreadsheetProducts) 
+            foreach (var spreadsheetProduct in spreadsheetProducts)
             {
                 var user = await
                     _dbContext
                     .Users
                     .FirstOrDefaultAsync(e => e.Email == spreadsheetProduct.UserEmail, cancellationToken);
-                if (user == null) {
+                if (user == null)
+                {
                     Console.WriteLine($"Не найден пользователь с почтовым ящиком: {spreadsheetProduct.UserEmail}");
-                    continue; 
+                    continue;
                 }
 
                 var tags = new List<Tag>();
@@ -64,10 +65,10 @@ namespace Ykotika.Application.Commands
                             .OutsourceShops
                             .FirstOrDefaultAsync(e => e.Name == outsourceShopFromSpreadsheet.Name, cancellationToken);
 
-                        if (outsourceShop == null) 
-                        { 
+                        if (outsourceShop == null)
+                        {
                             Console.WriteLine($"Не найден внешний магазин с наименованием: {outsourceShopFromSpreadsheet.Name}");
-                            continue; 
+                            continue;
                         }
 
                         outsourceShops.Add(new OutsourceShopProductInfo
@@ -83,10 +84,10 @@ namespace Ykotika.Application.Commands
                     .ProductTypes
                     .Include(e => e.Form)
                     .FirstOrDefaultAsync(e => e.Name == spreadsheetProduct.ProductTypeName, cancellationToken);
-                if (productType == null) 
-                { 
+                if (productType == null)
+                {
                     Console.WriteLine($"Не найден тип товара с наименованием: {spreadsheetProduct.ProductTypeName}");
-                    continue; 
+                    continue;
                 }
 
                 var inputRecords = new List<FormRecord.InputRecord>();
@@ -94,10 +95,10 @@ namespace Ykotika.Application.Commands
                 {
                     var id = productType.Form.Inputs.FirstOrDefault(e => e.ExtraAttributes.Label == inputRecord.Name)?.Id;
 
-                    if (id == null) 
+                    if (id == null)
                     {
                         Console.WriteLine($"Не найдено поле с наименованием: {inputRecord.Name}");
-                        continue; 
+                        continue;
                     }
 
                     inputRecords.Add(new FormRecord.InputRecord
