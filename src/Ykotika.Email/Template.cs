@@ -7,7 +7,7 @@ namespace Ykotika.Email
     {
         public string ResourceName => _resourceName;
         public string Name => _name;
-        
+
         private readonly string _resourceName;
         private readonly string _string;
         private readonly string _name;

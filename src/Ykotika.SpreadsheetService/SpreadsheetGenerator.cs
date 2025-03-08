@@ -1,19 +1,26 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using ClosedXML.Excel;
+using SharpCompress.Archives;
+using System.Text.Json;
+using Ykotika.Application.Commands;
 using Ykotika.Application.Interfaces;
+using Ykotika.Application.Models;
 using Ykotika.Domain.Entities;
 using Ykotika.Domain.ValueObjects;
+using static Ykotika.Application.Models.ProductFromSpreadsheetDto;
 
 namespace Ykotika.SpreadsheetService
 {
     public class SpreadsheetGenerator
-        (IMapper mapper)
+        (IMapper mapper,
+        IFileService fileService)
         : ISpreadsheetService
     {
         private readonly IMapper _mapper = mapper;
+        private readonly IFileService _fileService = fileService;
 
-        public FileData GenerateProductsTable(List<Product> products, string rootUrl)
+        public FileData GenerateProductsSpreadsheet(List<Product> products, string rootUrl)
         {
             products.ForEach(product => product.Source.Path = Path.Combine(rootUrl, product.Source.Path).Replace("\\", "/"));
             products.ForEach(product => product.Images.ForEach(image => image.Image.Path = Path.Combine(rootUrl, image.Image.Path).Replace("\\", "/")));
@@ -162,6 +169,171 @@ namespace Ykotika.SpreadsheetService
             }
 
             return cells;
+        }
+
+        public async Task<List<ProductFromSpreadsheetDto>> GenerateRequestsFromSpreadsheet(FileData spreadsheet, FileData filesZip)
+        {
+            var filesFromZips = new List<FilesFromZipForSpreadsheet>();
+
+            using (var stream = new MemoryStream(filesZip.Content))
+            {
+                using var archive = ArchiveFactory.Open(stream);
+
+                foreach (var entry in archive.Entries.Where(e => e.IsDirectory))
+                {
+                    string articleFolder = entry.Key.Trim('/');
+                    string article = articleFolder.Split('/')[0];
+                    var files = archive.Entries
+                        .Where(e => e.Key.StartsWith(articleFolder) && !e.IsDirectory)
+                        .ToList();
+
+                    if (files.Count == 0) continue;
+
+                    var sourceFile = files.FirstOrDefault();
+                    if (sourceFile == null) continue;
+
+                    var sourceFileEntity = await _fileService.Upload(new FileData
+                    { 
+                        Content = ReadEntryBytes(sourceFile),
+                        Path = "static"
+                    });
+
+
+
+                    var images = new List<ImageListItem>();
+
+                    string photoFolder = $"{articleFolder}/Фото/";
+                    var photoFiles = files
+                        .Where(e => e.Key.StartsWith(photoFolder) && (e.Key.EndsWith(".jpg") || e.Key.EndsWith(".png") || e.Key.EndsWith(".jpeg")))
+                        .OrderBy(e => e.Key)
+                        .ToList();
+
+                    int orderIndex = 0;
+
+                    foreach (var photoFile in photoFiles)
+                    {
+                        var imageFile = await _fileService.Upload(new FileData
+                        {
+                            Content = ReadEntryBytes(photoFile),
+                            Path = "static"
+                        });
+
+                        images.Add(new ImageListItem
+                        {
+                            Image = imageFile,
+                            OrderIndex = orderIndex 
+                        });
+                        orderIndex++;
+                    }
+
+                    filesFromZips.Add(new FilesFromZipForSpreadsheet
+                    {
+                        Article = article,
+                        Source = sourceFileEntity,
+                        Images = images,
+                    });
+                }
+            }
+
+            var productCommands = new List<ProductFromSpreadsheetDto>();
+
+            using (var stream = new MemoryStream(spreadsheet.Content)) 
+            using (var workbook = new XLWorkbook(stream))
+            {
+                foreach (var worksheet in workbook.Worksheets)
+                {
+                    if (worksheet.Position.Equals(1))
+                    {
+                        continue;
+                    }
+
+                    var lastRow = worksheet.LastRowUsed().RowNumber();
+                    var lastCol = worksheet.LastColumnUsed().ColumnNumber();
+
+                    for (int row = 2; row <= lastRow; row++)
+                    {
+                        var inputRecords = new List<ProductFromSpreadsheetDto.FormRecordFromSpreadsheet.InputRecordFromSpreadsheet>();
+
+                        for (int col = 13;  col <= lastCol; col++)
+                        {
+                            inputRecords.Add(new ProductFromSpreadsheetDto.FormRecordFromSpreadsheet.InputRecordFromSpreadsheet
+                            { 
+                                Name = worksheet.Cell(1, col).GetValue<string>(),
+                                Value = worksheet.Cell(row, col).GetValue<string>()
+                            });
+                        }
+                        ProductStatus status = ProductStatus.Edit;
+
+                        switch (worksheet.Cell(row, 10).GetValue<string>().Replace(" ", "").Replace("\r", "").Replace("\n", ""))
+                        {
+                            case "Редактирование":
+                                status = ProductStatus.Edit;
+                                break;
+                            case "Ожидание модерации":
+                                status = ProductStatus.PendingModeration;
+                                break;
+                            case "Модерируется":
+                                status = ProductStatus.Moderating;
+                                break;
+                            case "Завершен":
+                                status = ProductStatus.Done;
+                                break;
+                            case "Продается":
+                                status = ProductStatus.Selling;
+                                break;
+                            case "Не продается":
+                                status = ProductStatus.NotSelling;
+                                break;
+                            case "Некорректный":
+                                status = ProductStatus.Incorrect;
+                                break;
+                            case "Исправлен":
+                                status = ProductStatus.Fixed;
+                                break;
+                        }
+                        var filesFromZip = filesFromZips.FirstOrDefault(e => e.Article == worksheet.Cell(row, 1).GetValue<string>().Replace(" ", "").Replace("\r", "").Replace("\n", ""));
+
+                        if (filesFromZip == null) 
+                        {
+                            Console.WriteLine($"Отсутствуют файлы товара: {worksheet.Cell(row, 1).GetValue<string>()}");
+                            continue; 
+                        }
+
+                        var product = new ProductFromSpreadsheetDto
+                        {
+                            ProductTypeName = worksheet.Name,
+                            Article = worksheet.Cell(row, 1).GetValue<string>(),
+                            Name = worksheet.Cell(row, 2).GetValue<string>(),
+                            Description = worksheet.Cell(row, 3).GetValue<string>(),
+                            UserEmail = worksheet.Cell(row, 4).GetValue<string>(),
+                            IsAdult = worksheet.Cell(row, 5).GetValue<string>() == "Да",
+                            Tags = [.. worksheet.Cell(row, 6).GetValue<string>().Split(";")],
+                            CategoryNames = [.. worksheet.Cell(row, 7).GetValue<string>().Split(";")],
+                            Files = filesFromZip,
+                            Status = status,
+                            IsPublished = worksheet.Cell(row, 11).GetValue<string>() == "Да",
+                            OutsourceShops = JsonSerializer.Deserialize<List<OutsourceShopFromSpreadsheet>>(worksheet.Cell(row, 12).GetValue<string>()),
+                            FormRecord = new FormRecordFromSpreadsheet 
+                            { 
+                                InputRecords = inputRecords,
+                                UserEmail = worksheet.Cell(row, 4).GetValue<string>(),
+                                IsPublished = worksheet.Cell(row, 11).GetValue<string>() == "Да"
+                            }
+                        };
+
+                        productCommands.Add(product);
+                    }
+                }
+            }
+
+            return productCommands;
+        }
+        static byte[] ReadEntryBytes(IArchiveEntry entry)
+        {
+            using var stream = entry.OpenEntryStream();
+            using var memoryStream = new MemoryStream();
+            stream.CopyTo(memoryStream);
+            return memoryStream.ToArray();
         }
     }
 }

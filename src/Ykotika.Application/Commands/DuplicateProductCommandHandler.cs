@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using NanoidDotNet;
 using Ykotika.Application.Common.Exceptions;
 using Ykotika.Application.Interfaces;
 using Ykotika.Domain.Entities;
@@ -8,7 +7,7 @@ using Ykotika.Domain.ValueObjects;
 
 namespace Ykotika.Application.Commands
 {
-    public class DuplicateProductCommandHandler 
+    public class DuplicateProductCommandHandler
         (IYkotikaDbContext dbContext,
         IArticleGenerator articleGenerator,
         IFileService fileService)
@@ -18,7 +17,7 @@ namespace Ykotika.Application.Commands
         private readonly IArticleGenerator _articleGenerator = articleGenerator;
         private readonly IFileService _fileService = fileService;
 
-        public async Task 
+        public async Task
             Handle(DuplicateProductCommand request, CancellationToken cancellationToken)
         {
             var product = await
@@ -37,7 +36,7 @@ namespace Ykotika.Application.Commands
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(Product), request.Id);
 
-            var user = await 
+            var user = await
                 _dbContext
                 .Users
                 .FirstOrDefaultAsync(e => e.Id == request.UserId, cancellationToken)
@@ -93,7 +92,7 @@ namespace Ykotika.Application.Commands
             foreach (var tag in product.Tags)
             {
                 newTags.Add(new Tag
-                { 
+                {
                     Value = tag.Value,
                 });
             }

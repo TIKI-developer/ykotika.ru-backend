@@ -1,7 +1,7 @@
-﻿using System.Net.Mail;
-using System.Net.Mime;
+﻿using Microsoft.Extensions.Options;
 using System.Net;
-using Microsoft.Extensions.Options;
+using System.Net.Mail;
+using System.Net.Mime;
 using Ykotika.Application.Interfaces;
 
 namespace Ykotika.Email

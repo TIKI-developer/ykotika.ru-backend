@@ -157,7 +157,7 @@ namespace Ykotika.WebAPI.Controllers
             var encodeToken = Uri.EscapeDataString(token);
 
             var recoverLink = $"{Request.Headers.Origin}/auth/password/recover?token={encodeToken}";
-            var message = _emailService.GetStringTemplateByName("RecoverPassword", new(){ { "link", recoverLink } });
+            var message = _emailService.GetStringTemplateByName("RecoverPassword", new() { { "link", recoverLink } });
             await _emailService.Send(dto.Email, "Восстановление пароля", message);
 
             return Ok();

@@ -17,7 +17,7 @@ namespace Ykotika.Application.Commands
         private readonly IJwtProvider _jwtProvider = jwtProvider;
         private readonly IPasswordHasher _passwordHasher = passwordHasher;
 
-        public async Task<LoginResponse> 
+        public async Task<LoginResponse>
             Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
         {
             var userEmail = _jwtProvider.VerifyPasswordRecoverToken(request.Token);

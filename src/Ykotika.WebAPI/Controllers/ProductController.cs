@@ -113,7 +113,6 @@ namespace Ykotika.WebAPI.Controllers
             GenerateSpreadSheet([FromBody] GenerateProductSpreadsheetDto dto)
         {
             var command = _mapper.Map<GenerateProductSpreadsheetCommand>(dto);
-            //command.RootUrl = $"{Request.Scheme}://{Request.Host}";
             command.RootUrl = Request.Headers.Origin.ToString() ?? $"{Request.Scheme}://{Request.Host}";
             var id = await Mediator.Send(command);
 
@@ -183,7 +182,7 @@ namespace Ykotika.WebAPI.Controllers
 
             if (authorizationResult.Succeeded)
             {
-                var command = new DuplicateProductCommand 
+                var command = new DuplicateProductCommand
                 {
                     Id = id,
                     UserId = UserId
@@ -265,6 +264,16 @@ namespace Ykotika.WebAPI.Controllers
                     await Mediator.Send(command);
                 }
             }
+
+            return Ok();
+        }
+        [HttpPost("by-spreadsheet")]
+        [Authorize(Roles = $"{Roles.AUTHOR_ROLE}, {Roles.ADMIN_ROLE}, {Roles.MODERATOR_ROLE}")]
+        public async Task<IActionResult>
+            UploadProductsBySpreadsheet([FromBody] UploadProductsBySpreadsheetDto dto)
+        {
+            var command = _mapper.Map<CreateProductsBySpreadsheetCommand>(dto);
+            await Mediator.Send(command);
 
             return Ok();
         }

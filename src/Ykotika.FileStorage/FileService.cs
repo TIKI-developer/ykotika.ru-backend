@@ -1,6 +1,5 @@
 ﻿using Ykotika.Application.Interfaces;
 using Ykotika.Domain.ValueObjects;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Ykotika.FileStorage
 {
@@ -88,7 +87,6 @@ namespace Ykotika.FileStorage
                 throw new Exception(ex.Message);
             }
         }
-
         public async Task<FileData> Duplicate(Domain.Entities.File file)
         {
             string sourcePath = Path.Combine(_baseFolder, file.Path);
@@ -114,6 +112,5 @@ namespace Ykotika.FileStorage
                 Content = content
             };
         }
-
     }
 }
