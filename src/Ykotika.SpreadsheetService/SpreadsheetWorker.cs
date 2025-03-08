@@ -193,7 +193,7 @@ namespace Ykotika.SpreadsheetService
                     var sourceFileEntity = await _fileService.Upload(new FileData
                     {
                         Content = ReadEntryBytes(sourceFile),
-                        Path = "static"
+                        Path = Path.GetFileName(sourceFile.Key) ?? "source.jpg"
                     });
 
 
@@ -213,7 +213,7 @@ namespace Ykotika.SpreadsheetService
                         var imageFile = await _fileService.Upload(new FileData
                         {
                             Content = ReadEntryBytes(photoFile),
-                            Path = "static"
+                            Path = Path.GetFileName(photoFile.Key) ?? "image.jpg"
                         });
 
                         images.Add(new ImageListItem
