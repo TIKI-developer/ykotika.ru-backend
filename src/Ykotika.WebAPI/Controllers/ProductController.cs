@@ -172,10 +172,12 @@ namespace Ykotika.WebAPI.Controllers
         public async Task<IActionResult>
             Duplicate(Guid id)
         {
-            var vm = new GetProductByIdQuery
+            var query = new GetProductByIdQuery
             {
                 Id = id
             };
+
+            var vm = await Mediator.Send(query);
 
             var authorizationResult = await _authorizationService
                 .AuthorizeAsync(User, vm, Policies.PRODUCT_DUPLICATE_POLICY);
