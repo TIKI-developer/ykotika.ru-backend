@@ -87,5 +87,30 @@ namespace Ykotika.FileStorage
                 throw new Exception(ex.Message);
             }
         }
+        public async Task<FileData> Duplicate(Domain.Entities.File file)
+        {
+            string sourcePath = Path.Combine(_baseFolder, file.Path);
+
+            if (!File.Exists(sourcePath))
+            {
+                throw new Exception("Файл не найден");
+            }
+
+            string directory = Path.GetDirectoryName(sourcePath)!;
+            string fileName = Guid.NewGuid().ToString();
+            string extension = Path.GetExtension(sourcePath);
+            string copyFileName = $"{fileName}{extension}";
+            string copyPath = Path.Combine(directory, copyFileName);
+
+            byte[] content = await File.ReadAllBytesAsync(sourcePath);
+
+            await File.WriteAllBytesAsync(copyPath, content);
+
+            return new FileData
+            {
+                Path = copyPath.Replace(_baseFolder, "").Replace("\\", "/").TrimStart('/'),
+                Content = content
+            };
+        }
     }
 }

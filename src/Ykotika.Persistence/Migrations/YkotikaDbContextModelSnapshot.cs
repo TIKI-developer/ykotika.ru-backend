@@ -43,6 +43,9 @@ namespace Ykotika.Persistence.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("About")
+                        .HasColumnType("text");
+
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
@@ -311,6 +314,9 @@ namespace Ykotika.Persistence.Migrations
 
                     b.Property<bool>("IsPublished")
                         .HasColumnType("boolean");
+
+                    b.Property<string>("ManualLink")
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -738,17 +744,19 @@ namespace Ykotika.Persistence.Migrations
 
                     b.OwnsMany("Ykotika.Domain.Entities.FormRecord+InputRecord", "InputRecords", b1 =>
                         {
-                            b1.Property<Guid>("FormRecordId")
-                                .HasColumnType("uuid");
-
                             b1.Property<string>("Id")
                                 .HasColumnType("text");
+
+                            b1.Property<Guid>("FormRecordId")
+                                .HasColumnType("uuid");
 
                             b1.Property<string>("Value")
                                 .IsRequired()
                                 .HasColumnType("text");
 
-                            b1.HasKey("FormRecordId", "Id");
+                            b1.HasKey("Id", "FormRecordId");
+
+                            b1.HasIndex("FormRecordId");
 
                             b1.ToTable("InputRecord");
 

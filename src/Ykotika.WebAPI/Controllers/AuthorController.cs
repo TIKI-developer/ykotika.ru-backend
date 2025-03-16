@@ -31,6 +31,19 @@ namespace Ykotika.WebAPI.Controllers
             return Ok(vm);
         }
 
+
+        [HttpPut("me")]
+        [Authorize(Roles = $"{Roles.AUTHOR_ROLE}")]
+        public async Task<IActionResult>
+            Update([FromBody] UpdateAuthorDto dto)
+        {
+            var command = _mapper.Map<UpdateAuthorCommand>(dto);
+            command.Id = UserId;
+            await Mediator.Send(command);
+
+            return Ok();
+        }
+
         [HttpGet]
         [Authorize(Roles = $"{Roles.DIRECTOR_ROLE}")]
         public async Task<ActionResult<PagedList<AuthorItem>>>

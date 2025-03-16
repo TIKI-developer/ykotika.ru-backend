@@ -26,11 +26,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Ykotika.Application\Ykotika.Application.csproj" />
     <ProjectReference Include="..\Ykotika.Article\Ykotika.Article.csproj" />
+    <ProjectReference Include="..\Ykotika.Email\Ykotika.Email.csproj" />
     <ProjectReference Include="..\Ykotika.FileStorage\Ykotika.FileStorage.csproj" />
     <ProjectReference Include="..\Ykotika.Persistence\Ykotika.Persistence.csproj" />
     <ProjectReference Include="..\Ykotika.Security\Ykotika.Security.csproj" />
     <ProjectReference Include="..\Ykotika.SpreadsheetService\Ykotika.SpreadsheetService.csproj" />
-    <ProjectReference Include="..\Ykotika.Verification\Ykotika.Verification.csproj" />
   </ItemGroup>
 
 </Project>

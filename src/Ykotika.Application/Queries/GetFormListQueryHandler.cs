@@ -22,12 +22,12 @@ namespace Ykotika.Application.Queries
                 .AsQueryable()
                 .Where(p => !request.Filter.IsPublished.HasValue || p.IsPublished == request.Filter.IsPublished.Value);
 
+            query = Sort(query, request.Sorting.SortBy, request.Sorting.IsDescending);
+
             var queryItems = query
                 .Include(e => e.Inputs)
                 .AsNoTracking()
                 .ProjectTo<FormItem>(_mapper.ConfigurationProvider);
-
-            query = Sort(query, request.Sorting.SortBy, request.Sorting.IsDescending);
 
             return await PagedList<FormItem>.CreateAsync(queryItems, request.Pagination.Page, request.Pagination.PageSize);
         }

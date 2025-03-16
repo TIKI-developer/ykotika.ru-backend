@@ -14,13 +14,13 @@ namespace Ykotika.WebAPI.Controllers
     [Route("auth")]
     public class AuthController
         (IMapper mapper,
-        IEmailVerifier emailVerifier,
+        IEmailService emailService,
         IJwtProvider jwtProvider)
         : BaseController
     {
         private readonly IMapper _mapper = mapper;
-        private readonly IEmailVerifier _emailVerifier = emailVerifier;
         private readonly IJwtProvider _jwtProvider = jwtProvider;
+        private readonly IEmailService _emailService = emailService;
 
         [Route("signup")]
         [HttpPost]
@@ -97,7 +97,8 @@ namespace Ykotika.WebAPI.Controllers
             var encodeToken = Uri.EscapeDataString(token);
 
             var confirmationLink = $"{Request.Headers.Origin}/auth/verifications/email?token={encodeToken}";
-            await _emailVerifier.SendVerificationLinkAsync(UserEmail, confirmationLink!);
+            var message = _emailService.GetStringTemplateByName("Verification", new() { { "link", confirmationLink } });
+            await _emailService.Send(UserEmail, "Подтверждение почты ykotika.ru", message);
 
             return Ok();
         }
@@ -133,6 +134,31 @@ namespace Ykotika.WebAPI.Controllers
             var command = _mapper.Map<UpdatePasswordCommand>(dto);
             command.UserId = UserId;
             await Mediator.Send(command);
+
+            return Ok();
+        }
+
+        [HttpPatch("password/recover")]
+        public async Task<ActionResult<LoginResponse>>
+            RecoverPassword([FromQuery] string token, [FromBody] UpdateForgottenPasswordDto dto)
+        {
+            var decodedToken = Uri.UnescapeDataString(token);
+            var command = _mapper.Map<ResetPasswordCommand>(dto);
+            command.Token = decodedToken;
+            var vm = await Mediator.Send(command);
+
+            return Ok(vm);
+        }
+        [HttpPost("password/recover/email")]
+        public async Task<IActionResult>
+            SendRecoverPasswordEmail([FromBody] SendRecoverPasswordMessageDto dto)
+        {
+            var token = _jwtProvider.GeneratePasswordRecoverToken(dto.Email);
+            var encodeToken = Uri.EscapeDataString(token);
+
+            var recoverLink = $"{Request.Headers.Origin}/auth/password/recover?token={encodeToken}";
+            var message = _emailService.GetStringTemplateByName("RecoverPassword", new() { { "link", recoverLink } });
+            await _emailService.Send(dto.Email, "Восстановление пароля", message);
 
             return Ok();
         }
