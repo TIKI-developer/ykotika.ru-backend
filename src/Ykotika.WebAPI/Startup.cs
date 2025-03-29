@@ -53,15 +53,15 @@ namespace Ykotika.WebAPI
                     ?? httpContext.Request.Headers.Host.ToString(),
                     factory: partition => new FixedWindowRateLimiterOptions
                     {
-                        PermitLimit = 15,
+                        PermitLimit = 35,
                         Window = TimeSpan.FromSeconds(5)
                     });
                 });
                 options.AddPolicy("RefreshTokenLimiter", context =>
                     RateLimitPartition.GetFixedWindowLimiter(context.Connection.RemoteIpAddress?.ToString(), _ => new FixedWindowRateLimiterOptions
                     {
-                        PermitLimit = 1,
-                        Window = TimeSpan.FromSeconds(5),
+                        PermitLimit = 10,
+                        Window = TimeSpan.FromMinutes(1),
                         QueueLimit = 0
                     }));
                 options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
