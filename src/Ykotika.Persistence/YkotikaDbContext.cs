@@ -29,6 +29,10 @@ namespace Ykotika.Persistence
         public DbSet<Domain.Entities.File> Files { get; set; }
         public DbSet<ProductType> ProductTypes { get; set; }
 
+        public DbSet<Chat> Chats { get; set; }
+        public DbSet<Message> Messages { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new EntityConfiguration());
@@ -47,6 +51,8 @@ namespace Ykotika.Persistence
             modelBuilder.ApplyConfiguration(new FileConfiguration());
             modelBuilder.ApplyConfiguration(new FormConfiguration());
             modelBuilder.ApplyConfiguration(new FormRecordConfiguration());
+            modelBuilder.ApplyConfiguration(new ChatConfiguration());
+            modelBuilder.ApplyConfiguration(new MessageConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

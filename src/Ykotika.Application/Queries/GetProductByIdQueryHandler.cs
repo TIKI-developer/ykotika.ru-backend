@@ -21,6 +21,7 @@ namespace Ykotika.Application.Queries
             var product = await
                 _dbContext
                 .Products
+                .Include(e => e.Discussion)
                 .Include(e => e.Images)
                 .ThenInclude(e => e.Image)
                 .Include(e => e.OutsourceShops)

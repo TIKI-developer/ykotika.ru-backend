@@ -4,12 +4,14 @@ using System.Threading.RateLimiting;
 using Ykotika.Application;
 using Ykotika.Application.Common.Mappings;
 using Ykotika.Application.Interfaces;
+using Ykotika.Caching;
 using Ykotika.Email;
 using Ykotika.FileStorage;
 using Ykotika.Persistence;
 using Ykotika.Security;
 using Ykotika.SpreadsheetService;
 using Ykotika.WebApi.Extensions;
+using Ykotika.WebAPI.Hubs;
 using Ykotika.WebAPI.Middleware;
 using Ykotika.WebAPI.ModelBinders;
 
@@ -23,6 +25,7 @@ namespace Ykotika.WebAPI
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSignalR();
             services.AddAutoMapper(config =>
             {
                 config.AddProfile(new AssemblyMappingProfile(Assembly.GetExecutingAssembly()));
@@ -31,6 +34,7 @@ namespace Ykotika.WebAPI
             });
 
             services.AddPersistence(Configuration);
+            services.AddCaching(Configuration);
             services.AddFileStorage();
             services.AddSecurity(Configuration);
             services.AddArticle();
@@ -118,6 +122,7 @@ namespace Ykotika.WebAPI
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/hubs/chats");
             });
         }
     }
