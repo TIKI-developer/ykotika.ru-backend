@@ -24,6 +24,7 @@ namespace Ykotika.Application.ViewModels
         public required ProductTypeDetails ProductType { get; init; }
         public required FormRecordDetails FormRecord { get; set; }
         public required Guid UserId { get; set; }
+        public Guid? DiscussionId { get; set; }
         public required UserDetails User { get; set; }
 
 
@@ -34,6 +35,8 @@ namespace Ykotika.Application.ViewModels
                 opt => opt.MapFrom(from => from.Status.ToString()))
                 .ForMember(to => to.UserId,
                 opt => opt.MapFrom(from => from.User.Id))
+                .ForMember(to => to.DiscussionId,
+                opt => opt.MapFrom(from => from.Discussion.Id))
                 .ForMember(to => to.SourcePath,
                 opt => opt.MapFrom(from => from.Source.Path));
         }

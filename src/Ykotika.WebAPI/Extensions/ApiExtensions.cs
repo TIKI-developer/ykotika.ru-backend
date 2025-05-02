@@ -39,7 +39,18 @@ namespace Ykotika.WebApi.Extensions
                     {
                         OnMessageReceived = context =>
                         {
-                            context.Token = context.Request.Cookies[Cookies.ACCESS_TOKEN_NAME];
+                            var accessToken = context.Request.Query["access_token"];
+
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+                            {
+                                context.Token = accessToken;
+                            }
+                            else
+                            {
+                                context.Token = context.Request.Cookies[Cookies.ACCESS_TOKEN_NAME];
+                            }
+
                             return Task.CompletedTask;
                         }
                     };

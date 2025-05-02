@@ -27,6 +27,9 @@ namespace Ykotika.Application.Interfaces
 
         DbSet<Domain.Entities.File> Files { get; set; }
 
+        DbSet<Chat> Chats { get; set; }
+        DbSet<Message> Messages { get; set; }
+
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

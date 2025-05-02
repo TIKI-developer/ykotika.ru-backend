@@ -13,6 +13,7 @@ namespace Ykotika.Domain.Entities
         public required ProductStatus Status { get; set; }
         public required List<Tag> Tags { get; set; }
         public List<Comment> Comments { get; set; } = [];
+        public Chat? Discussion { get; set; }
         public File? Source { get; set; }
         public required List<ImageListItem> Images { get; set; }
         public required List<OutsourceShopProductInfo> OutsourceShops { get; set; }

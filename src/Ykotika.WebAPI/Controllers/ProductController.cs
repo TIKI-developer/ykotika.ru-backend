@@ -130,6 +130,21 @@ namespace Ykotika.WebAPI.Controllers
             return Ok();
         }
 
+        [HttpPost("{id}/discussion")]
+        [Authorize(Roles = $"{Roles.MODERATOR_ROLE}")]
+        public async Task<ActionResult<Guid>>
+            CreateDiscussion(Guid id)
+        {
+            var command = new CreateProductDiscussionCommand
+            {
+                ProductId = id,
+                CreatorId = UserId
+            };
+            var chatId = await Mediator.Send(command);
+
+            return Ok(chatId);
+        }
+
         [HttpPatch("{id}/outsource-shops")]
         [Authorize(Roles = $"{Roles.MODERATOR_ROLE}, {Roles.ADMIN_ROLE}, {Roles.DIRECTOR_ROLE}")]
         public async Task<IActionResult>

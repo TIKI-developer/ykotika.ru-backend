@@ -9,6 +9,8 @@ namespace Ykotika.Persistence.EntityTypeConfigurations
         public void Configure(EntityTypeBuilder<Product> builder)
         {
             builder
+                .HasOne(e => e.Discussion);
+            builder
                 .OwnsMany(e => e.OutsourceShops, os =>
                 {
                     os.WithOwner();
