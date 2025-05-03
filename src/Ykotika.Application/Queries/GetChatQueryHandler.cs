@@ -20,8 +20,14 @@ namespace Ykotika.Application.Queries
                 .Chats
                 .Include(e => e.Members)
                 .Include(e => e.Messages)
-                .FirstOrDefaultAsync(e => e.Id == request.Id)
+                .ThenInclude(e => e.Attachments)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(Chat), cancellationToken);
+
+            chat.Messages = chat.Messages
+                .OrderBy(m => m.Timestamps.CreatedAt)
+                .ToList();
 
             return _mapper.Map<ChatDetails>(chat);
         }
