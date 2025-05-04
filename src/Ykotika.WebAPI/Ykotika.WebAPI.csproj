@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\NotificationSystem\Ykotika.NotificationSystem.csproj" />
     <ProjectReference Include="..\Ykotika.Application\Ykotika.Application.csproj" />
     <ProjectReference Include="..\Ykotika.Article\Ykotika.Article.csproj" />
     <ProjectReference Include="..\Ykotika.Caching\Ykotika.Caching.csproj" />

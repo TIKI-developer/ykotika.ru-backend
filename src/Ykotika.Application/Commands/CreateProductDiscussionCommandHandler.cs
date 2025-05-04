@@ -33,7 +33,8 @@ namespace Ykotika.Application.Commands
             {
                 Id = Guid.NewGuid(),
                 Timestamps = new Domain.ValueObjects.Timestamps(),
-                Members = members
+                Members = members,
+                Type = "productDiscussion"
             };
 
             product.Discussion = newChat;

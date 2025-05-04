@@ -35,7 +35,7 @@ namespace Ykotika.Persistence.Migrations
 
                     b.HasIndex("ProductsId");
 
-                    b.ToTable("CategoryProduct");
+                    b.ToTable("CategoryProduct", (string)null);
                 });
 
             modelBuilder.Entity("ChatUser", b =>
@@ -50,7 +50,7 @@ namespace Ykotika.Persistence.Migrations
 
                     b.HasIndex("MembersId");
 
-                    b.ToTable("ChatUser");
+                    b.ToTable("ChatUser", (string)null);
                 });
 
             modelBuilder.Entity("FileMessage", b =>
@@ -65,7 +65,7 @@ namespace Ykotika.Persistence.Migrations
 
                     b.HasIndex("MessageId");
 
-                    b.ToTable("FileMessage");
+                    b.ToTable("FileMessage", (string)null);
                 });
 
             modelBuilder.Entity("Ykotika.Domain.Entities.Author", b =>
@@ -81,7 +81,7 @@ namespace Ykotika.Persistence.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("Authors");
+                    b.ToTable("Authors", (string)null);
                 });
 
             modelBuilder.Entity("Ykotika.Domain.Entities.Entity", b =>
@@ -95,7 +95,7 @@ namespace Ykotika.Persistence.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.ToTable("Entities");
+                    b.ToTable("Entities", (string)null);
 
                     b.UseTptMappingStrategy();
                 });
@@ -110,14 +110,14 @@ namespace Ykotika.Persistence.Migrations
                     b.HasIndex("Path")
                         .IsUnique();
 
-                    b.ToTable("Files");
+                    b.ToTable("Files", (string)null);
                 });
 
             modelBuilder.Entity("Ykotika.Domain.Entities.Admin", b =>
                 {
                     b.HasBaseType("Ykotika.Domain.Entities.Entity");
 
-                    b.ToTable("Admin");
+                    b.ToTable("Admin", (string)null);
                 });
 
             modelBuilder.Entity("Ykotika.Domain.Entities.Agreement", b =>
@@ -137,7 +137,7 @@ namespace Ykotika.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Agreements");
+                    b.ToTable("Agreements", (string)null);
                 });
 
             modelBuilder.Entity("Ykotika.Domain.Entities.Category", b =>
@@ -165,7 +165,7 @@ namespace Ykotika.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("Ykotika.Domain.Entities.Chat", b =>
@@ -175,7 +175,7 @@ namespace Ykotika.Persistence.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.ToTable("Chats");
+                    b.ToTable("Chats", (string)null);
                 });
 
             modelBuilder.Entity("Ykotika.Domain.Entities.Customer", b =>
@@ -187,7 +187,7 @@ namespace Ykotika.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("Ykotika.Domain.Entities.Director", b =>
@@ -199,7 +199,7 @@ namespace Ykotika.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Directors");
+                    b.ToTable("Directors", (string)null);
                 });
 
             modelBuilder.Entity("Ykotika.Domain.Entities.Form", b =>
@@ -219,7 +219,7 @@ namespace Ykotika.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Forms");
+                    b.ToTable("Forms", (string)null);
                 });
 
             modelBuilder.Entity("Ykotika.Domain.Entities.FormRecord", b =>
@@ -239,7 +239,7 @@ namespace Ykotika.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("FormRecords");
+                    b.ToTable("FormRecords", (string)null);
                 });
 
             modelBuilder.Entity("Ykotika.Domain.Entities.Message", b =>
@@ -259,7 +259,7 @@ namespace Ykotika.Persistence.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Messages");
+                    b.ToTable("Messages", (string)null);
                 });
 
             modelBuilder.Entity("Ykotika.Domain.Entities.Moderator", b =>
@@ -271,7 +271,7 @@ namespace Ykotika.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Moderators");
+                    b.ToTable("Moderators", (string)null);
                 });
 
             modelBuilder.Entity("Ykotika.Domain.Entities.Offer", b =>
@@ -290,7 +290,7 @@ namespace Ykotika.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Offers");
+                    b.ToTable("Offers", (string)null);
                 });
 
             modelBuilder.Entity("Ykotika.Domain.Entities.OutsourceShop", b =>
@@ -310,7 +310,7 @@ namespace Ykotika.Persistence.Migrations
 
                     b.HasIndex("ImagePath");
 
-                    b.ToTable("OutsourceShops");
+                    b.ToTable("OutsourceShops", (string)null);
                 });
 
             modelBuilder.Entity("Ykotika.Domain.Entities.Product", b =>
@@ -363,7 +363,7 @@ namespace Ykotika.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("Ykotika.Domain.Entities.ProductType", b =>
@@ -394,7 +394,7 @@ namespace Ykotika.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ProductTypes");
+                    b.ToTable("ProductTypes", (string)null);
                 });
 
             modelBuilder.Entity("Ykotika.Domain.Entities.User", b =>
@@ -438,7 +438,7 @@ namespace Ykotika.Persistence.Migrations
 
                     b.HasIndex("ImagePath");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("CategoryProduct", b =>
@@ -494,26 +494,7 @@ namespace Ykotika.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("Ykotika.Domain.ValueObjects.Timestamps", "Timestamps", b1 =>
-                        {
-                            b1.Property<Guid>("AuthorUserId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<DateTime>("CreatedAt")
-                                .HasColumnType("timestamp with time zone");
-
-                            b1.Property<DateTime>("UpdatedAt")
-                                .HasColumnType("timestamp with time zone");
-
-                            b1.HasKey("AuthorUserId");
-
-                            b1.ToTable("Authors");
-
-                            b1.WithOwner()
-                                .HasForeignKey("AuthorUserId");
-                        });
-
-                    b.OwnsOne("Ykotika.Domain.ValueObjects.AuthorRequest", "Request", b1 =>
+                    b.OwnsOne("Ykotika.Domain.Entities.Author.Request#Ykotika.Domain.ValueObjects.AuthorRequest", "Request", b1 =>
                         {
                             b1.Property<Guid>("AuthorUserId")
                                 .HasColumnType("uuid");
@@ -527,12 +508,12 @@ namespace Ykotika.Persistence.Migrations
 
                             b1.HasKey("AuthorUserId");
 
-                            b1.ToTable("Authors");
+                            b1.ToTable("Authors", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("AuthorUserId");
 
-                            b1.OwnsOne("Ykotika.Domain.ValueObjects.Timestamps", "Timestamps", b2 =>
+                            b1.OwnsOne("Ykotika.Domain.Entities.Author.Request#Ykotika.Domain.ValueObjects.AuthorRequest.Timestamps#Ykotika.Domain.ValueObjects.Timestamps", "Timestamps", b2 =>
                                 {
                                     b2.Property<Guid>("AuthorRequestAuthorUserId")
                                         .HasColumnType("uuid");
@@ -545,7 +526,7 @@ namespace Ykotika.Persistence.Migrations
 
                                     b2.HasKey("AuthorRequestAuthorUserId");
 
-                                    b2.ToTable("Authors");
+                                    b2.ToTable("Authors", (string)null);
 
                                     b2.WithOwner()
                                         .HasForeignKey("AuthorRequestAuthorUserId");
@@ -555,7 +536,7 @@ namespace Ykotika.Persistence.Migrations
                                 .IsRequired();
                         });
 
-                    b.OwnsMany("Ykotika.Domain.ValueObjects.Social", "Socials", b1 =>
+                    b.OwnsMany("Ykotika.Domain.Entities.Author.Socials#Ykotika.Domain.ValueObjects.Social", "Socials", b1 =>
                         {
                             b1.Property<Guid>("AuthorUserId")
                                 .HasColumnType("uuid");
@@ -576,7 +557,26 @@ namespace Ykotika.Persistence.Migrations
 
                             b1.HasKey("AuthorUserId", "Id");
 
-                            b1.ToTable("Social");
+                            b1.ToTable("Social", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("AuthorUserId");
+                        });
+
+                    b.OwnsOne("Ykotika.Domain.Entities.Author.Timestamps#Ykotika.Domain.ValueObjects.Timestamps", "Timestamps", b1 =>
+                        {
+                            b1.Property<Guid>("AuthorUserId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<DateTime>("CreatedAt")
+                                .HasColumnType("timestamp with time zone");
+
+                            b1.Property<DateTime>("UpdatedAt")
+                                .HasColumnType("timestamp with time zone");
+
+                            b1.HasKey("AuthorUserId");
+
+                            b1.ToTable("Authors", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("AuthorUserId");
@@ -595,7 +595,7 @@ namespace Ykotika.Persistence.Migrations
 
             modelBuilder.Entity("Ykotika.Domain.Entities.Entity", b =>
                 {
-                    b.OwnsOne("Ykotika.Domain.ValueObjects.Timestamps", "Timestamps", b1 =>
+                    b.OwnsOne("Ykotika.Domain.Entities.Entity.Timestamps#Ykotika.Domain.ValueObjects.Timestamps", "Timestamps", b1 =>
                         {
                             b1.Property<Guid>("EntityId")
                                 .HasColumnType("uuid");
@@ -608,7 +608,7 @@ namespace Ykotika.Persistence.Migrations
 
                             b1.HasKey("EntityId");
 
-                            b1.ToTable("Entities");
+                            b1.ToTable("Entities", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("EntityId");
@@ -620,7 +620,7 @@ namespace Ykotika.Persistence.Migrations
 
             modelBuilder.Entity("Ykotika.Domain.Entities.File", b =>
                 {
-                    b.OwnsOne("Ykotika.Domain.ValueObjects.Timestamps", "Timestamps", b1 =>
+                    b.OwnsOne("Ykotika.Domain.Entities.File.Timestamps#Ykotika.Domain.ValueObjects.Timestamps", "Timestamps", b1 =>
                         {
                             b1.Property<string>("FilePath")
                                 .HasColumnType("text");
@@ -633,7 +633,7 @@ namespace Ykotika.Persistence.Migrations
 
                             b1.HasKey("FilePath");
 
-                            b1.ToTable("Files");
+                            b1.ToTable("Files", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("FilePath");
@@ -758,7 +758,7 @@ namespace Ykotika.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsMany("Ykotika.Domain.Entities.Form+Input", "Inputs", b1 =>
+                    b.OwnsMany("Ykotika.Domain.Entities.Form.Inputs#Ykotika.Domain.Entities.Form+Input", "Inputs", b1 =>
                         {
                             b1.Property<Guid>("FormId")
                                 .HasColumnType("uuid");
@@ -774,12 +774,12 @@ namespace Ykotika.Persistence.Migrations
 
                             b1.HasKey("FormId", "Id");
 
-                            b1.ToTable("Input");
+                            b1.ToTable("Input", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("FormId");
 
-                            b1.OwnsOne("Ykotika.Domain.Entities.Form+InputExtraAttributes", "ExtraAttributes", b2 =>
+                            b1.OwnsOne("Ykotika.Domain.Entities.Form.Inputs#Ykotika.Domain.Entities.Form+Input.ExtraAttributes#Ykotika.Domain.Entities.Form+InputExtraAttributes", "ExtraAttributes", b2 =>
                                 {
                                     b2.Property<Guid>("InputFormId")
                                         .HasColumnType("uuid");
@@ -811,7 +811,7 @@ namespace Ykotika.Persistence.Migrations
 
                                     b2.HasKey("InputFormId", "InputId");
 
-                                    b2.ToTable("Input");
+                                    b2.ToTable("Input", (string)null);
 
                                     b2.WithOwner()
                                         .HasForeignKey("InputFormId", "InputId");
@@ -846,7 +846,7 @@ namespace Ykotika.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsMany("Ykotika.Domain.Entities.FormRecord+InputRecord", "InputRecords", b1 =>
+                    b.OwnsMany("Ykotika.Domain.Entities.FormRecord.InputRecords#Ykotika.Domain.Entities.FormRecord+InputRecord", "InputRecords", b1 =>
                         {
                             b1.Property<string>("Id")
                                 .HasColumnType("text");
@@ -862,7 +862,7 @@ namespace Ykotika.Persistence.Migrations
 
                             b1.HasIndex("FormRecordId");
 
-                            b1.ToTable("InputRecord");
+                            b1.ToTable("InputRecord", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("FormRecordId");
@@ -985,7 +985,7 @@ namespace Ykotika.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsMany("Ykotika.Domain.ValueObjects.Comment", "Comments", b1 =>
+                    b.OwnsMany("Ykotika.Domain.Entities.Product.Comments#Ykotika.Domain.ValueObjects.Comment", "Comments", b1 =>
                         {
                             b1.Property<Guid>("ProductId")
                                 .HasColumnType("uuid");
@@ -1010,7 +1010,7 @@ namespace Ykotika.Persistence.Migrations
 
                             b1.HasIndex("AuthorId");
 
-                            b1.ToTable("Comment");
+                            b1.ToTable("Comment", (string)null);
 
                             b1.HasOne("Ykotika.Domain.Entities.User", "Author")
                                 .WithMany()
@@ -1024,7 +1024,7 @@ namespace Ykotika.Persistence.Migrations
                             b1.Navigation("Author");
                         });
 
-                    b.OwnsMany("Ykotika.Domain.ValueObjects.ImageListItem", "Images", b1 =>
+                    b.OwnsMany("Ykotika.Domain.Entities.Product.Images#Ykotika.Domain.ValueObjects.ImageListItem", "Images", b1 =>
                         {
                             b1.Property<Guid>("ProductId")
                                 .HasColumnType("uuid");
@@ -1046,7 +1046,7 @@ namespace Ykotika.Persistence.Migrations
 
                             b1.HasIndex("ImagePath");
 
-                            b1.ToTable("ImageListItem");
+                            b1.ToTable("ImageListItem", (string)null);
 
                             b1.HasOne("Ykotika.Domain.Entities.File", "Image")
                                 .WithMany()
@@ -1060,7 +1060,7 @@ namespace Ykotika.Persistence.Migrations
                             b1.Navigation("Image");
                         });
 
-                    b.OwnsMany("Ykotika.Domain.ValueObjects.OutsourceShopProductInfo", "OutsourceShops", b1 =>
+                    b.OwnsMany("Ykotika.Domain.Entities.Product.OutsourceShops#Ykotika.Domain.ValueObjects.OutsourceShopProductInfo", "OutsourceShops", b1 =>
                         {
                             b1.Property<Guid>("ProductId")
                                 .HasColumnType("uuid");
@@ -1082,7 +1082,7 @@ namespace Ykotika.Persistence.Migrations
 
                             b1.HasIndex("OutsourceShopId");
 
-                            b1.ToTable("OutsourceShopProductInfo");
+                            b1.ToTable("OutsourceShopProductInfo", (string)null);
 
                             b1.HasOne("Ykotika.Domain.Entities.OutsourceShop", "OutsourceShop")
                                 .WithMany()
@@ -1096,7 +1096,7 @@ namespace Ykotika.Persistence.Migrations
                             b1.Navigation("OutsourceShop");
                         });
 
-                    b.OwnsMany("Ykotika.Domain.ValueObjects.Tag", "Tags", b1 =>
+                    b.OwnsMany("Ykotika.Domain.Entities.Product.Tags#Ykotika.Domain.ValueObjects.Tag", "Tags", b1 =>
                         {
                             b1.Property<Guid>("ProductId")
                                 .HasColumnType("uuid");
@@ -1113,7 +1113,7 @@ namespace Ykotika.Persistence.Migrations
 
                             b1.HasKey("ProductId", "Id");
 
-                            b1.ToTable("Tag");
+                            b1.ToTable("Tag", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("ProductId");

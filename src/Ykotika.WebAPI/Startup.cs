@@ -7,6 +7,7 @@ using Ykotika.Application.Interfaces;
 using Ykotika.Caching;
 using Ykotika.Email;
 using Ykotika.FileStorage;
+using Ykotika.NotificationSystem;
 using Ykotika.Persistence;
 using Ykotika.Security;
 using Ykotika.SpreadsheetService;
@@ -34,7 +35,7 @@ namespace Ykotika.WebAPI
             });
 
             services.AddPersistence(Configuration);
-            services.AddScoped<INotificationService, NotificationHub>();
+            services.AddNotificationSystem(Configuration);
             services.AddCaching(Configuration);
             services.AddFileStorage();
             services.AddSecurity(Configuration);
