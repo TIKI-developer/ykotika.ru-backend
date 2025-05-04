@@ -29,6 +29,7 @@ namespace Ykotika.Application.Interfaces
 
         DbSet<Chat> Chats { get; set; }
         DbSet<Message> Messages { get; set; }
+        DbSet<Notification> Notifications { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

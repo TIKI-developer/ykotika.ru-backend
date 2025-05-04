@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Ykotika.Application.Common.Exceptions;
 using Ykotika.Application.Interfaces;
+using Ykotika.Application.Models;
 using Ykotika.Application.ViewModels;
 using Ykotika.Domain.Entities;
 using Ykotika.Domain.ValueObjects;
@@ -11,11 +12,13 @@ namespace Ykotika.Application.Commands
 {
     internal class CreateMessageCommandHandler 
         (IYkotikaDbContext dbContext,
-        IMapper mapper)
+        IMapper mapper,
+        INotificationService notificationService)
         : IRequestHandler<CreateMessageCommand, MessageItem>
     {
         private readonly IMapper _mapper = mapper;
         private readonly IYkotikaDbContext _dbContext = dbContext;
+        private readonly INotificationService _notificationService = notificationService;
 
         public async Task<MessageItem> Handle(CreateMessageCommand request, CancellationToken cancellationToken)
         {
@@ -58,6 +61,28 @@ namespace Ykotika.Application.Commands
             };
 
             await _dbContext.Messages.AddAsync(newMessage, cancellationToken);
+
+            foreach (var user in chat.Members) {
+
+                if (user.Id == newMessage.Sender.Id)
+                    continue;
+
+                var notification = new Notification
+                {
+                    Id = Guid.NewGuid(),
+                    Timestamps = new Timestamps(),
+                    Title = "Вам пришло новое сообщение",
+                    Body = newMessage.Text ?? "...",
+                    IsRead = false,
+                    User = user,
+                    UserId = user.Id
+                };
+
+                await _dbContext.Notifications.AddAsync(notification, cancellationToken);
+
+                await _notificationService.Send(new NotifyDto(user.Id, _mapper.Map<NotificationItem>(notification)));
+            }
+
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return _mapper.Map<MessageItem>(newMessage);

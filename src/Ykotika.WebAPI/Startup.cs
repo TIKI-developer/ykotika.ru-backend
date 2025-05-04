@@ -34,6 +34,7 @@ namespace Ykotika.WebAPI
             });
 
             services.AddPersistence(Configuration);
+            services.AddScoped<INotificationService, NotificationHub>();
             services.AddCaching(Configuration);
             services.AddFileStorage();
             services.AddSecurity(Configuration);
@@ -123,6 +124,7 @@ namespace Ykotika.WebAPI
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<ChatHub>("/hubs/chats");
+                endpoints.MapHub<NotificationHub>("/hubs/notifications");
             });
         }
     }
