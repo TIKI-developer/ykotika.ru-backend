@@ -15,6 +15,7 @@ namespace Ykotika.Domain.Entities
             public required string Id { get; set; }
             public required int OrderIndex { get; set; }
             public required InputType Type { get; set; }
+            public string? DefaultValue { get; set; }
             public required InputExtraAttributes ExtraAttributes { get; set; }
         }
         public class InputExtraAttributes

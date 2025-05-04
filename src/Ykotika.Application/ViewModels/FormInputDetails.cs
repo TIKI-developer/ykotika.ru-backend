@@ -8,6 +8,7 @@ namespace Ykotika.Application.ViewModels
     {
         public required string Id { get; set; }
         public required string Type { get; set; }
+        public string? DefaultValue { get; set; }
         public required Form.InputExtraAttributes ExtraAttributes { get; set; }
 
         public void Mapping(Profile profile)

@@ -19,6 +19,7 @@ namespace Ykotika.WebAPI.Models
         {
             public string? Id { get; set; }
             public string? Type { get; set; }
+            public string? DefaultValue { get; set; }
             public Form.InputExtraAttributes? ExtraAttributes { get; set; }
 
             public void Mapping(Profile profile)

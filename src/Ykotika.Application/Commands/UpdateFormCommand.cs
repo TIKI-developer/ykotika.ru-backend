@@ -14,6 +14,7 @@ namespace Ykotika.Application.Commands
         {
             public string? Id { get; set; }
             public required Form.InputType Type { get; set; }
+            public string? DefaultValue { get; set; }
             public required Form.InputExtraAttributes ExtraAttributes { get; set; }
         }
     }

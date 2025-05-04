@@ -18,6 +18,7 @@ namespace Ykotika.WebAPI.Models
         public class CreateFormInputDto : IMapWith<CreateFormCommand.InputDto>
         {
             public required string Type { get; set; }
+            public string? DefaultValue { get; set; }
             public required Form.InputExtraAttributes ExtraAttributes { get; set; }
 
             public void Mapping(Profile profile)

@@ -33,6 +33,7 @@ namespace Ykotika.Application.Commands
                 {
                     Id = Nanoid.Generate(size: 6),
                     OrderIndex = index,
+                    DefaultValue = dto.DefaultValue,
                     Type = dto.Type,
                     ExtraAttributes = new Form.InputExtraAttributes
                     {

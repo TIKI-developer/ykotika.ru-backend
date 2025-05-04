@@ -20,6 +20,8 @@ namespace Ykotika.Application.Queries
                 .Chats
                 .Include(e => e.Members)
                 .Include(e => e.Messages)
+                .ThenInclude(e => e.Sender)
+                .Include(e => e.Messages)
                 .ThenInclude(e => e.Attachments)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)

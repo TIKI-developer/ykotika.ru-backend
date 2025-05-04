@@ -51,6 +51,7 @@ namespace Ykotika.Application.Commands
                             Id = Nanoid.Generate(size: 6),
                             OrderIndex = index,
                             ExtraAttributes = input.ExtraAttributes,
+                            DefaultValue = input.DefaultValue,
                             Type = input.Type,
                         };
                         form.Inputs.Add(newInput);
@@ -60,6 +61,7 @@ namespace Ykotika.Application.Commands
                     {
                         formInput.Type = input.Type;
                         formInput.OrderIndex = index;
+                        formInput.DefaultValue = input.DefaultValue;
                         formInput.ExtraAttributes = input.ExtraAttributes;
                         id = formInput.Id;
                     }
