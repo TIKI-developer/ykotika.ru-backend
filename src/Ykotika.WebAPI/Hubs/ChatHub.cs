@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Security.Claims;
@@ -8,7 +7,6 @@ using System.Text.Json;
 using Ykotika.Application.Commands;
 using Ykotika.Application.Queries;
 using Ykotika.Application.ViewModels;
-using Ykotika.WebAPI.Constants;
 using Ykotika.WebAPI.Models;
 
 namespace Ykotika.WebAPI.Hubs;
@@ -32,9 +30,6 @@ public class ChatHub(IMediator mediator, IMapper mapper, IDistributedCache cache
     //[Authorize(Roles = $"{Roles.AUTHOR_ROLE}, {Roles.MODERATOR_ROLE}, {Roles.ADMIN_ROLE}")]
     public async Task Join(JoinChatDto dto)
     {
-        Console.WriteLine("Connection ID" + Context.ConnectionId);
-        Console.WriteLine("User" + Context.User.Identity.IsAuthenticated);
-        Console.WriteLine("User" + Context.User.FindFirst(ClaimTypes.NameIdentifier).Value);
         var connection = new ChatConnectionDto(UserId, dto.ChatId);
         var query = new GetChatQuery { Id = connection.ChatId };
         var chat = await _mediator.Send(query);
