@@ -27,7 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ykotika.Article", "Ykotika.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ykotika.Email", "Ykotika.Email\Ykotika.Email.csproj", "{5E3BE971-CA91-4B7B-B88F-89BE4B0C8EAC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ykotika.Caching", "Ykotika.Caching\Ykotika.Caching.csproj", "{6EDA1860-49CD-4F31-AC84-3092C8CCA61C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ykotika.Caching", "Ykotika.Caching\Ykotika.Caching.csproj", "{6EDA1860-49CD-4F31-AC84-3092C8CCA61C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ykotika.NotificationSystem", "NotificationSystem\Ykotika.NotificationSystem.csproj", "{6BB58DFD-E30E-44F4-8ABB-567278F6B099}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,10 @@ Global
 		{6EDA1860-49CD-4F31-AC84-3092C8CCA61C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EDA1860-49CD-4F31-AC84-3092C8CCA61C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EDA1860-49CD-4F31-AC84-3092C8CCA61C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BB58DFD-E30E-44F4-8ABB-567278F6B099}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BB58DFD-E30E-44F4-8ABB-567278F6B099}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BB58DFD-E30E-44F4-8ABB-567278F6B099}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BB58DFD-E30E-44F4-8ABB-567278F6B099}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -90,6 +96,7 @@ Global
 		{FA07A730-4805-4E99-BB28-7263B6D754C7} = {EB28710A-D892-40A6-BD35-B1CBCEAB62C7}
 		{5E3BE971-CA91-4B7B-B88F-89BE4B0C8EAC} = {EB28710A-D892-40A6-BD35-B1CBCEAB62C7}
 		{6EDA1860-49CD-4F31-AC84-3092C8CCA61C} = {EB28710A-D892-40A6-BD35-B1CBCEAB62C7}
+		{6BB58DFD-E30E-44F4-8ABB-567278F6B099} = {EB28710A-D892-40A6-BD35-B1CBCEAB62C7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AEB7AB46-486C-466B-BBD3-A6321F825590}

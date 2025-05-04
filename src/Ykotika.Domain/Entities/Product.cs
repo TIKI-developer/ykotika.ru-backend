@@ -35,6 +35,3 @@ namespace Ykotika.Domain.Entities
         Fixed
     }
 }
-
-
-//В работе, Готово, Загружено, ЕстьОшибки, Ошибка исправлена

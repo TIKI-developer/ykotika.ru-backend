@@ -10,7 +10,7 @@ namespace Ykotika.Application.ViewModels
         public required Timestamps Timestamps { get; set; }
         public required string Title { get; set; }
         public required string Body { get; set; }
-        public string? Href { get; set; }
+        public string? RedirectUri { get; set; }
         public required bool IsRead { get; set; }
         public required Guid UserId { get; set; }
     }

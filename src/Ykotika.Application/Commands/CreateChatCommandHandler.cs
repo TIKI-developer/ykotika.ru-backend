@@ -25,7 +25,8 @@ namespace Ykotika.Application.Commands
                 Id = Guid.NewGuid(),
                 Timestamps = new Timestamps(),
                 Name = request.Name,
-                Members = members
+                Members = members,
+                Type = request.Type
             };
 
             await _dbContext.Chats.AddAsync(newChat, cancellationToken);

@@ -6,5 +6,6 @@ namespace Ykotika.Application.Commands
     {
         public string? Name { get; set; }
         public required List<Guid> Members { get; set; }
+        public required string Type { get; set; }
     }
 }

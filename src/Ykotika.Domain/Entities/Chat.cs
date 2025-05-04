@@ -5,5 +5,6 @@
         public string? Name { get; set; }
         public required List<User> Members { get; set; }
         public List<Message> Messages { get; set; } = [];
+        public required string Type { get; set; }
     }
 }

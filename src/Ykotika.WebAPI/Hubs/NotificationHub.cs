@@ -18,16 +18,32 @@ namespace Ykotika.WebAPI.Hubs
         Task ReceiveNotification(NotificationItem notification);
     }
 
-    public class NotificationHub(IMediator mediator, IMapper mapper, IDistributedCache cache) : Hub<INotificationClient>, INotificationService
+    public class NotificationHub : Hub<INotificationClient>, IDisposable
     {
-        private readonly IMediator _mediator = mediator;
-        private readonly IMapper _mapper = mapper;
-        private readonly IDistributedCache _cache = cache;
+        private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
+        private readonly IDistributedCache _cache;
+        private readonly INotificationSender _notificationSender;
 
         internal Guid UserId => !Context.User.Identity.IsAuthenticated
             ? Guid.Empty
             : Guid.Parse(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
+        public NotificationHub(IMediator mediator,
+        IMapper mapper,
+        IDistributedCache cache,
+        INotificationSender notificationSender)
+        {
+            _mediator = mediator;
+            _mapper = mapper;
+            _cache = cache;
+            _notificationSender = notificationSender;
+            _notificationSender.NotificationReceived += OnNotificationReceived;
+        }
+        void IDisposable.Dispose()
+        {
+            _notificationSender.NotificationReceived -= OnNotificationReceived;
+        }
         public async Task ConnectToNotifications(ConnectNotificationSystemDto dto)
         {
             var connection = new NotificationSystemConnectionDto(UserId);
@@ -45,7 +61,13 @@ namespace Ykotika.WebAPI.Hubs
                     .Users(connection.UserId.ToString())
                     .ReceiveNotificationList(notificationList);
         }
-        public async Task Send(NotifyDto dto)
+
+        private async void OnNotificationReceived(object? sender, NotifyDto dto)
+        {
+            await Send(dto);   
+        }
+
+        private async Task Send(NotifyDto dto)
         {
             await Clients
                 .Users(dto.UserId.ToString())

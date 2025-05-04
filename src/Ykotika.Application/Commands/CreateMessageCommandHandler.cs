@@ -13,12 +13,16 @@ namespace Ykotika.Application.Commands
     internal class CreateMessageCommandHandler 
         (IYkotikaDbContext dbContext,
         IMapper mapper,
-        INotificationService notificationService)
+        INotificationService notificationService,
+        INotificationRedirectUriResolver notificationRedirectUriResolver,
+        INotificationMetadataProvider notificationMetadataProvider)
         : IRequestHandler<CreateMessageCommand, MessageItem>
     {
         private readonly IMapper _mapper = mapper;
         private readonly IYkotikaDbContext _dbContext = dbContext;
         private readonly INotificationService _notificationService = notificationService;
+        private readonly INotificationRedirectUriResolver _notificationRedirectUriResolver = notificationRedirectUriResolver;
+        private readonly INotificationMetadataProvider _notificationMetadataProvider = notificationMetadataProvider;
 
         public async Task<MessageItem> Handle(CreateMessageCommand request, CancellationToken cancellationToken)
         {
@@ -67,20 +71,26 @@ namespace Ykotika.Application.Commands
                 if (user.Id == newMessage.Sender.Id)
                     continue;
 
+                var baseMetadata = new Dictionary<string, string> { { "chatId", chat.Id.ToString() } };
+
+                var enrichedMetadata = await _notificationMetadataProvider.EnrichMetadataAsync("ChatMessage", baseMetadata);
+
                 var notification = new Notification
                 {
                     Id = Guid.NewGuid(),
                     Timestamps = new Timestamps(),
+                    Type = "ChatMessage",
                     Title = "Вам пришло новое сообщение",
                     Body = newMessage.Text ?? "...",
+                    Metadata = enrichedMetadata,
                     IsRead = false,
                     User = user,
                     UserId = user.Id
                 };
-
+                var vm = _mapper.Map<NotificationItem>(notification);
+                vm.RedirectUri = _notificationRedirectUriResolver.ResolvedRedirectionUri(notification);
                 await _dbContext.Notifications.AddAsync(notification, cancellationToken);
-
-                await _notificationService.Send(new NotifyDto(user.Id, _mapper.Map<NotificationItem>(notification)));
+                await _notificationService.Send(new NotifyDto(user.Id, vm));
             }
 
             await _dbContext.SaveChangesAsync(cancellationToken);
