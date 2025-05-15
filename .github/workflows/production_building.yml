@@ -1,0 +1,37 @@
+name: Production building
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '.github/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      PROJECT_NAME: ${{ vars.PROJECT_NAME }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Harbor
+        run: echo '${{ secrets.HARBOR_PUBLISHER_TOKEN }}' | docker login ${{ vars.HARBOR_URL }} -u '${{ secrets.HARBOR_ROBOT_PUBLISHER_NAME }}' --password-stdin
+
+      - name: Get repository name
+        run: |
+          REPO_NAME=$(basename ${{ github.repository }})
+          echo "REPO_NAME=$REPO_NAME" >> $GITHUB_ENV
+
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ vars.HARBOR_URL }}/$PROJECT_NAME/$REPO_NAME:latest -f web/Dockerfile web
+
+      - name: Push Docker image to Harbor
+        run: |
+          docker push ${{ vars.HARBOR_URL }}/$PROJECT_NAME/$REPO_NAME:latest

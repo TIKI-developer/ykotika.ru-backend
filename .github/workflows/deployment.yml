@@ -1,0 +1,28 @@
+name: Deployment
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Set up prod server SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Deploy to production server
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} bash <<'EOF'
+            export DOCKER_CONFIG="$HOME/.docker"
+            mkdir -p "$DOCKER_CONFIG"
+            echo -n '${{ secrets.HARBOR_PULLER_TOKEN }}' | docker login ${{ vars.HARBOR_URL }} -u '${{ secrets.HARBOR_ROBOT_PULLER_NAME }}' --password-stdin
+            cd ${{ vars.DCY_ABS_PATH }}
+            docker compose pull
+            docker compose up -d
+            docker logout ${{ vars.HARBOR_URL }}
+            rm -rf "$DOCKER_CONFIG"
+          EOF
