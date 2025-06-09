@@ -4,6 +4,23 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 # Устанавливаем рабочую директорию для сборки
 WORKDIR /src
 
+# Копируем всю директорию с исходным кодом в контейнер
+COPY src/ ./
+# Очищаем проект перед сборкой
+RUN dotnet clean Ykotika.sln
+
+# Сборка проекта
+RUN dotnet build Ykotika.sln -c Debug
+
+# Публикуем проект
+RUN dotnet publish Ykotika.WebAPI/Ykotika.WebAPI.csproj -c Debug -o /app
+
+# Используем официальный образ .NET Runtime для запуска приложения (с .NET 8)
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+
+# Устанавливаем рабочую директорию для исполнимого файла
+WORKDIR /app
+
 ARG LOGGING__LOG_LEVEL__DEFAULT
 ENV LOGGING__LOG_LEVEL__DEFAULT=$LOGGING__LOG_LEVEL__DEFAULT
 
@@ -54,22 +71,6 @@ ENV EMAIL_VERIFIER_OPTIONS__CREDENTIALS__HOST=$EMAIL_VERIFIER_OPTIONS__CREDENTIA
 
 ARG ALLOWED_ORIGINS
 ENV ALLOWED_ORIGINS=$ALLOWED_ORIGINS
-# Копируем всю директорию с исходным кодом в контейнер
-COPY src/ ./
-# Очищаем проект перед сборкой
-RUN dotnet clean Ykotika.sln
-
-# Сборка проекта
-RUN dotnet build Ykotika.sln -c Debug
-
-# Публикуем проект
-RUN dotnet publish Ykotika.WebAPI/Ykotika.WebAPI.csproj -c Debug -o /app
-
-# Используем официальный образ .NET Runtime для запуска приложения (с .NET 8)
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
-
-# Устанавливаем рабочую директорию для исполнимого файла
-WORKDIR /app
 
 # Копируем собранное приложение из стадии сборки
 COPY --from=build /app ./
