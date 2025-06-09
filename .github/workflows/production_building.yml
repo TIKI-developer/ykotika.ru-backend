@@ -1,0 +1,53 @@
+name: Production building
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Harbor
+        run: | 
+          echo '${{ secrets.HARBOR_PUBLISHER_TOKEN }}' | \
+          docker login ${{ vars.HARBOR_URL }} \
+          -u '${{ secrets.HARBOR_ROBOT_PUBLISHER_NAME }}' \
+          --password-stdin
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          tags: ${{ vars.HARBOR_URL }}/${{ vars.HARBOR_PROJECT_NAME }}/${{ vars.HARBOR_REPO_NAME }}:staging
+          context: .
+          file: ./Dockerfile
+          push: true
+          build-args: |
+            LOGGING__LOGLEVEL__DEFAULT=${{ vars.LOGGING__LOGLEVEL__DEFAULT }}
+            LOGGING__LOGLEVEL__MICROSOFT__ASPNETCORE=${{ vars.LOGGING__LOGLEVEL__MICROSOFT__ASPNETCORE }}
+            ALLOWED_HOSTS=${{ vars.ALLOWEDHOSTS }}
+            CONNECTIONSTRINGS__DBCONNECTION=${{ secrets.CONNECTIONSTRINGS__DBCONNECTION }}
+            CONNECTIONSTRINGS__REDIS=${{ secrets.CONNECTIONSTRINGS__REDIS }}
+            ACCESSTOKENOPTIONS__JWTOPTIONS__SECRETKEY=${{ secrets.ACCESSTOKENOPTIONS__JWTOPTIONS__SECRETKEY }}
+            ACCESSTOKENOPTIONS__JWTOPTIONS__EXPIRESHOURS=${{ vars.ACCESSTOKENOPTIONS__JWTOPTIONS__EXPIRESHOURS }}
+            REFRESHTOKENOPTIONS__JWTOPTIONS__SECRETKEY=${{ secrets.REFRESHTOKENOPTIONS__JWTOPTIONS__SECRETKEY }}
+            REFRESHTOKENOPTIONS__JWTOPTIONS__EXPIRESHOURS=${{ vars.REFRESHTOKENOPTIONS__JWTOPTIONS__EXPIRESHOURS }}
+            ENCRYPTIONOPTIONS__KEY=${{ secrets.ENCRYPTIONOPTIONS__KEY }}
+            ENCRYPTIONOPTIONS__AESIV=${{ secrets.ENCRYPTIONOPTIONS__AESIV }}
+            EMAILVERIFIEROPTIONS__CREDENTIALS__ADDRESS=${{ vars.EMAILVERIFIEROPTIONS__CREDENTIALS__ADDRESS }}
+            EMAILVERIFIEROPTIONS__CREDENTIALS__PASSWORD=${{ secrets.EMAILVERIFIEROPTIONS__CREDENTIALS__PASSWORD }}
+            EMAILVERIFIEROPTIONS__CREDENTIALS__PORT=${{ vars.EMAILVERIFIEROPTIONS__CREDENTIALS__PORT }}
+            EMAILVERIFIEROPTIONS__CREDENTIALS__ENABLESSL=${{ vars.EMAILVERIFIEROPTIONS__CREDENTIALS__ENABLESSL }}
+            EMAILVERIFIEROPTIONS__CREDENTIALS__HOST=${{ vars.EMAILVERIFIEROPTIONS__CREDENTIALS__HOST }}
+            ALLOWED_ORIGINS=${{ vars.ALLOWEDORIGINS }}

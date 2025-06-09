@@ -1,0 +1,70 @@
+name: Staging server setup
+description: Fully universal | Used for nessecary development/staging server initialization
+
+on:
+  workflow_dispatch:
+    
+jobs:
+  setup:
+    if: github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.DEV_SSH_PRIVATE_KEY }}
+
+      - name: Install Docker, Docker Compose & Nginx on server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.DEV_SERVER_USER }}@${{ vars.DEV_SERVER_IP }} << 'EOF'
+
+            # Установка Docker
+            if ! command -v docker &> /dev/null; then
+              curl -fsSL https://get.docker.com | sh
+            fi
+
+            # Установка Docker Compose (plugin)
+            if ! docker compose version &> /dev/null; then
+              mkdir -p ~/.docker/cli-plugins
+              curl -SL https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-linux-x86_64 -o ~/.docker/cli-plugins/docker-compose
+              chmod +x ~/.docker/cli-plugins/docker-compose
+            fi
+
+            # Установка или обновление Nginx
+            if ! command -v nginx &> /dev/null; then
+              sudo apt update
+              sudo apt install -y nginx
+            else
+              echo "Nginx уже установлен, проверка обновлений..."
+              sudo apt update
+              sudo apt install --only-upgrade -y nginx
+            fi
+
+          EOF
+
+      - name: Ensure remote directory exists
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.DEV_SERVER_USER }}@${{ vars.DEV_SERVER_IP }} \
+          "mkdir -p ${{ vars.DCY_ABS_PATH }}/nginx"
+
+      - name: Copy nginx config to server and reload Nginx
+        run: |
+          REPO_NAME=$(basename ${{ github.repository }})
+          echo "Using repository name: $REPO_NAME"
+
+          scp -o StrictHostKeyChecking=no configs/nginx/staging.conf \
+            ${{ secrets.DEV_SERVER_USER }}@${{ vars.DEV_SERVER_IP }}:/etc/nginx/sites-available/${REPO_NAME}-staging
+
+          ssh -o StrictHostKeyChecking=no ${{ secrets.DEV_SERVER_USER }}@${{ vars.DEV_SERVER_IP }} << EOF
+            if [ -f /etc/nginx/sites-available/${REPO_NAME}-staging ]; then
+              sudo ln -sf /etc/nginx/sites-available/${REPO_NAME}-staging /etc/nginx/sites-enabled/${REPO_NAME}-staging
+              sudo nginx -t && sudo systemctl reload nginx
+            else
+              echo "Nginx configuration file is missing. Aborting!"
+              exit 1
+            fi
+          EOF
