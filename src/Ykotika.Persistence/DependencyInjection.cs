@@ -13,7 +13,7 @@ namespace Ykotika.Persistence
 
             if (string.IsNullOrEmpty(connectionString))
             {
-                connectionString = Environment.GetEnvironmentVariable("DbConnection");
+                connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRINGS__DB_CONNECTION");
             }
 
             if (string.IsNullOrEmpty(connectionString))

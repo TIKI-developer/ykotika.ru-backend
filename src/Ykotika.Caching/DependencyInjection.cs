@@ -13,7 +13,7 @@ namespace Ykotika.Caching
 
                 if (string.IsNullOrEmpty(connection))
                 {
-                    connection = Environment.GetEnvironmentVariable("Redis");
+                    connection = Environment.GetEnvironmentVariable("CONNECTION_STRINGS__REDIS");
                 }
 
                 if (string.IsNullOrEmpty(connection))
