@@ -20,6 +20,7 @@ namespace Ykotika.Application.Queries
                 _dbContext
                 .Notifications
                 .AsQueryable()
+                .AsNoTracking()
                 .Where(e => e.UserId == request.UserId);
 
             query = Sort(query);

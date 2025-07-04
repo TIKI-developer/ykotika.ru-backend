@@ -30,15 +30,24 @@ public class ChatHub(IMediator mediator, IMapper mapper, IDistributedCache cache
     //[Authorize(Roles = $"{Roles.AUTHOR_ROLE}, {Roles.MODERATOR_ROLE}, {Roles.ADMIN_ROLE}")]
     public async Task Join(JoinChatDto dto)
     {
+        Console.WriteLine($"Создаем connection {JsonSerializer.Serialize(dto)}");
         var connection = new ChatConnectionDto(UserId, dto.ChatId);
+        Console.WriteLine("Подготавливаем запрос");
         var query = new GetChatQuery { Id = connection.ChatId };
+        Console.WriteLine($"Выполняем запрос {JsonSerializer.Serialize(query)}");
         var chat = await _mediator.Send(query);
+        Console.WriteLine($"Запрос выполнен. Результат: {JsonSerializer.Serialize(chat)}");
+        Console.WriteLine($"Сериализуем подключение {JsonSerializer.Serialize(connection)}");
         var stringConnection = JsonSerializer.Serialize(connection);
+        Console.WriteLine("Кешируем подключение");
         await _cache.SetStringAsync(Context.ConnectionId, stringConnection);
 
+        Console.WriteLine("Успешно");
+        Console.WriteLine("Добавляем в группу");
         await Groups
                 .AddToGroupAsync(Context.ConnectionId, connection.ChatId.ToString());
 
+        Console.WriteLine($"Отправляем клиенту чат {JsonSerializer.Serialize(chat)}");
         await Clients
                 .Users(connection.UserId.ToString())
                 .ReceiveChat(chat);

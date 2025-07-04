@@ -1,4 +1,5 @@
-﻿using Ykotika.Application.Common.Mappings;
+﻿using AutoMapper;
+using Ykotika.Application.Common.Mappings;
 using Ykotika.Domain.Entities;
 using Ykotika.Domain.ValueObjects;
 
@@ -13,5 +14,10 @@ namespace Ykotika.Application.ViewModels
         public string? RedirectUri { get; set; }
         public required bool IsRead { get; set; }
         public required Guid UserId { get; set; }
+
+        public void Mapping(Profile profile)
+        {
+            profile.CreateMap<Notification, NotificationItem>();
+        }
     }
 }

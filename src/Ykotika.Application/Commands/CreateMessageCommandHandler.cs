@@ -40,6 +40,7 @@ namespace Ykotika.Application.Commands
             var chat = await
                 _dbContext
                 .Chats
+                .Include(e => e.Members)
                 .FirstOrDefaultAsync(e => e.Id == request.ChatId, cancellationToken)
                 ?? throw new NotFoundException(nameof(Chat), request.ChatId);
 

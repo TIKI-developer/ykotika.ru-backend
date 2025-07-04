@@ -27,9 +27,7 @@ namespace Ykotika.Application.Queries
                 .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException(nameof(Chat), cancellationToken);
 
-            chat.Messages = chat.Messages
-                .OrderBy(m => m.Timestamps.CreatedAt)
-                .ToList();
+            chat.Messages = [.. chat.Messages.OrderBy(m => m.Timestamps.CreatedAt)];
 
             return _mapper.Map<ChatDetails>(chat);
         }
